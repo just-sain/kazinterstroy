@@ -23,8 +23,8 @@ const App = ({ Component, pageProps, router }) => {
 				<meta property='og:site_name' content='' />
 				<meta name='og:title' content='' />
 				<meta property='og:type' content='website' />
-				<meta property='og:image' content='' />  */}
-				<meta name='og:url' content={process.env.NEXT_PUBLIC_SELF_DOMAIN + router.asPath} />
+				<meta property='og:image' content='' />
+				<meta name='og:url' content={process.env.NEXT_PUBLIC_SELF_DOMAIN + router.asPath} /> */}
 				<meta name='og:locale' content='ru_RU' />
 
 				<link rel='apple-touch-icon' href='/favicon.ico' />

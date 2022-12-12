@@ -1,3 +1,4 @@
+import axios from 'axios';
 // components
 import Head from 'next/head';
 import styled from '@emotion/styled';
