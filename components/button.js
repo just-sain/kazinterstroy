@@ -28,6 +28,13 @@ const StyledButton = styled.button`
 
 	transition: background 0.4s ease 0s;
 
+	span {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 0.25rem;
+	}
+
 	a {
 		text-decoration: none;
 	}

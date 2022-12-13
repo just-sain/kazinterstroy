@@ -1,22 +1,46 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 // components
 import Head from 'next/head';
 import Link from 'next/link';
-import styled from '@emotion/styled';
 import { Error404Page } from '../../404';
+import { Button } from '../../../components/button';
+import styled from '@emotion/styled';
+import { AiFillCaretLeft } from 'react-icons/ai';
+import { Breadcrumb } from '../../../components/breadcrumb';
+import { AppContext } from '../../../components/context';
 
 const Wrapper = styled.div`
 	width: 100%;
 `;
 
-const Heading = styled.h1`
+const Heading = styled.div`
 	margin-bottom: 2rem;
 
-	text-align: center;
-	font-size: 3.2rem;
-	font-weight: 300;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 1rem;
+
+	h1 {
+		text-align: center;
+		font-size: 3.2rem;
+		font-weight: 400;
+	}
+`;
+
+const Back = styled(Link)`
+	padding: 0.5rem;
+
+	display: flex;
+	align-items: flex-end;
+
+	background: rgb(var(--error));
+	border-radius: 0.5rem;
+
+	color: rgb(var(--white));
+	font-size: 2.4rem;
 `;
 
 const Grid = styled.div`
@@ -59,24 +83,33 @@ const Item = styled(Link)`
 	}
 `;
 
-const Category = ({ menu, categoryId }) => {
+const Category = ({ categoryId }) => {
 	const { query } = useRouter();
-	const [categoryData, setCategoryData] = useState(menu.find(m => m.id === Number(categoryId)));
+	const { menu } = useContext(AppContext);
+
+	const [categoryData, setCategoryData] = useState(menu && menu.find(m => m.id === Number(categoryId)));
 	const [categoryItems, setCategoryItems] = useState(
-		menu
-			.filter(m => m.level === 2)
-			.filter(second => categoryData.left < second.left && second.right < categoryData.right)
+		menu &&
+			menu
+				.filter(m => m.level === 2)
+				.filter(second => categoryData.left < second.left && second.right < categoryData.right)
 	);
+
+	const breadcrumbData = [
+		{ name: 'Каталог', href: '/category' },
+		{ name: categoryData.name, href: `/category/${categoryData.id}` }
+	];
 
 	useEffect(() => {
 		if (!query?.category || isNaN(query?.category)) return <Error404Page />;
 		if (query.category === categoryData.id) return;
 
-		setCategoryData(menu.find(m => m.id === Number(query.category)));
+		setCategoryData(menu && menu.find(m => m.id === Number(query.category)));
 		setCategoryItems(
-			menu
-				.filter(m => m.level === 2)
-				.filter(second => categoryData.left < second.left && second.right < categoryData.right)
+			menu &&
+				menu
+					.filter(m => m.level === 2)
+					.filter(second => categoryData.left < second.left && second.right < categoryData.right)
 		);
 	}, [query]);
 
@@ -86,7 +119,13 @@ const Category = ({ menu, categoryId }) => {
 				<title>{categoryData.name} / KazInterStroy</title>
 			</Head>
 			<Wrapper>
-				<Heading>{categoryData.name}</Heading>
+				<Breadcrumb links={breadcrumbData} withMarginBottom />
+				<Heading>
+					<Back href={`/category`} title='Назад'>
+						<AiFillCaretLeft />
+					</Back>
+					<h1>{categoryData.name}</h1>
+				</Heading>
 				<Grid>
 					{categoryItems.map(i => (
 						<Item href={`/category/${categoryData.id}/${i.id}`} key={i.id}>

@@ -1,11 +1,11 @@
 import Layout from '../components/layout';
-import globalStyles from '../lib/styles';
+import globalStyles from '../helpers/styles';
 // components
 import Head from 'next/head';
 import { Global } from '@emotion/react';
 import { AppContextProvider } from '../components/context';
 
-const App = ({ Component, pageProps, router }) => {
+const App = ({ Component, pageProps }) => {
 	return (
 		<>
 			<Head>

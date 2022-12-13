@@ -1,12 +1,14 @@
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import axios from 'axios';
 // components
 import Head from 'next/head';
+import Link from 'next/link';
+import { Breadcrumb } from '../../components/breadcrumb';
 import { BsArrowReturnRight } from 'react-icons/bs';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
-import Link from 'next/link';
+import { AppContext } from '../../components/context';
 
 const Wrapper = styled.div`
 	width: 100%;
@@ -112,12 +114,26 @@ const Heading = styled.h2`
 	}
 `;
 
-const Category = ({ menu }) => {
-	const [firstLevel] = useState(menu.filter(m => m.level === 1));
-	const [secondLevel] = useState(menu.filter(m => m.level === 2));
-	const [selectMenu, setSelectMenu] = useState(firstLevel[0]);
+const Title = styled.h1`
+	margin-bottom: 1.5rem;
 
+	color: rgb(var(--black));
+	text-align: center;
+	font-size: 3.4rem;
+	font-weight: 400;
+
+	a {
+		cursor: alias;
+	}
+`;
+
+const Category = () => {
 	const router = useRouter();
+	const { menu } = useContext(AppContext);
+
+	const [firstLevel] = useState(menu && menu.filter(m => m.level === 1));
+	const [secondLevel] = useState(menu && menu.filter(m => m.level === 2));
+	const [selectMenu, setSelectMenu] = useState(firstLevel[0]);
 
 	return (
 		<>
@@ -125,6 +141,7 @@ const Category = ({ menu }) => {
 				<title>Все категории / KazInterStroy</title>
 			</Head>
 			<Wrapper>
+				<Title>Наш Каталог</Title>
 				<Box>
 					<FirstLevelMenu>
 						{firstLevel.map(first => (

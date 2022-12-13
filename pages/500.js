@@ -658,17 +658,17 @@ const Content = styled.div`
 	}
 `;
 
-export const Error404Page = () => {
+export const Error500Page = () => {
 	const particles = [];
 
 	for (let i = 0; i <= 70; i++) {
-		particles.push(i <= 35 ? 4 : 0);
+		particles.push(i <= 30 ? 5 : 0);
 	}
 
 	return (
 		<>
 			<Head>
-				<title>404 ошибка, страница не найдена / KazInterStroy</title>
+				<title>404 ошибка, что то пошло не так / KazInterStroy</title>
 			</Head>
 			<Wrapper>
 				{particles.map((n, i) => (
@@ -680,7 +680,7 @@ export const Error404Page = () => {
 					<p>
 						Незнакомец,
 						<br />
-						Вы заблудились в галактике <b>404</b>.
+						Вы вылетели на орбиту <b>500</b>.
 					</p>
 					<Button size='m' href='/'>
 						Вернуться на землю
@@ -691,7 +691,7 @@ export const Error404Page = () => {
 	);
 };
 
-export default Error404Page;
+export default Error500Page;
 
 export const getStaticProps = async () => {
 	// menu

@@ -38,8 +38,19 @@ const StyledContainer = styled(Container)`
 // isOpen: boolean;
 
 export const Menu = ({ isOpen, setIsMenuOpen, ...props }) => {
-	const { menu } = useContext(AppContext);
-	const [filteredMenu, setFilteredMenu] = useState(menu.filter(m => m.level === 1).filter((m, i) => i < 10));
+	const { menu, setMenu } = useContext(AppContext);
+	const [filteredMenu, setFilteredMenu] = useState(menu && menu.filter(m => m.level === 1).filter((m, i) => i < 10));
+
+	useEffect(() => {
+		if (!menu) {
+			const { data: menu } = axios
+				.get(`${process.env.NEXT_PUBLIC_API}/categories?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}`)
+				.then(({ data }) => {
+					setFilteredMenu(data);
+					setMenu && setMenu(data);
+				});
+		}
+	}, [menu]);
 
 	return (
 		<StyledMenu isOpen={isOpen} {...props}>
