@@ -1,6 +1,7 @@
-import styled from '@emotion/styled';
+import { Fragment, memo } from 'react';
+// components
 import Link from 'next/link';
-import { Fragment } from 'react';
+import styled from '@emotion/styled';
 
 const BreadcrumbWrapper = styled.div`
 	width: 100%;
@@ -53,7 +54,7 @@ const Slash = styled.span`
 // links: { name: string, href: string }[]
 // withMarginBottom: boolean (but it is will 0 or 1)
 
-export const Breadcrumb = ({ links, withMarginBottom = 0, ...props }) => {
+export const Breadcrumb = memo(({ links, withMarginBottom = 0, ...props }) => {
 	if (!links || !links.length) {
 		return <></>;
 	}
@@ -78,4 +79,4 @@ export const Breadcrumb = ({ links, withMarginBottom = 0, ...props }) => {
 			})}
 		</BreadcrumbWrapper>
 	);
-};
+});

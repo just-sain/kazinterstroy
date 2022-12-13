@@ -1,12 +1,12 @@
 import { useContext, useState } from 'react';
 import axios from 'axios';
-import { declOfNum } from '../../../helpers/declaration';
+import { AppContext } from '../../../../components/context';
+import { declOfNum } from '../../../../helpers/declaration';
 // components
 import Head from 'next/head';
-import { Breadcrumb } from '../../../components/breadcrumb';
-import { Article } from '../../../components/article';
+import { Breadcrumb } from '../../../../components/breadcrumb';
+import { Article } from '../../../../components/article';
 import styled from '@emotion/styled';
-import { AppContext } from '../../../components/context';
 
 const Wrapper = styled.div`
 	width: 100%;
@@ -53,8 +53,6 @@ const Category = ({ elements, categoryId, elementId }) => {
 		{ name: categoryData.name, href: `/category/${categoryData.id}` },
 		{ name: elementData.name, href: `/category/${categoryData.id}/${elementData.id}` }
 	];
-
-	console.log(elements);
 
 	return (
 		<>

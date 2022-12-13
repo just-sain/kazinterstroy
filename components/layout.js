@@ -3,13 +3,13 @@ import { useEffect, useState } from 'react';
 import format from 'date-fns/format';
 // components
 import Link from 'next/link';
-import styled from '@emotion/styled';
-import { css } from '@emotion/css';
-import { AiOutlineUser } from 'react-icons/ai';
 import { Container } from './container';
 import { List } from './list';
 import { Search } from './search';
 import { Menu } from './menu';
+import { AiOutlineUser } from 'react-icons/ai';
+import styled from '@emotion/styled';
+import { css } from '@emotion/css';
 
 const Wrapper = styled.div`
 	min-height: 100vh;
@@ -132,8 +132,6 @@ const Main = styled.main`
 	display: grid;
 	justify-items: center;
 
-	animation: fade-down 1.5s ease 0s normal;
-
 	@keyframes fade-down {
 		from {
 			opacity: 0;
@@ -143,10 +141,6 @@ const Main = styled.main`
 			opacity: 1;
 			transform: translateY(0);
 		}
-	}
-
-	@media screen and (max-width: 1050px) {
-		padding: calc(var(--header-height) + 3rem) 1rem 10rem;
 	}
 `;
 
@@ -190,18 +184,17 @@ const Map = styled.iframe`
 
 const Layout = ({ children }) => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
-	const router = useRouter();
+	const { events } = useRouter();
 
 	useEffect(() => {
 		const handleRouteChange = url => {
-			console.log(`App is changing to ${url}`);
 			setIsMenuOpen(false);
 		};
 
-		router.events.on('routeChangeStart', handleRouteChange);
+		events.on('routeChangeStart', handleRouteChange);
 
 		return () => {
-			router.events.off('routeChangeStart', handleRouteChange);
+			events.off('routeChangeStart', handleRouteChange);
 		};
 	}, []);
 

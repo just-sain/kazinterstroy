@@ -9,6 +9,7 @@ const globalStyles = css`
 		--container-s: 1040px;
 
 		--primary: 34, 138, 218;
+		--secondary: 221, 112, 32;
 		--cash: 17, 140, 79;
 		--error: 235, 75, 75;
 
