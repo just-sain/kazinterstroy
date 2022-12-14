@@ -692,16 +692,3 @@ export const Error500Page = () => {
 };
 
 export default Error500Page;
-
-export const getStaticProps = async () => {
-	// menu
-	const { data: menu } = await axios.get(
-		`${process.env.NEXT_PUBLIC_API}/categories?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}`
-	);
-
-	return {
-		props: {
-			menu
-		}
-	};
-};

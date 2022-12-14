@@ -692,16 +692,3 @@ export const Error404Page = () => {
 };
 
 export default Error404Page;
-
-export const getStaticProps = async () => {
-	// menu
-	const { data: menu } = await axios.get(
-		`${process.env.NEXT_PUBLIC_API}/categories?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}`
-	);
-
-	return {
-		props: {
-			menu
-		}
-	};
-};

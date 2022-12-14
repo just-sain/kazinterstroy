@@ -1,14 +1,12 @@
 import { useRouter } from 'next/router';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 // components
 import Head from 'next/head';
 import Link from 'next/link';
-import { Breadcrumb } from '../../components/breadcrumb';
 import { BsArrowReturnRight } from 'react-icons/bs';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
-import { AppContext } from '../../components/context';
 
 const Wrapper = styled.div`
 	width: 100%;
@@ -127,9 +125,8 @@ const Title = styled.h1`
 	}
 `;
 
-const Category = () => {
+const Category = ({ menu }) => {
 	const router = useRouter();
-	const { menu } = useContext(AppContext);
 
 	const [firstLevel] = useState(menu && menu.filter(m => m.level === 1));
 	const [secondLevel] = useState(menu && menu.filter(m => m.level === 2));

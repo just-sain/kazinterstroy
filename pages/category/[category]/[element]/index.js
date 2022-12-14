@@ -1,6 +1,5 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
-import { AppContext } from '../../../../components/context';
 import { declOfNum } from '../../../../helpers/declaration';
 // components
 import Head from 'next/head';
@@ -42,11 +41,11 @@ const Box = styled.div`
 	}
 `;
 
-const Category = ({ elements, categoryId, elementId }) => {
-	const { menu } = useContext(AppContext);
-
+const Category = ({ elements, categoryId, elementId, menu }) => {
 	const [categoryData] = useState(menu && menu.find(m => m.id === Number(categoryId)));
 	const [elementData] = useState(menu && menu.find(m => m.id === Number(elementId)));
+
+	console.log(elements);
 
 	const breadcrumbData = [
 		{ name: 'Каталог', href: '/category' },

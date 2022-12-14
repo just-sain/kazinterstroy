@@ -1,12 +1,10 @@
 import { useRouter } from 'next/router';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 // components
 import Head from 'next/head';
-import { Error404Page } from '../../404';
 import styled from '@emotion/styled';
 import { Breadcrumb } from '../../../components/breadcrumb';
-import { AppContext } from '../../../components/context';
 import { SecondLevel } from '../../../components/secondLevel';
 
 const Wrapper = styled.div`
@@ -21,9 +19,8 @@ const Heading = styled.h1`
 	font-weight: 400;
 `;
 
-const Category = ({ categoryId }) => {
+const Category = ({ categoryId, menu }) => {
 	const { query } = useRouter();
-	const { menu } = useContext(AppContext);
 
 	const [categoryData, setCategoryData] = useState(menu && menu.find(m => m.id === Number(categoryId)));
 	const [categoryItems, setCategoryItems] = useState(

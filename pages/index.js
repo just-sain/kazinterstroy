@@ -1,54 +1,16 @@
-import axios from 'axios';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
 // components
 import Head from 'next/head';
 import Link from 'next/link';
-import Slider from 'react-slick';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, Pagination } from 'swiper'; // required modules for swiper js
+import { PopElement } from '../components/popElement';
 import styled from '@emotion/styled';
 import { css } from '@emotion/css';
-import { PopElement } from '../components/popElement';
+// styles for swiper.js
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 // slider
-const sliderData = [
-	{ img: 'https://al-style.kz/upload/iblock/167/vod29crradneigwr4xo3e86fgd5xe2cv.jpg' },
-	{ img: 'https://al-style.kz/upload/iblock/028/6us2io66ol3octve5lrwnkecvieiylu2.jpg' },
-	{ img: 'https://al-style.kz/upload/iblock/56d/gaazaa8mrljohowsmrknbf8ahn4pg62n.jpg' }
-];
-
-const SliderContainer = styled.div`
-	width: 100%;
-	height: auto;
-	padding-bottom: 3rem;
-
-	position: absolute;
-	top: var(--header-height);
-	left: 0;
-`;
-
-const SliderItem = styled.div`
-	width: 100%;
-	cursor: grab;
-
-	&:active {
-		cursor: grabbing;
-	}
-
-	img {
-		width: 100%;
-		height: auto;
-		object-fit: cover;
-		object-position: center;
-	}
-`;
-
-const CustomArrow = () => (
-	<div
-		className={css`
-			display: none;
-		`}
-	/>
-);
 
 // pop products
 const PopContainer = styled.div`
@@ -73,40 +35,67 @@ const PopHeading = styled.div`
 	}
 `;
 
-const HomePage = ({ popProducts }) => {
-	const sliderSetting = {
-		dots: true,
-		infinite: true,
-		slidesToShow: 1,
-		slidesToScroll: 1,
-		autoplay: true,
-		speed: 500,
-		autoplaySpeed: 3000,
-		cssEase: 'ease',
-		nextArrow: <CustomArrow />,
-		prevArrow: <CustomArrow />
-	};
+// swiper js
+const Carousel = styled.section`
+	height: 70rem;
+`;
 
+const StyledSwiper = styled(Swiper)`
+	width: 100vw;
+	height: 70rem;
+
+	position: absolute;
+	top: var(--header-height);
+	left: 0;
+`;
+
+const StyledSwiperSlide = styled(SwiperSlide)`
+	background: rgb(var(--bg));
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	img {
+		width: 100%;
+		height: 100%;
+
+		display: block;
+		object-fit: cover;
+		object-position: center;
+	}
+`;
+
+// data
+const sliderData = [
+	{ img: 'https://al-style.kz/upload/iblock/167/vod29crradneigwr4xo3e86fgd5xe2cv.jpg' },
+	{ img: 'https://al-style.kz/upload/iblock/028/6us2io66ol3octve5lrwnkecvieiylu2.jpg' },
+	{ img: 'https://al-style.kz/upload/iblock/56d/gaazaa8mrljohowsmrknbf8ahn4pg62n.jpg' }
+];
+
+const HomePage = ({ popProducts }) => {
 	return (
 		<>
 			<Head>
 				<title>KazInterStroy - Интернет магазин</title>
 			</Head>
-			<section
-				className={css`
-					width: 100%;
-					height: 32vw;
-				`}>
-				<SliderContainer>
-					<Slider append {...sliderSetting}>
-						{sliderData.map((s, i) => (
-							<SliderItem key={i}>
-								<img src={s.img} />
-							</SliderItem>
-						))}
-					</Slider>
-				</SliderContainer>
-			</section>
+			<Carousel>
+				<StyledSwiper
+					grabCursor={true}
+					centeredSlides={true}
+					autoplay={{
+						delay: 2500,
+						disableOnInteraction: false
+					}}
+					pagination={{ clickable: true, dynamicBullets: true }}
+					modules={[Autoplay, Pagination]}>
+					{sliderData.map(s => (
+						<StyledSwiperSlide key={s}>
+							<img src={s.img} alt={s.img} />
+						</StyledSwiperSlide>
+					))}
+				</StyledSwiper>
+			</Carousel>
 			<section
 				className={css`
 					margin-top: 7.5rem;
@@ -128,11 +117,6 @@ const HomePage = ({ popProducts }) => {
 export default HomePage;
 
 export const getStaticProps = async () => {
-	// menu
-	const { data: menu } = await axios.get(
-		`${process.env.NEXT_PUBLIC_API}/categories?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}`
-	);
-
 	// popular products
 	const popProducts = [
 		{
@@ -166,8 +150,7 @@ export const getStaticProps = async () => {
 
 	return {
 		props: {
-			popProducts,
-			menu
+			popProducts
 		}
 	};
 };

@@ -1,18 +1,13 @@
-import { useContext, useEffect, useState } from 'react';
-import { AppContext } from './context';
 // components
 import Link from 'next/link';
 import styled from '@emotion/styled';
 import { Container } from './container';
-import { List } from './list';
-import { Button } from './button';
-import { css } from '@emotion/css';
 
 const StyledMenu = styled.menu`
-	width: 100%;
-	max-height: calc(100vh - var(--header-height));
+	width: 100vw;
+	height: 100vh;
 	z-index: 90;
-	padding: 3rem 0 5rem;
+	padding: calc(var(--header-height) + 3rem) 0 5rem;
 	overflow: hidden;
 
 	background: rgba(var(--primary), 0.9);
@@ -21,11 +16,12 @@ const StyledMenu = styled.menu`
 	color: rgb(var(--white));
 
 	position: fixed;
-	top: var(--header-height);
+	top: 0;
 	left: 0;
 
-	transform: translateY(${({ isOpen }) => (isOpen ? `0` : `-200%`)});
-	transition: transform 0.4s ease 0s;
+	transform-origin: left;
+	transform: scaleX(${({ isOpen }) => (isOpen ? `1` : `0`)});
+	transition: transform 0.8s ease 0s;
 `;
 
 const StyledContainer = styled(Container)`
@@ -38,53 +34,10 @@ const StyledContainer = styled(Container)`
 // isOpen: boolean;
 
 export const Menu = ({ isOpen, setIsMenuOpen, ...props }) => {
-	const { menu, setMenu } = useContext(AppContext);
-	const [filteredMenu, setFilteredMenu] = useState(menu && menu.filter(m => m.level === 1).filter((m, i) => i < 10));
-
-	useEffect(() => {
-		if (!menu) {
-			const { data: menu } = axios
-				.get(`${process.env.NEXT_PUBLIC_API}/categories?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}`)
-				.then(({ data }) => {
-					setFilteredMenu(data);
-					setMenu && setMenu(data);
-				});
-		}
-	}, [menu]);
-
 	return (
 		<StyledMenu isOpen={isOpen} {...props}>
 			<StyledContainer maxW='m'>
-				<List color='white' columns='1' gap='s'>
-					<h6>Каталог</h6>
-					{filteredMenu.map(m => (
-						<li key={m.id}>
-							<Link href={`/category/${m.id}`} onClick={() => setIsMenuOpen(false)}>
-								{m.name}
-							</Link>
-						</li>
-					))}
-					<li
-						className={css`
-							margin-top: 0.5rem;
-						`}>
-						<Button size='s' background='white' color='black' href='/category' withArrow>
-							Просмотреть Все
-						</Button>
-					</li>
-				</List>
-				<List color='white' columns='1' gap='s'>
-					<h6>Медиа</h6>
-					<li>
-						<Link href='/'>Главная</Link>
-					</li>
-					<li>
-						<Link href='/contact'>О нас</Link>
-					</li>
-					<li>
-						<Link href='/contact'>Контакты</Link>
-					</li>
-				</List>
+				<div>this is menu</div>
 			</StyledContainer>
 		</StyledMenu>
 	);

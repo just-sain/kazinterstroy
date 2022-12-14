@@ -5,7 +5,7 @@ export const declOfNum = (num, titles) => {
 	return titles[num % 100 > 4 && num % 100 < 20 ? 2 : cases[num % 10 < 5 ? num % 10 : 5]];
 };
 
-//
+// quantity: number
 export const declOfQuantity = quantity => {
 	if (typeof quantity === 'number') {
 		return quantity === 0 ? 'Нет в наличи' : quantity;

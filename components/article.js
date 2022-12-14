@@ -25,7 +25,7 @@ const Poster = styled.img`
 	object-position: center;
 `;
 
-const Name = styled(Link)`
+const Name = styled.h4`
 	color: rgb(var(--primary));
 	font-weight: 500;
 	font-size: 1.6rem;
@@ -43,32 +43,46 @@ const Price = styled.p`
 `;
 
 const Quantity = styled.p`
+	color: rgb(var(--${({ notavailable }) => (!notavailable ? `gray` : `error`)}));
 	font-weight: 500;
 	font-size: 1.4rem;
-
-	color: rgb(var(--${({ notavailable }) => (!notavailable ? `gray` : `error`)}));
 
 	span {
 		color: rgb(var(--primary));
 	}
 `;
 
+const Brand = styled.p`
+	color: rgb(var(--gray));
+	font-weight: 500;
+	font-size: 1.4rem;
+
+	span {
+		color: rgb(var(--secondary));
+	}
+`;
+
 export const Article = ({ href, articleData }) => {
 	return (
 		<StyledArticle>
-			<div>
+			<Link href={href} passHref>
 				<Poster src={articleData.images[0]} alt={articleData.name} />
-				<Name href={href} passHref>
-					{articleData.name}
-				</Name>
-			</div>
+				<Name>{articleData.name}</Name>
+			</Link>
 			<div>
 				<Price>
-					Цена: {priceRule(articleData.price1)}₸ / <span>{priceRule(articleData.price2)}₸</span>
+					Цена: {priceRule(articleData.price1)} / <span>{priceRule(articleData.price2)}</span>
 				</Price>
 				<Quantity notavailable={declOfQuantity(articleData.quantity) === 'Нет в наличи'}>
-					{declOfQuantity(articleData.quantity)}
+					{declOfQuantity(articleData.quantity) === 'Нет в наличи'
+						? declOfQuantity(articleData.quantity)
+						: `В наличи: ${declOfQuantity(articleData.quantity)}`}
 				</Quantity>
+				{articleData.brand && (
+					<Brand>
+						Брэнд: <span>{articleData.brand}</span>
+					</Brand>
+				)}
 			</div>
 		</StyledArticle>
 	);

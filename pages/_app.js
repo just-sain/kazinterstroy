@@ -1,6 +1,5 @@
 import Layout from '../components/layout';
 import globalStyles from '../helpers/styles';
-import { AppContextProvider } from '../components/context';
 // components
 import Head from 'next/head';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -46,11 +45,9 @@ const App = ({ Component, pageProps, router }) => {
 					<link rel='shortcut icon' href='/favicon.ico' type='image/x-icon' />
 				</Head>
 				<Global styles={globalStyles} />
-				<AppContextProvider menu={pageProps.menu}>
-					<Layout>
-						<Component {...pageProps} />
-					</Layout>
-				</AppContextProvider>
+				<Layout>
+					<Component {...pageProps} />
+				</Layout>
 			</motion.div>
 		</AnimatePresence>
 	);

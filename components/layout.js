@@ -65,13 +65,26 @@ const Logo = styled.div`
 `;
 
 const Block = styled.div`
+	width: 100%;
+
 	opacity: 0;
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
+	justify-content: flex-end;
 	gap: 2rem;
 
 	animation: fade-down 0.5s ease 1.2s forwards;
+`;
+
+const HeaderMenu = styled.menu`
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 2rem;
+
+	color: rgb(var(--black));
+	font-size: 2rem;
+	font-weight: 500;
 `;
 
 const Burger = styled.div`
@@ -217,7 +230,26 @@ const Layout = ({ children }) => {
 						</Link>
 					</Logo>
 					<Block>
-						<Search onSearch={text => router.push(`/search?search=${text}`)} />
+						<HeaderMenu>
+							<li>
+								<Link href='/'>Главная</Link>
+							</li>
+							<li>
+								<Link href='/category'>Каталог</Link>
+							</li>
+							<li>
+								<Link href='/about'>О нас</Link>
+							</li>
+							<li>
+								<Link href='/contacts'>Контакты</Link>
+							</li>
+						</HeaderMenu>
+						<Search
+							onSearch={text => router.push(`/search?search=${text}`)}
+							className={css`
+								max-width: 20rem;
+							`}
+						/>
 						<AiOutlineUser
 							className={css`
 								width: 2.8rem;
