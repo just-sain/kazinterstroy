@@ -37,16 +37,44 @@ const PopHeading = styled.div`
 
 // swiper js
 const Carousel = styled.section`
-	height: 70rem;
+	height: 60rem;
+
+	--swiper-pagination-color: rgb(var(--primary));
+
+	@media screen and (max-width: 1440px) {
+		height: 50rem;
+	}
+	@media screen and (max-width: 1240px) {
+		height: 40rem;
+	}
+	@media screen and (max-width: 768px) {
+		height: 30rem;
+	}
+	@media screen and (max-width: 600px) {
+		height: 20rem;
+	}
 `;
 
 const StyledSwiper = styled(Swiper)`
 	width: 100vw;
-	height: 70rem;
+	height: 60rem;
 
 	position: absolute;
 	top: var(--header-height);
 	left: 0;
+
+	@media screen and (max-width: 1440px) {
+		height: 50rem;
+	}
+	@media screen and (max-width: 1240px) {
+		height: 40rem;
+	}
+	@media screen and (max-width: 768px) {
+		height: 30rem;
+	}
+	@media screen and (max-width: 600px) {
+		height: 20rem;
+	}
 `;
 
 const StyledSwiperSlide = styled(SwiperSlide)`
@@ -68,9 +96,9 @@ const StyledSwiperSlide = styled(SwiperSlide)`
 
 // data
 const sliderData = [
-	{ img: 'https://al-style.kz/upload/iblock/167/vod29crradneigwr4xo3e86fgd5xe2cv.jpg' },
-	{ img: 'https://al-style.kz/upload/iblock/028/6us2io66ol3octve5lrwnkecvieiylu2.jpg' },
-	{ img: 'https://al-style.kz/upload/iblock/56d/gaazaa8mrljohowsmrknbf8ahn4pg62n.jpg' }
+	'https://al-style.kz/upload/iblock/167/vod29crradneigwr4xo3e86fgd5xe2cv.jpg',
+	'https://al-style.kz/upload/iblock/028/6us2io66ol3octve5lrwnkecvieiylu2.jpg',
+	'https://al-style.kz/upload/iblock/56d/gaazaa8mrljohowsmrknbf8ahn4pg62n.jpg'
 ];
 
 const HomePage = ({ popProducts }) => {
@@ -91,7 +119,7 @@ const HomePage = ({ popProducts }) => {
 					modules={[Autoplay, Pagination]}>
 					{sliderData.map(s => (
 						<StyledSwiperSlide key={s}>
-							<img src={s.img} alt={s.img} />
+							<img src={s} alt={s} />
 						</StyledSwiperSlide>
 					))}
 				</StyledSwiper>

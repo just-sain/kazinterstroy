@@ -8,13 +8,18 @@ const globalStyles = css`
 		--container-m: 1240px;
 		--container-s: 1040px;
 
+		--outer-shadow: 0.3rem 0.3rem 0.6rem #d0d0d0, -0.3rem -0.3rem 0.6rem #f8f8f8;
+		--outer-shadow-0: 0 0 0 #d0d0d0, 0 0 0 #f8f8f8;
+		--inner-shadow: inset 0.3rem 0.3rem 0.6rem #d0d0d0, inset -0.3rem -0.3rem 0.6rem #f8f8f8;
+		--inner-shadow-0: inset 0 0 0 #d0d0d0, inset 0 0 0 #f8f8f8;
+
+		--bg: 251, 254, 253;
+		--darker-bg: 241, 244, 243;
+
 		--primary: 34, 138, 218;
 		--secondary: 221, 112, 32;
 		--cash: 17, 140, 79;
 		--error: 235, 75, 75;
-
-		--bg: 251, 254, 253;
-		--darker-bg: 241, 244, 243;
 
 		--white: 255, 250, 250;
 		--darker-white: 222, 222, 222;
@@ -25,10 +30,6 @@ const globalStyles = css`
 
 		--font-family-primary: -apple-system, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
 			Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-
-		--font-light: 300;
-		--font-medium: 500;
-		--font-bold: 700;
 	}
 
 	* {

@@ -2,12 +2,12 @@ import { useState } from 'react';
 // components
 import { AiOutlineSearch } from 'react-icons/ai';
 import styled from '@emotion/styled';
-import { css } from '@emotion/css';
 
 const Form = styled.form`
-	min-width: 35rem;
+	min-width: 25rem;
 	width: 100%;
 	padding: 0.7rem 1.5rem;
+	overflow: hidden;
 
 	display: flex;
 	align-items: center;
@@ -31,7 +31,7 @@ const Input = styled.input`
 
 	color: rgb(var(--black));
 	font-size: 1.4rem;
-	font-weight: var(--font-medium);
+	font-weight: 500;
 
 	&:hover,
 	&:focus {
@@ -42,6 +42,17 @@ const Input = styled.input`
 	&::placeholder {
 		color: rgb(var(--gray));
 	}
+`;
+
+const Icon = styled(AiOutlineSearch)`
+	width: 2rem;
+	height: 2rem;
+
+	cursor: pointer;
+	fill: rgb(var(--black));
+
+	transform: translateY(${({ text }) => (!text ? `-5` : `0`)}rem);
+	transition: transform 0.4s ease 0s;
 `;
 
 //text: string;
@@ -66,21 +77,7 @@ export const Search = ({ onSearch, ...props }) => {
 				onChange={e => setText(e.currentTarget.value)}
 			/>
 			<button type='submit' tabIndex={!text ? -1 : 0}>
-				<AiOutlineSearch
-					className={css`
-						width: 2rem;
-						height: 2rem;
-
-						cursor: pointer;
-						fill: rgb(var(--black));
-
-						transform: translateY(${!text ? `-5rem` : `0`});
-						transition: transform 0.4s ease 0s;
-
-						&:hover {
-						}
-					`}
-				/>
+				<Icon text={text} />
 			</button>
 		</Form>
 	);

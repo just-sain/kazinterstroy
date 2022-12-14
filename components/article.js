@@ -1,5 +1,5 @@
 import { priceRule } from '../helpers/price';
-import { declOfNum, declOfQuantity } from '../helpers/declaration';
+import { declOfQuantity } from '../helpers/declaration';
 // components
 import Link from 'next/link';
 import styled from '@emotion/styled';
@@ -13,8 +13,14 @@ const StyledArticle = styled.div`
 	align-items: stretch;
 	gap: 1rem;
 
-	box-shadow: 0.4rem 0.4rem 1rem rgba(var(--black), 0.15);
+	box-shadow: var(--outer-shadow), var(--inner-shadow-0);
 	border-radius: 1.5rem;
+
+	transition: box-shadow 0.3s ease 0s;
+
+	&:hover {
+		box-shadow: var(--outer-shadow-0), var(--inner-shadow);
+	}
 `;
 
 const Poster = styled.img`
@@ -31,14 +37,15 @@ const Name = styled.h4`
 	font-size: 1.6rem;
 `;
 
-const Price = styled.p`
+const Info = styled.div``;
+
+const Line = styled.p`
+	color: rgb(var(--gray));
 	font-weight: 500;
 	font-size: 1.4rem;
 
-	color: rgb(var(--gray));
-
 	span {
-		color: rgb(var(--cash));
+		color: rgb(var(--secondary));
 	}
 `;
 
@@ -62,6 +69,18 @@ const Brand = styled.p`
 	}
 `;
 
+const Price = styled.h3`
+	margin-top: 1rem;
+
+	color: rgb(var(--light-gray));
+	font-size: 1.8rem;
+	font-weight: 600;
+
+	span {
+		color: rgb(var(--cash));
+	}
+`;
+
 export const Article = ({ href, articleData }) => {
 	return (
 		<StyledArticle>
@@ -69,10 +88,7 @@ export const Article = ({ href, articleData }) => {
 				<Poster src={articleData.images[0]} alt={articleData.name} />
 				<Name>{articleData.name}</Name>
 			</Link>
-			<div>
-				<Price>
-					Цена: {priceRule(articleData.price1)} / <span>{priceRule(articleData.price2)}</span>
-				</Price>
+			<Info>
 				<Quantity notavailable={declOfQuantity(articleData.quantity) === 'Нет в наличи'}>
 					{declOfQuantity(articleData.quantity) === 'Нет в наличи'
 						? declOfQuantity(articleData.quantity)
@@ -83,7 +99,10 @@ export const Article = ({ href, articleData }) => {
 						Брэнд: <span>{articleData.brand}</span>
 					</Brand>
 				)}
-			</div>
+				<Price>
+					<span>{priceRule(articleData.price1)}</span> (шт)
+				</Price>
+			</Info>
 		</StyledArticle>
 	);
 };

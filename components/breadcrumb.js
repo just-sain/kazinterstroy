@@ -8,11 +8,12 @@ const BreadcrumbWrapper = styled.div`
 
 	margin-bottom: ${({ withMarginBottom }) => (withMarginBottom ? `1.5rem` : `0`)};
 `;
+
 const StyledLink = styled(Link)`
 	width: 100%;
 
 	color: rgb(var(--${({ iscurrentpage }) => (iscurrentpage ? `primary` : `gray`)}));
-	font-size: 1.6rem;
+	font-size: 1.4rem;
 	font-weight: 400;
 
 	position: relative;

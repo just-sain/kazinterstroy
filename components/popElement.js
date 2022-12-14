@@ -25,7 +25,7 @@ const PopWrapper = styled.div`
 		border-radius: 0.5rem;
 
 		color: rgb(var(--white));
-		font-weight: var(--font-bold);
+		font-weight: 700;
 	}
 `;
 

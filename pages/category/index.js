@@ -14,7 +14,7 @@ const Wrapper = styled.div`
 
 const Box = styled.div`
 	width: 100%;
-	height: calc(100vh - var(--header-height) - 3rem - 2rem - 5rem);
+	height: 55rem;
 
 	display: grid;
 	grid-template-columns: 1fr 2fr;
@@ -22,10 +22,11 @@ const Box = styled.div`
 
 const FirstLevelMenu = styled.ul`
 	width: 100%;
+	padding: 1rem;
 	overflow-y: scroll;
 `;
 
-const FirstLevelMenuItem = styled.li`
+const MenuItem = styled.li`
 	padding: 1rem 2.5rem 1rem 1rem;
 	overflow: hidden;
 
@@ -62,8 +63,8 @@ const FirstLevelMenuItem = styled.li`
 
 		color: rgb(var(--white));
 
-		top: -0.2rem;
-		left: -0.8rem;
+		top: -0.3rem;
+		left: 0.8rem;
 
 		a {
 			transform: translate(0, -50%);
@@ -78,7 +79,7 @@ const FirstLevelMenuItem = styled.li`
 
 			color: rgb(var(--white));
 
-			top: -0.2rem;
+			top: -0.3rem;
 			left: -0.8rem;
 
 			a {
@@ -142,7 +143,7 @@ const Category = ({ menu }) => {
 				<Box>
 					<FirstLevelMenu>
 						{firstLevel.map(first => (
-							<FirstLevelMenuItem
+							<MenuItem
 								key={first.id}
 								isSelected={selectMenu.id === first.id}
 								onClick={() => setSelectMenu(first)}>
@@ -150,7 +151,7 @@ const Category = ({ menu }) => {
 								<Link href={`/category/${first.id}`}>
 									<BsArrowReturnRight />
 								</Link>
-							</FirstLevelMenuItem>
+							</MenuItem>
 						))}
 					</FirstLevelMenu>
 					<SecondLevelMenu>
@@ -164,14 +165,14 @@ const Category = ({ menu }) => {
 							{secondLevel
 								.filter(second => selectMenu.left < second.left && second.right < selectMenu.right)
 								.map(second => (
-									<FirstLevelMenuItem
+									<MenuItem
 										key={second.id}
 										onClick={() => router.push(`/category/${selectMenu.id}/${second.id}`)}>
 										{second.name}
 										<Link href={`/category/${selectMenu.id}/${second.id}`}>
 											<BsArrowReturnRight />
 										</Link>
-									</FirstLevelMenuItem>
+									</MenuItem>
 								))}
 						</ul>
 					</SecondLevelMenu>

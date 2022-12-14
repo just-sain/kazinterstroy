@@ -104,6 +104,8 @@ export const getServerSideProps = async ctx => {
 		`${process.env.NEXT_PUBLIC_API}/elements?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&limit=250&category=${ctx.query.element}&additional_fields=url,brand,images`
 	);
 
+	if (!elements.length) return { notFound: true };
+
 	return {
 		props: {
 			menu,
