@@ -92,9 +92,6 @@ export const Footer = memo(() => {
 						<li>
 							<a href='mailto:kazinterstroy@mail.ru'>kazinterstroy@mail.ru</a>
 						</li>
-						<li>
-							<a href='tel:+77013597588'>Обратиться к менеджеру</a>
-						</li>
 					</List>
 					<List>
 						<h6>Адрес</h6>

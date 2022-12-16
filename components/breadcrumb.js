@@ -1,12 +1,21 @@
 import { Fragment, memo } from 'react';
 // components
 import Link from 'next/link';
+import { BsArrowBarLeft } from 'react-icons/bs';
 import styled from '@emotion/styled';
 
-const BreadcrumbWrapper = styled.div`
+const Wrapper = styled.div`
 	width: 100%;
 
-	margin-bottom: ${({ withMarginBottom }) => (withMarginBottom ? `1.5rem` : `0`)};
+	margin-bottom: ${({ withMarginBottom }) => (withMarginBottom ? `5rem` : `0`)};
+`;
+
+const Breadcrumbs = styled.div`
+	display: block;
+
+	@media screen and (max-width: 500px) {
+		display: none;
+	}
 `;
 
 const StyledLink = styled(Link)`
@@ -52,6 +61,27 @@ const Slash = styled.span`
 	font-weight: 300;
 `;
 
+const BackArrow = styled(Link)`
+	display: none;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 0.5rem;
+
+	cursor: pointer;
+
+	color: rgb(var(--primary));
+	font-size: 1.8rem;
+	font-weight: 500;
+
+	svg {
+		font-size: 3.3rem;
+	}
+
+	@media screen and (max-width: 500px) {
+		display: flex;
+	}
+`;
+
 // links: { name: string, href: string }[]
 // withMarginBottom: boolean (but it is will 0 or 1)
 
@@ -61,23 +91,31 @@ export const Breadcrumb = memo(({ links, withMarginBottom = 0, ...props }) => {
 	}
 
 	return (
-		<BreadcrumbWrapper withMarginBottom={withMarginBottom} {...props}>
-			{links.map((l, i) => {
-				if (i < links.length - 1) {
-					return (
-						<Fragment key={l.href}>
-							<StyledLink href={l.href}>{l.name}</StyledLink>
-							<Slash> / </Slash>
-						</Fragment>
-					);
-				}
+		<>
+			<Wrapper withMarginBottom={withMarginBottom} {...props}>
+				<Breadcrumbs>
+					{links.map((l, i) => {
+						if (i < links.length - 1) {
+							return (
+								<Fragment key={l.href}>
+									<StyledLink href={l.href}>{l.name}</StyledLink>
+									<Slash> / </Slash>
+								</Fragment>
+							);
+						}
 
-				return (
-					<StyledLink key={l.href} href={l.href} iscurrentpage={1}>
-						{l.name}
-					</StyledLink>
-				);
-			})}
-		</BreadcrumbWrapper>
+						return (
+							<StyledLink key={l.href} href={l.href} iscurrentpage={1}>
+								{l.name}
+							</StyledLink>
+						);
+					})}
+				</Breadcrumbs>
+				<BackArrow href={links[links.length - 2].href}>
+					<BsArrowBarLeft />
+					Назад
+				</BackArrow>
+			</Wrapper>
+		</>
 	);
 });

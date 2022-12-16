@@ -137,7 +137,7 @@ export const Menu = ({ isOpen, setIsMenuOpen, ...props }) => {
 						<Link href='/about'>О нас</Link>
 					</li>
 					<li>
-						<Link href='/contacts'>Контакты</Link>
+						<Link href='/contact'>Контакты</Link>
 					</li>
 				</StyledMenu>
 			</StyledContainer>

@@ -668,7 +668,7 @@ export const Error404Page = () => {
 	return (
 		<>
 			<Head>
-				<title>404 ошибка, страница не найдена / KazInterStroy</title>
+				<title>404, страница не найдена / KazInterStroy</title>
 			</Head>
 			<Wrapper>
 				{particles.map((n, i) => (

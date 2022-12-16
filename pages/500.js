@@ -668,7 +668,7 @@ export const Error500Page = () => {
 	return (
 		<>
 			<Head>
-				<title>404 ошибка, что то пошло не так / KazInterStroy</title>
+				<title>500, что то пошло не так / KazInterStroy</title>
 			</Head>
 			<Wrapper>
 				{particles.map((n, i) => (

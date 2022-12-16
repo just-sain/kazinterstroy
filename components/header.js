@@ -1,17 +1,17 @@
 import { memo } from 'react';
 // components
-import styled from '@emotion/styled';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { Container } from './container';
 import { Search } from './search';
 import { FaPhoneAlt } from 'react-icons/fa';
 import { css } from '@emotion/react';
+import styled from '@emotion/styled';
 
-const StyledHeader = styled.header`
+const StyledHeader = styled(motion.header)`
 	width: 100%;
 	height: var(--header-height);
 	z-index: 100;
-	opacity: 0;
 
 	background: rgba(${({ isMenuOpen }) => (isMenuOpen ? `var(--bg), 1` : `var(--primary), 0.3`)});
 	backdrop-filter: blur(0.5rem);
@@ -23,8 +23,6 @@ const StyledHeader = styled.header`
 	left: 0;
 
 	transition: background 0.4s ease 0.2s;
-
-	animation: fade-down 0.5s ease 0.6s forwards;
 `;
 
 const StyledContainer = styled(Container)`
@@ -35,16 +33,13 @@ const StyledContainer = styled(Container)`
 	align-items: center;
 `;
 
-const LeftBlock = styled.div`
+const LeftBlock = styled(motion.div)`
 	width: 100%;
 
-	opacity: 0;
 	display: flex;
 	align-items: center;
 	justify-content: flex-start;
 	gap: 1rem;
-
-	animation: fade-down 0.5s ease 1.2s forwards;
 `;
 
 const Logo = styled.div`
@@ -61,6 +56,10 @@ const Logo = styled.div`
 		img {
 			width: auto;
 			height: 5rem;
+		}
+
+		@media screen and (max-width: 300px) {
+			font-size: 0;
 		}
 	}
 `;
@@ -80,14 +79,11 @@ const HeaderMenu = styled.menu`
 	}
 `;
 
-const RightBlock = styled.div`
-	opacity: 0;
+const RightBlock = styled(motion.div)`
 	display: flex;
 	align-items: center;
 	justify-content: flex-end;
 	gap: 1rem;
-
-	animation: fade-down 0.5s ease 1.2s forwards;
 `;
 
 const Phones = styled.div`
@@ -193,9 +189,16 @@ const Burger = styled.div`
 
 export const Header = memo(({ isMenuOpen, setIsMenuOpen }) => {
 	return (
-		<StyledHeader isMenuOpen={isMenuOpen}>
+		<StyledHeader
+			isMenuOpen={isMenuOpen}
+			initial={{ opacity: 0, translateY: '-100%' }}
+			transition={{ delay: 0.6, duration: 0.6 }}
+			animate={{ opacity: 1, translateY: 0 }}>
 			<StyledContainer maxW='l'>
-				<LeftBlock>
+				<LeftBlock
+					initial={{ opacity: 0, translateY: '-100%' }}
+					transition={{ delay: 0.8, duration: 0.6 }}
+					animate={{ opacity: 1, translateY: 0 }}>
 					<Logo>
 						<Link href='/'>
 							<img src='/logo.png' />
@@ -213,11 +216,14 @@ export const Header = memo(({ isMenuOpen, setIsMenuOpen }) => {
 							<Link href='/about'>О нас</Link>
 						</li>
 						<li>
-							<Link href='/contacts'>Контакты</Link>
+							<Link href='/contact'>Контакты</Link>
 						</li>
 					</HeaderMenu>
 				</LeftBlock>
-				<RightBlock>
+				<RightBlock
+					initial={{ opacity: 0, translateY: '-100%' }}
+					transition={{ delay: 1, duration: 0.6 }}
+					animate={{ opacity: 1, translateY: 0 }}>
 					<Phones>
 						<Phone href='tel:+77013597588'>
 							<Icon />

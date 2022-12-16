@@ -14,6 +14,7 @@ const StyledArticle = styled.div`
 	gap: 1rem;
 
 	box-shadow: var(--outer-shadow), var(--inner-shadow-0);
+	background: rgba(var(--real-white), 1);
 	border-radius: 1.5rem;
 
 	transition: box-shadow 0.3s ease 0s;
@@ -38,16 +39,6 @@ const Name = styled.h4`
 `;
 
 const Info = styled.div``;
-
-const Line = styled.p`
-	color: rgb(var(--gray));
-	font-weight: 500;
-	font-size: 1.4rem;
-
-	span {
-		color: rgb(var(--secondary));
-	}
-`;
 
 const Quantity = styled.p`
 	color: rgb(var(--${({ notavailable }) => (!notavailable ? `gray` : `error`)}));

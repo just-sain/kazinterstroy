@@ -22,6 +22,7 @@ const globalStyles = css`
 		--error: 235, 75, 75;
 
 		--white: 255, 250, 250;
+		--real-white: 255, 255, 255;
 		--darker-white: 222, 222, 222;
 		--black: 12, 10, 15;
 		--gray: 58, 58, 58;
@@ -98,6 +99,27 @@ const globalStyles = css`
 		to {
 			opacity: 1;
 			transform: translateY(0%);
+		}
+	}
+
+	@keyframes fade-right {
+		from {
+			opacity: 0;
+			transform: translateX(-20%);
+		}
+		to {
+			opacity: 1;
+			transform: translateX(0%);
+		}
+	}
+	@keyframes fade-left {
+		from {
+			opacity: 0;
+			transform: translateX(20%);
+		}
+		to {
+			opacity: 1;
+			transform: translateX(0%);
 		}
 	}
 `;

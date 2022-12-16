@@ -1,6 +1,7 @@
-import { useState } from 'react';
 import axios from 'axios';
 import { Autoplay, Zoom, Pagination, EffectCards } from 'swiper'; // required modules for swiper
+import { declOfQuantity } from '../../../../helpers/declaration';
+import { priceRule } from '../../../../helpers/price';
 // components
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Breadcrumb } from '../../../../components/breadcrumb';
@@ -10,9 +11,6 @@ import 'swiper/css';
 import 'swiper/css/zoom';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-cards';
-import { declOfQuantity } from '../../../../helpers/declaration';
-import { css } from '@emotion/css';
-import { priceRule } from '../../../../helpers/price';
 
 const Wrapper = styled.div`
 	width: 100%;
@@ -21,8 +19,13 @@ const Wrapper = styled.div`
 const Heading = styled.h1`
 	color: rgb(var(--black));
 	line-height: 2.8rem;
-	font-size: 3rem;
+	font-size: 3.2rem;
 	font-weight: 400;
+
+	@media screen and (max-width: 300px) {
+		font-size: 2rem;
+		word-break: break-all;
+	}
 `;
 
 const Grid = styled.div`
@@ -30,6 +33,11 @@ const Grid = styled.div`
 
 	display: grid;
 	grid-template-columns: minmax(45rem, 2fr) 1fr;
+	gap: 3rem;
+
+	@media screen and (max-width: 900px) {
+		grid-template-columns: 1fr;
+	}
 `;
 
 // carousel
@@ -38,11 +46,24 @@ const Carousel = styled.div`
 	height: 45rem;
 
 	position: relative;
+
+	@media screen and (max-width: 900px) {
+		grid-template-columns: 1fr;
+	}
+
+	@media screen and (max-width: 550px) {
+		height: 75vw;
+	}
+
+	@media screen and (max-width: 300px) {
+		height: 30rem;
+	}
 `;
 
 const StyledSwiper = styled(Swiper)`
-	width: 45rem;
-	height: 45rem;
+	max-width: 45rem;
+	width: 100%;
+	height: 100%;
 
 	position: absolute;
 	top: 0;
@@ -51,6 +72,14 @@ const StyledSwiper = styled(Swiper)`
 	transform: translateX(-50%);
 
 	--swiper-pagination-color: rgb(var(--primary));
+
+	@media screen and (max-width: 550px) {
+		max-width: 75vw;
+	}
+
+	@media screen and (max-width: 550px) {
+		max-width: 90%;
+	}
 `;
 
 const StyledSwiperSlide = styled(SwiperSlide)`
@@ -71,7 +100,13 @@ const Info = styled.ul`
 
 		color: rgb(var(--black));
 		text-indent: 1rem;
+		font-size: 2.4rem;
 		font-weight: 400;
+
+		@media screen and (max-width: 300px) {
+			font-size: 1.8rem;
+			word-break: break-all;
+		}
 	}
 
 	li {
@@ -91,6 +126,17 @@ const Info = styled.ul`
 		span:last-of-type {
 			color: rgb(var(--secondary));
 		}
+
+		@media screen and (max-width: 420px) {
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 0rem;
+		}
+
+		@media screen and (max-width: 250px) {
+			font-size: 1.4rem;
+			word-break: break-all;
+		}
 	}
 `;
 
@@ -109,13 +155,31 @@ const Price = styled.p`
 `;
 
 const DetailText = styled.div`
-	margin-top: 5rem;
+	margin-top: 7.5rem;
+	text-align: start;
 
 	h1,
-	h2,
-	h3 {
+	h2 {
+		margin: 1rem 0;
 		font-weight: 400;
-		margin-bottom: 1rem;
+	}
+
+	h3,
+	h4 {
+		margin: 0.5rem 0;
+		font-weight: 500;
+	}
+
+	p {
+		text-indent: 1.5rem;
+	}
+
+	center {
+		text-align: start;
+	}
+
+	img {
+		border-radius: 1.5rem;
 	}
 `;
 
@@ -142,13 +206,20 @@ const PropertiesItem = styled.li`
 		border: none;
 		border-bottom: 0.1rem dotted rgb(var(--light-gray));
 	}
+
+	@media screen and (max-width: 420px) {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 0rem;
+	}
+
+	@media screen and (max-width: 250px) {
+		font-size: 1.4rem;
+		word-break: break-all;
+	}
 `;
 
-const Item = ({ categoryId, elementId, item, menu }) => {
-	const [categoryData] = useState(menu && menu.find(m => m.id === Number(categoryId)));
-	const [elementData] = useState(menu && menu.find(m => m.id === Number(elementId)));
-	console.log(item);
-
+const Item = ({ categoryData, elementData, item }) => {
 	const breadcrumbData = [
 		{ name: 'Каталог', href: '/category' },
 		{ name: categoryData.name, href: `/category/${categoryData.id}` },
@@ -200,11 +271,13 @@ const Item = ({ categoryId, elementId, item, menu }) => {
 								{declOfQuantity(item.quantity)}
 							</span>
 						</li>
-						<li>
-							<span>Гарантия</span>
-							<hr />
-							<span>{item.warranty}</span>
-						</li>
+						{item.warranty && (
+							<li>
+								<span>Гарантия</span>
+								<hr />
+								<span>{item.warranty}</span>
+							</li>
+						)}
 						<li>
 							<span>Артикул-PartNumber</span>
 							<hr />
@@ -250,25 +323,30 @@ export const getServerSideProps = async ctx => {
 		return { notFound: true };
 	}
 
-	// menu
-	const { data: menu } = await axios.get(
-		`${process.env.NEXT_PUBLIC_API}/categories?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}`
+	// category data
+	const { data: categoryData } = await axios.get(
+		`${process.env.NEXT_PUBLIC_API}/categories?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&id=${ctx.query.category}`
 	);
+	if (!categoryData || !categoryData.length) return { notFound: true };
+
+	// element data
+	const { data: elementData } = await axios.get(
+		`${process.env.NEXT_PUBLIC_API}/categories?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&id=${ctx.query.element}`
+	);
+	if (!elementData || !elementData.length) return { notFound: true };
 
 	// item
 	const additionalFields = 'images,brand,description,instructions,weight,warranty,detailtext,properties';
 	const { data: item } = await axios.get(
 		`${process.env.NEXT_PUBLIC_API}/element-info?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&article=${ctx.query.item}&additional_fields=${additionalFields}`
 	);
-
-	if (!item.length) return { notFound: true };
+	if (!item || !item.length) return { notFound: true };
 
 	return {
 		props: {
-			categoryId: ctx.query.category,
-			elementId: ctx.query.element,
-			item: item[0],
-			menu
+			categoryData: categoryData[0],
+			elementData: elementData[0],
+			item: item[0]
 		}
 	};
 };

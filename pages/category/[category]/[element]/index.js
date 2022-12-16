@@ -41,12 +41,7 @@ const Box = styled.div`
 	}
 `;
 
-const Category = ({ elements, categoryId, elementId, menu }) => {
-	const [categoryData] = useState(menu && menu.find(m => m.id === Number(categoryId)));
-	const [elementData] = useState(menu && menu.find(m => m.id === Number(elementId)));
-
-	console.log(elements);
-
+const Category = ({ categoryData, elementData, elements }) => {
 	const breadcrumbData = [
 		{ name: 'Каталог', href: '/category' },
 		{ name: categoryData.name, href: `/category/${categoryData.id}` },
@@ -94,24 +89,31 @@ export const getServerSideProps = async ctx => {
 		return { notFound: true };
 	}
 
-	// menu
-	const { data: menu } = await axios.get(
-		`${process.env.NEXT_PUBLIC_API}/categories?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}`
+	// category data
+	const { data: categoryData } = await axios.get(
+		`${process.env.NEXT_PUBLIC_API}/categories?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&id=${ctx.query.category}`
 	);
+	if (!categoryData || !categoryData.length) return { notFound: true };
 
-	// elements
+	// element data
+	const { data: elementData } = await axios.get(
+		`${process.env.NEXT_PUBLIC_API}/categories?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&id=${ctx.query.element}`
+	);
+	if (!elementData || !elementData.length) return { notFound: true };
+
+	// items
+	const additionalFields = 'additional_fields=url,brand,images';
 	const { data: elements } = await axios.get(
-		`${process.env.NEXT_PUBLIC_API}/elements?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&limit=250&category=${ctx.query.element}&additional_fields=url,brand,images`
+		`${process.env.NEXT_PUBLIC_API}/elements?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&limit=250&category=${ctx.query.element}&${additionalFields}`
 	);
 
-	if (!elements.length) return { notFound: true };
+	if (!elements || !elements.length) return { notFound: true };
 
 	return {
 		props: {
-			menu,
-			elements,
-			categoryId: ctx.query.category,
-			elementId: ctx.query.element
+			categoryData: categoryData[0],
+			elementData: elementData[0],
+			elements
 		}
 	};
 };

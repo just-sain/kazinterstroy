@@ -4,7 +4,7 @@ import axios from 'axios';
 // components
 import Head from 'next/head';
 import Link from 'next/link';
-import { BsArrowReturnRight } from 'react-icons/bs';
+import { BsArrowBarLeft, BsArrowReturnRight } from 'react-icons/bs';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 
@@ -18,12 +18,23 @@ const Box = styled.div`
 
 	display: grid;
 	grid-template-columns: 1fr 2fr;
+
+	@media screen and (max-width: 850px) {
+		grid-template-columns: 1fr;
+	}
 `;
 
 const FirstLevelMenu = styled.ul`
 	width: 100%;
 	padding: 1rem;
-	overflow-y: scroll;
+	overflow-y: auto;
+	opacity: 0;
+
+	animation: fade-right 0.5s ease 0s forwards;
+
+	@media screen and (max-width: 850px) {
+		display: ${({ isMenuSelect }) => (isMenuSelect ? `none` : `block`)};
+	}
 `;
 
 const MenuItem = styled.li`
@@ -91,9 +102,17 @@ const MenuItem = styled.li`
 const SecondLevelMenu = styled.div`
 	width: 100%;
 	padding: 2rem;
-	overflow: hidden;
+	overflow-y: auto;
+	opacity: 0;
 
 	background: rgb(var(--light-gray), 0.1);
+	border-radius: 0 1.5rem 1.5rem 0;
+
+	animation: fade-left 0.5s ease 0s forwards;
+
+	@media screen and (max-width: 850px) {
+		display: ${({ isMenuSelect }) => (!isMenuSelect ? `none` : `block`)};
+	}
 `;
 
 const Heading = styled.h2`
@@ -110,6 +129,17 @@ const Heading = styled.h2`
 
 	a {
 		cursor: alias;
+	}
+`;
+
+const BackArrow = styled(BsArrowBarLeft)`
+	margin-right: 1rem;
+
+	display: none;
+	cursor: pointer;
+
+	@media screen and (max-width: 850px) {
+		display: block;
 	}
 `;
 
@@ -132,6 +162,12 @@ const Category = ({ menu }) => {
 	const [firstLevel] = useState(menu && menu.filter(m => m.level === 1));
 	const [secondLevel] = useState(menu && menu.filter(m => m.level === 2));
 	const [selectMenu, setSelectMenu] = useState(firstLevel[0]);
+	const [isMenuSelect, setIsMenuSelect] = useState(false);
+
+	const onFirstLevelMenuClick = selectedMenu => {
+		setSelectMenu(selectedMenu);
+		setIsMenuSelect(true);
+	};
 
 	return (
 		<>
@@ -141,12 +177,12 @@ const Category = ({ menu }) => {
 			<Wrapper>
 				<Title>Наш Каталог</Title>
 				<Box>
-					<FirstLevelMenu>
+					<FirstLevelMenu isMenuSelect={isMenuSelect}>
 						{firstLevel.map(first => (
 							<MenuItem
 								key={first.id}
 								isSelected={selectMenu.id === first.id}
-								onClick={() => setSelectMenu(first)}>
+								onClick={() => onFirstLevelMenuClick(first)}>
 								{first.name}
 								<Link href={`/category/${first.id}`}>
 									<BsArrowReturnRight />
@@ -154,9 +190,10 @@ const Category = ({ menu }) => {
 							</MenuItem>
 						))}
 					</FirstLevelMenu>
-					<SecondLevelMenu>
+					<SecondLevelMenu isMenuSelect={isMenuSelect}>
 						<ul>
 							<Heading>
+								<BackArrow onClick={() => setIsMenuSelect(false)} />
 								{selectMenu.name}
 								<Link href={`/category/${selectMenu.id}`}>
 									<BsArrowReturnRight />

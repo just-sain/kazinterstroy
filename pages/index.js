@@ -1,57 +1,38 @@
+import client from '../lib/contentful';
 // components
 import Head from 'next/head';
-import Link from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination } from 'swiper'; // required modules for swiper js
-import { PopElement } from '../components/popElement';
 import styled from '@emotion/styled';
-import { css } from '@emotion/css';
 // styles for swiper.js
 import 'swiper/css';
 import 'swiper/css/pagination';
+import { Companies } from '../components/companies';
 
-// slider
-
-// pop products
-const PopContainer = styled.div`
-	width: 100%;
-
-	display: grid;
-	grid-template-columns: 1fr 1fr 1fr;
-	gap: 5rem;
-`;
-
-const PopHeading = styled.div`
-	margin-bottom: 5rem;
-
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	gap: 1rem;
-
-	a {
-		color: rgb(var(--primary));
-		text-decoration: underline;
-	}
-`;
-
-// swiper js
+// slider (swiper js)
 const Carousel = styled.section`
-	height: 60rem;
+	width: 100%;
+	height: calc(60rem - 3rem);
 
 	--swiper-pagination-color: rgb(var(--primary));
 
 	@media screen and (max-width: 1440px) {
-		height: 50rem;
+		height: calc(50rem - 3rem);
 	}
 	@media screen and (max-width: 1240px) {
-		height: 40rem;
+		height: calc(40rem - 3rem);
 	}
 	@media screen and (max-width: 768px) {
-		height: 30rem;
+		height: calc(30rem - 3rem);
 	}
 	@media screen and (max-width: 600px) {
-		height: 20rem;
+		height: calc(25rem - 3rem);
+	}
+	@media screen and (max-width: 450px) {
+		height: calc(20rem - 3rem);
+	}
+	@media screen and (max-width: 300px) {
+		height: calc(15rem - 3rem);
 	}
 `;
 
@@ -73,7 +54,13 @@ const StyledSwiper = styled(Swiper)`
 		height: 30rem;
 	}
 	@media screen and (max-width: 600px) {
+		height: 25rem;
+	}
+	@media screen and (max-width: 450px) {
 		height: 20rem;
+	}
+	@media screen and (max-width: 300px) {
+		height: 15rem;
 	}
 `;
 
@@ -94,14 +81,98 @@ const StyledSwiperSlide = styled(SwiperSlide)`
 	}
 `;
 
-// data
-const sliderData = [
-	'https://al-style.kz/upload/iblock/167/vod29crradneigwr4xo3e86fgd5xe2cv.jpg',
-	'https://al-style.kz/upload/iblock/028/6us2io66ol3octve5lrwnkecvieiylu2.jpg',
-	'https://al-style.kz/upload/iblock/56d/gaazaa8mrljohowsmrknbf8ahn4pg62n.jpg'
-];
+// about section
+const About = styled.section`
+	margin-top: 10rem;
 
-const HomePage = ({ popProducts }) => {
+	display: grid;
+	grid-template-columns: 2fr 1fr;
+	grid-template-rows: min-content 1fr;
+	grid-template-areas: 'img title' 'img description';
+	justify-items: center;
+	gap: 1rem 2rem;
+
+	@media screen and (max-width: 1024px) {
+		margin-top: 5rem;
+
+		grid-template-columns: 1fr;
+		grid-template-rows: max-content min-content 1fr;
+		grid-template-areas: 'img' 'title' 'description';
+		gap: 1rem;
+	}
+`;
+
+const AboutImg = styled.div`
+	overflow: hidden;
+
+	grid-area: img;
+	border-radius: 1.5rem;
+
+	img {
+		width: 100%;
+		height: 100%;
+
+		object-fit: cover;
+		object-position: center;
+	}
+
+	@media screen and (max-width: 1024px) {
+		width: 65%;
+	}
+	@media screen and (max-width: 768px) {
+		width: 75%;
+	}
+	@media screen and (max-width: 550px) {
+		width: 90%;
+	}
+	@media screen and (max-width: 450px) {
+		width: 100%;
+	}
+`;
+
+const AboutTitle = styled.h1`
+	grid-area: title;
+
+	color: rgb(var(--primary));
+	line-height: 3.8rem;
+	font-size: 3.2rem;
+	font-weight: 500;
+
+	@media screen and (max-width: 600px) {
+		word-break: break-all;
+		line-height: 2.8rem;
+		font-size: 2.4rem;
+	}
+`;
+
+const AboutDescription = styled.p`
+	grid-area: description;
+
+	color: rgb(var(--black));
+	text-indent: 1rem;
+	font-size: 1.8rem;
+	font-weight: 400;
+
+	@media screen and (max-width: 1024px) {
+		width: 90%;
+	}
+	@media screen and (max-width: 600px) {
+		width: 100%;
+
+		word-break: break-all;
+	}
+`;
+
+// companies section
+const StyledCompanies = styled(Companies)`
+	margin-top: 10rem;
+
+	@media screen and (max-width: 1024px) {
+		margin-top: 5rem;
+	}
+`;
+
+const HomePage = ({ title, description, sliderData, companiesData }) => {
 	return (
 		<>
 			<Head>
@@ -124,20 +195,14 @@ const HomePage = ({ popProducts }) => {
 					))}
 				</StyledSwiper>
 			</Carousel>
-			<section
-				className={css`
-					margin-top: 7.5rem;
-				`}>
-				<PopHeading>
-					<h1>Наши популярные товары</h1>
-					<Link href='/shop'>Просмотреть все наши товары...</Link>
-				</PopHeading>
-				<PopContainer>
-					{popProducts.map((p, i) => (
-						<PopElement key={i} {...p} />
-					))}
-				</PopContainer>
-			</section>
+			<About>
+				<AboutImg>
+					<img src='/home.png' alt='' />
+				</AboutImg>
+				<AboutTitle>{title}</AboutTitle>
+				<AboutDescription>{description}</AboutDescription>
+			</About>
+			<StyledCompanies companiesData={companiesData} />
 		</>
 	);
 };
@@ -145,40 +210,32 @@ const HomePage = ({ popProducts }) => {
 export default HomePage;
 
 export const getStaticProps = async () => {
-	// popular products
-	const popProducts = [
-		{
-			path: '/products/rjc45',
-			name: 'RJC45 - сетевой коннектор 8P8C CAT.5E.',
-			image: 'https://images.satu.kz/113613494_w640_h640_rjc45-konnektor.jpg',
-			inStock: false,
-			description:
-				'Коннектор сетевой 8P8C Cat.5E. Надежные, усиленные зубья контактов для надежного крепления провода, улучшенные фиксаторы обжима кабеля, экран от наводок, металлический',
-			price: 100
-		},
-		{
-			path: '/products/rjc45',
-			name: 'RJC45 - сетевой коннектор 8P8C CAT.5E.',
-			image: 'https://images.satu.kz/113613494_w640_h640_rjc45-konnektor.jpg',
-			inStock: true,
-			description:
-				'Коннектор сетевой 8P8C Cat.5E. Надежные, усиленные зубья контактов для надежного крепления провода, улучшенные фиксаторы обжима кабеля, экран от наводок, металлический',
-			price: 100
-		},
-		{
-			path: '/products/rjc45',
-			name: 'RJC45 - сетевой коннектор 8P8C CAT.5E.',
-			image: 'https://images.satu.kz/113613494_w640_h640_rjc45-konnektor.jpg',
-			inStock: true,
-			description:
-				'Коннектор сетевой 8P8C Cat.5E. Надежные, усиленные зубья контактов для надежного крепления провода, улучшенные фиксаторы обжима кабеля, экран от наводок, металлический',
-			price: 100
-		}
-	];
+	const home = await client.getEntries({ content_type: 'home' });
+
+	// sliderData
+	const sliderData = [];
+	for (let i = 0; i < home.items[0].fields.slider.length; i++) {
+		sliderData.push(home.items[0].fields.slider[i].fields.file.url);
+	}
+	if (!sliderData.length) sliderData.push('/slider-plug.webp'); // if sliderData is empty
+
+	// companiesData
+	const companies = await client.getEntries({ content_type: 'componies' });
+
+	const companiesData = [];
+	for (let i = 0; i < companies.items.length; i++) {
+		companiesData.push({
+			name: companies.items[i].fields.name,
+			logo: companies.items[i].fields.logo.fields.file.url
+		});
+	}
 
 	return {
 		props: {
-			popProducts
+			title: home.items[0].fields.title,
+			sliderData,
+			description: home.items[0].fields.description.content[0].content[0].value,
+			companiesData
 		}
 	};
 };
