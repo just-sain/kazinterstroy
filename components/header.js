@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { memo } from 'react';
 // components
 import Link from 'next/link';
@@ -7,6 +8,7 @@ import { Search } from './search';
 import { FaPhoneAlt } from 'react-icons/fa';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import Image from 'next/image';
 
 const StyledHeader = styled(motion.header)`
 	width: 100%;
@@ -53,14 +55,24 @@ const Logo = styled.div`
 		font-size: 2.6rem;
 		font-weight: 700;
 
-		img {
-			width: auto;
-			height: 5rem;
-		}
-
 		@media screen and (max-width: 300px) {
 			font-size: 0;
 		}
+	}
+`;
+
+const LogoImage = styled.div`
+	width: 5rem;
+	height: 5rem;
+
+	position: relative;
+
+	img {
+		width: auto;
+		height: 5rem;
+
+		object-fit: contain;
+		object-position: center;
 	}
 `;
 
@@ -201,7 +213,9 @@ export const Header = memo(({ isMenuOpen, setIsMenuOpen }) => {
 					animate={{ opacity: 1, translateY: 0 }}>
 					<Logo>
 						<Link href='/'>
-							<img src='/logo.png' />
+							<LogoImage>
+								<Image src='/logo.png' alt='KazInterStroy' priority fill sizes='100%' />
+							</LogoImage>
 							KazInterStroy
 						</Link>
 					</Logo>
@@ -234,7 +248,7 @@ export const Header = memo(({ isMenuOpen, setIsMenuOpen }) => {
 							<span>+7 (727) 32 31 030</span>
 						</Phone>
 					</Phones>
-					<StyledSearch onSearch={text => router.push(`/search?search=${text}`)} />
+					<StyledSearch />
 					<Burger onClick={() => setIsMenuOpen(!isMenuOpen)} ismenuopen={isMenuOpen ? 1 : 0}>
 						<div />
 						<div />

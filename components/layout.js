@@ -6,6 +6,7 @@ import { Header } from './header';
 import { Menu } from './menu';
 import { Footer } from './footer';
 import styled from '@emotion/styled';
+import Image from 'next/image';
 
 const Wrapper = styled.div`
 	min-height: 100vh;
@@ -33,18 +34,22 @@ const Main = styled.div`
 	}
 `;
 
-const BgItem = styled.img`
+const Bg = styled.div`
 	width: 100%;
-	height: auto;
-	opacity: 0.075;
-
-	pointer-events: none;
-	object-fit: contain;
-	object-position: center;
+	height: 100%;
 
 	position: fixed;
 	top: 45%;
 	left: 50%;
+`;
+
+const BgImg = styled(Image)`
+	opacity: 0.05;
+	filter: grayscale(100%);
+
+	pointer-events: none;
+	object-fit: contain;
+	object-position: center;
 
 	transform: translate(-50%, -50%);
 
@@ -77,7 +82,9 @@ const Layout = ({ children }) => {
 			<Header isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
 			<Menu isOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
 			<Main>{children}</Main>
-			<BgItem src='/bg-item.png' />
+			<Bg>
+				<BgImg src='/bg-item.png' alt='bg' priority fill sizes='100%' />
+			</Bg>
 			<Footer />
 		</Wrapper>
 	);

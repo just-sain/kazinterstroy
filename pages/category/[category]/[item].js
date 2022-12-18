@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { Autoplay, Zoom, Pagination, EffectCards } from 'swiper'; // required modules for swiper
-import { declOfQuantity } from '../../../../helpers/declaration';
-import { priceRule } from '../../../../helpers/price';
+import { declOfQuantity } from '../../../helpers/declaration';
+import { priceRule } from '../../../helpers/price';
 // components
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Breadcrumb } from '../../../../components/breadcrumb';
+import { Breadcrumb } from '../../../components/breadcrumb';
 import styled from '@emotion/styled';
 // styles for swiper
 import 'swiper/css';
@@ -24,7 +24,7 @@ const Heading = styled.h1`
 
 	@media screen and (max-width: 300px) {
 		font-size: 2rem;
-		word-break: break-all;
+		word-break: break-word;
 	}
 `;
 
@@ -105,7 +105,7 @@ const Info = styled.ul`
 
 		@media screen and (max-width: 300px) {
 			font-size: 1.8rem;
-			word-break: break-all;
+			word-break: break-word;
 		}
 	}
 
@@ -136,7 +136,7 @@ const Info = styled.ul`
 
 		@media screen and (max-width: 250px) {
 			font-size: 1.4rem;
-			word-break: break-all;
+			word-break: break-word;
 		}
 	}
 `;
@@ -217,16 +217,15 @@ const PropertiesItem = styled.li`
 
 	@media screen and (max-width: 250px) {
 		font-size: 1.4rem;
-		word-break: break-all;
+		word-break: break-word;
 	}
 `;
 
-const Item = ({ categoryData, elementData, item }) => {
+const Item = ({ categoryData, item }) => {
 	const breadcrumbData = [
 		{ name: 'Каталог', href: '/category' },
 		{ name: categoryData.name, href: `/category/${categoryData.id}` },
-		{ name: elementData.name, href: `/category/${categoryData.id}/${elementData.id}` },
-		{ name: item.name, href: `/category/${categoryData.id}/${elementData.id}/${item.id}` }
+		{ name: item.name, href: `/category/${categoryData.id}/${item.id}` }
 	];
 
 	return (
@@ -313,15 +312,7 @@ const Item = ({ categoryData, elementData, item }) => {
 export default Item;
 
 export const getServerSideProps = async ctx => {
-	if (
-		!ctx?.query ||
-		!ctx.query.category ||
-		isNaN(ctx.query.category) ||
-		!ctx.query.element ||
-		isNaN(ctx.query.element) ||
-		!ctx.query.item ||
-		isNaN(ctx.query.item)
-	) {
+	if (!ctx?.query || !ctx.query.category || isNaN(ctx.query.category) || !ctx.query.item || isNaN(ctx.query.item)) {
 		return { notFound: true };
 	}
 
@@ -330,12 +321,6 @@ export const getServerSideProps = async ctx => {
 		`${process.env.NEXT_PUBLIC_API}/categories?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&id=${ctx.query.category}`
 	);
 	if (!categoryData || !categoryData.length) return { notFound: true };
-
-	// element data
-	const { data: elementData } = await axios.get(
-		`${process.env.NEXT_PUBLIC_API}/categories?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&id=${ctx.query.element}`
-	);
-	if (!elementData || !elementData.length) return { notFound: true };
 
 	// item
 	const additionalFields = 'images,brand,description,instructions,weight,warranty,detailtext,properties';
@@ -347,7 +332,6 @@ export const getServerSideProps = async ctx => {
 	return {
 		props: {
 			categoryData: categoryData[0],
-			elementData: elementData[0],
 			item: item[0]
 		}
 	};

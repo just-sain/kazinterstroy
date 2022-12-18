@@ -34,6 +34,7 @@ const Heading = styled.h1`
 	gap: 1rem;
 
 	color: rgb(var(--black));
+	word-break: break-word;
 	text-align: center;
 	font-size: 3.2rem;
 	font-weight: 400;
@@ -55,6 +56,7 @@ const Line = styled.div`
 	grid-template-columns: 1fr 2.5fr;
 
 	color: rgb(var(--black));
+	word-break: break-word;
 	font-size: 1.8rem;
 	font-weight: 500;
 
@@ -111,7 +113,9 @@ const Contact = ({ contactData }) => {
 				<title>Контакты / KazInterStroy</title>
 			</Head>
 			<MapSection>
-				<Map src='https://yandex.ru/map-widget/v1/?um=constructor%3A09c7f4a4a087808079f28245bf8ab598e9609a06e555f8a5586d6e7ed9ab7da3&amp;source=constructor'></Map>
+				<Map
+					loading='lazy'
+					src='https://yandex.ru/map-widget/v1/?um=constructor%3A09c7f4a4a087808079f28245bf8ab598e9609a06e555f8a5586d6e7ed9ab7da3&amp;source=constructor'></Map>
 			</MapSection>
 			<StyledContact>
 				<Heading>

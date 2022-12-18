@@ -1,3 +1,5 @@
+// components
+import Image from 'next/image';
 import styled from '@emotion/styled';
 
 const StyledSection = styled.section`
@@ -11,7 +13,7 @@ const Heading = styled.h1`
 	font-weight: 400;
 
 	@media screen and (max-width: 600px) {
-		word-break: break-all;
+		word-break: break-word;
 		line-height: 2.8rem;
 		font-size: 2.4rem;
 	}
@@ -27,14 +29,20 @@ const Flex = styled.div`
 	gap: 2rem 5rem;
 `;
 
-const Item = styled.img`
+const Item = styled.div`
 	width: 21%;
-	height: auto;
+	height: 5rem;
 
-	/* filter: grayscale(100%); */
-	pointer-events: none;
-	object-fit: contain;
-	object-position: center;
+	position: relative;
+
+	img {
+		width: 21%;
+		height: 100%;
+
+		pointer-events: none;
+		object-fit: contain;
+		object-position: center;
+	}
 
 	@media screen and (max-width: 850px) {
 		width: 25%;
@@ -54,10 +62,12 @@ const Item = styled.img`
 export const Companies = ({ companiesData, ...props }) => {
 	return (
 		<StyledSection {...props}>
-			<Heading>Компаний с которыми мы сотрудничаем</Heading>
+			<Heading>Компании с которыми мы сотрудничаем</Heading>
 			<Flex>
 				{companiesData.map(c => (
-					<Item key={c.name} src={c.logo} alt={c.name} />
+					<Item key={c.name}>
+						<Image src={`https:${c.logo}`} alt={c.name} fill sizes='100%' />
+					</Item>
 				))}
 			</Flex>
 		</StyledSection>

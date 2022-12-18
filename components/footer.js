@@ -113,7 +113,9 @@ export const Footer = memo(() => {
 							<a href='#'>Документы</a>
 						</li>
 					</List>
-					<Map src='https://yandex.ru/map-widget/v1/?um=constructor%3A09c7f4a4a087808079f28245bf8ab598e9609a06e555f8a5586d6e7ed9ab7da3&amp;source=constructor'></Map>
+					<Map
+						loading='lazy'
+						src='https://yandex.ru/map-widget/v1/?um=constructor%3A09c7f4a4a087808079f28245bf8ab598e9609a06e555f8a5586d6e7ed9ab7da3&amp;source=constructor'></Map>
 				</StyledContainer>
 				<Bottom>Авторское право © 2023 KazInterStroy All rights reserved.</Bottom>
 			</FooterWrapper>

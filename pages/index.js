@@ -1,6 +1,7 @@
 import client from '../lib/contentful';
 // components
 import Head from 'next/head';
+import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination } from 'swiper'; // required modules for swiper js
 import styled from '@emotion/styled';
@@ -39,6 +40,8 @@ const Carousel = styled.section`
 const StyledSwiper = styled(Swiper)`
 	width: 100vw;
 	height: 60rem;
+
+	background: rgb(var(--bg));
 
 	position: absolute;
 	top: var(--header-height);
@@ -103,10 +106,14 @@ const About = styled.section`
 `;
 
 const AboutImg = styled.div`
+	width: 100%;
+	height: 100%;
 	overflow: hidden;
 
 	grid-area: img;
 	border-radius: 1.5rem;
+
+	position: relative;
 
 	img {
 		width: 100%;
@@ -139,7 +146,7 @@ const AboutTitle = styled.h1`
 	font-weight: 500;
 
 	@media screen and (max-width: 600px) {
-		word-break: break-all;
+		word-break: break-word;
 		line-height: 2.8rem;
 		font-size: 2.4rem;
 	}
@@ -159,7 +166,7 @@ const AboutDescription = styled.p`
 	@media screen and (max-width: 600px) {
 		width: 100%;
 
-		word-break: break-all;
+		word-break: break-word;
 	}
 `;
 
@@ -172,7 +179,7 @@ const StyledCompanies = styled(Companies)`
 	}
 `;
 
-const HomePage = ({ title, description, sliderData, companiesData }) => {
+const HomePage = ({ title, contentImage, description, sliderData, companiesData }) => {
 	return (
 		<>
 			<Head>
@@ -190,14 +197,14 @@ const HomePage = ({ title, description, sliderData, companiesData }) => {
 					modules={[Autoplay, Pagination]}>
 					{sliderData.map(s => (
 						<StyledSwiperSlide key={s}>
-							<img src={s} alt={s} />
+							<Image src={`https:${s}`} alt={s} fill sizes='100%' />
 						</StyledSwiperSlide>
 					))}
 				</StyledSwiper>
 			</Carousel>
 			<About>
 				<AboutImg>
-					<img src='/home.png' alt='' />
+					<Image src={`https:${contentImage}`} alt='KazInterStroy' fill sizes='100%' />
 				</AboutImg>
 				<AboutTitle>{title}</AboutTitle>
 				<AboutDescription>{description}</AboutDescription>
@@ -232,8 +239,9 @@ export const getStaticProps = async () => {
 
 	return {
 		props: {
-			title: home.items[0].fields.title,
 			sliderData,
+			title: home.items[0].fields.title,
+			contentImage: home.items[0].fields.content_image.fields.file.url,
 			description: home.items[0].fields.description.content[0].content[0].value,
 			companiesData
 		}

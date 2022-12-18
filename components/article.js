@@ -2,10 +2,12 @@ import { priceRule } from '../helpers/price';
 import { declOfQuantity } from '../helpers/declaration';
 // components
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import styled from '@emotion/styled';
 
-const StyledArticle = styled.div`
+const StyledArticle = styled(motion.div)`
 	padding: 2rem 1.5rem;
+	overflow: hidden;
 
 	display: flex;
 	flex-direction: column;
@@ -16,6 +18,8 @@ const StyledArticle = styled.div`
 	box-shadow: var(--outer-shadow), var(--inner-shadow-0);
 	background: rgba(var(--real-white), 1);
 	border-radius: 1.5rem;
+
+	position: relative;
 
 	transition: box-shadow 0.3s ease 0s;
 
@@ -33,12 +37,12 @@ const Poster = styled.img`
 `;
 
 const Name = styled.h4`
+	margin-top: 0.5rem;
+
 	color: rgb(var(--primary));
 	font-weight: 500;
 	font-size: 1.6rem;
 `;
-
-const Info = styled.div``;
 
 const Quantity = styled.p`
 	color: rgb(var(--${({ notavailable }) => (!notavailable ? `gray` : `error`)}));
@@ -74,12 +78,16 @@ const Price = styled.h3`
 
 export const Article = ({ href, articleData }) => {
 	return (
-		<StyledArticle>
+		<StyledArticle
+			transition={{ duration: 0.8 }}
+			initial={{ opacity: 0, translateY: '30%' }}
+			animate={{ opacity: 1, translateY: '0' }}
+			exit={{ opacity: 0, scale: 0 }}>
 			<Link href={href} passHref>
 				<Poster src={articleData.images[0]} alt={articleData.name} />
 				<Name>{articleData.name}</Name>
 			</Link>
-			<Info>
+			<div>
 				<Quantity notavailable={declOfQuantity(articleData.quantity) === 'Нет в наличи'}>
 					{declOfQuantity(articleData.quantity) === 'Нет в наличи'
 						? declOfQuantity(articleData.quantity)
@@ -93,7 +101,7 @@ export const Article = ({ href, articleData }) => {
 				<Price>
 					<span>{priceRule(articleData.price1)}</span> (шт)
 				</Price>
-			</Info>
+			</div>
 		</StyledArticle>
 	);
 };

@@ -1,13 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // components
 import { AiOutlineSearch } from 'react-icons/ai';
 import styled from '@emotion/styled';
+import { useRouter } from 'next/router';
 
 const Form = styled.form`
 	min-width: 25rem;
 	width: 100%;
 	padding: 0.7rem 1.5rem;
-	overflow: hidden;
 
 	display: flex;
 	align-items: center;
@@ -44,6 +44,10 @@ const Input = styled.input`
 	}
 `;
 
+const Button = styled.button`
+	overflow: hidden;
+`;
+
 const Icon = styled(AiOutlineSearch)`
 	width: 2rem;
 	height: 2rem;
@@ -57,10 +61,19 @@ const Icon = styled(AiOutlineSearch)`
 
 //text: string;
 
-export const Search = ({ onSearch, ...props }) => {
-	const [text, setText] = useState('');
+export const Search = ({ ...props }) => {
+	const { query, push } = useRouter();
+	const [text, setText] = useState(query.search ?? '');
 
-	const onSubmit = (e, text) => {
+	useEffect(() => {
+		setText(query.search ?? '');
+	}, [query.search]);
+
+	const onSearch = text => {
+		push(`/search?search=${text}`);
+	};
+
+	const onSubmit = e => {
 		e.preventDefault();
 
 		if (!text) return;
@@ -68,7 +81,7 @@ export const Search = ({ onSearch, ...props }) => {
 	};
 
 	return (
-		<Form onSubmit={e => onSubmit(e, text)} {...props}>
+		<Form onSubmit={onSubmit} {...props}>
 			<Input
 				className='xz'
 				type='text'
@@ -76,9 +89,9 @@ export const Search = ({ onSearch, ...props }) => {
 				value={text}
 				onChange={e => setText(e.currentTarget.value)}
 			/>
-			<button type='submit' tabIndex={!text ? -1 : 0}>
+			<Button type='submit' tabIndex={!text ? -1 : 0}>
 				<Icon text={text} />
-			</button>
+			</Button>
 		</Form>
 	);
 };

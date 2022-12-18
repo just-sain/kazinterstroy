@@ -25,4 +25,8 @@ export const List = styled.ul`
 	a {
 		text-decoration: underline;
 	}
+
+	@media screen and (max-width: 250px) {
+		word-break: break-word;
+	}
 `;

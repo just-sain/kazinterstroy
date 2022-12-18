@@ -26,6 +26,7 @@ const globalStyles = css`
 		--darker-white: 222, 222, 222;
 		--black: 12, 10, 15;
 		--gray: 58, 58, 58;
+		--real-gray: 187, 187, 187;
 		--black-gray: 35, 35, 35;
 		--light-gray: 160, 160, 160;
 
@@ -120,6 +121,11 @@ const globalStyles = css`
 		to {
 			opacity: 1;
 			transform: translateX(0%);
+		}
+	}
+	@keyframes mirage {
+		to {
+			background-position: 215px 0, 0 0, 15px 150px, 15px 180px;
 		}
 	}
 `;

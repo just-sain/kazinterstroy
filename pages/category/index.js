@@ -4,7 +4,7 @@ import axios from 'axios';
 // components
 import Head from 'next/head';
 import Link from 'next/link';
-import { BsArrowBarLeft, BsArrowReturnRight } from 'react-icons/bs';
+import { BsArrowBarLeft, BsArrowReturnRight, BsArrowBarRight } from 'react-icons/bs';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 
@@ -54,7 +54,7 @@ const MenuItem = styled.li`
 
 	transition: background 0.4s ease 0s, left 0.3s ease 0s, top 0.3s ease 0s, color 0.3s ease 0s;
 
-	a {
+	div {
 		cursor: alias;
 
 		color: rgb(var(--white));
@@ -68,6 +68,12 @@ const MenuItem = styled.li`
 		transition: transform 0.4s ease 0s;
 	}
 
+	svg {
+		position: relative;
+		top: 0.25rem;
+		left: 0.5rem;
+	}
+
 	&:hover {
 		background: rgb(var(--black));
 		border: 0.1rem solid rgb(var(--bg));
@@ -77,7 +83,7 @@ const MenuItem = styled.li`
 		top: -0.3rem;
 		left: 0.8rem;
 
-		a {
+		div {
 			transform: translate(0, -50%);
 		}
 	}
@@ -184,9 +190,9 @@ const Category = ({ menu }) => {
 								isSelected={selectMenu.id === first.id}
 								onClick={() => onFirstLevelMenuClick(first)}>
 								{first.name}
-								<Link href={`/category/${first.id}`}>
-									<BsArrowReturnRight />
-								</Link>
+								<div>
+									<BsArrowBarRight />
+								</div>
 							</MenuItem>
 						))}
 					</FirstLevelMenu>
@@ -195,18 +201,13 @@ const Category = ({ menu }) => {
 							<Heading>
 								<BackArrow onClick={() => setIsMenuSelect(false)} />
 								{selectMenu.name}
-								<Link href={`/category/${selectMenu.id}`}>
-									<BsArrowReturnRight />
-								</Link>
 							</Heading>
 							{secondLevel
 								.filter(second => selectMenu.left < second.left && second.right < selectMenu.right)
 								.map(second => (
-									<MenuItem
-										key={second.id}
-										onClick={() => router.push(`/category/${selectMenu.id}/${second.id}`)}>
+									<MenuItem key={second.id} onClick={() => router.push(`/category/${second.id}`)}>
 										{second.name}
-										<Link href={`/category/${selectMenu.id}/${second.id}`}>
+										<Link href={`/category/${second.id}`}>
 											<BsArrowReturnRight />
 										</Link>
 									</MenuItem>

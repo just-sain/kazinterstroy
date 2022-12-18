@@ -7,10 +7,11 @@ import { FaPhoneAlt } from 'react-icons/fa';
 
 const Wrapper = styled.div`
 	width: 100vw;
-	min-height: 100vh;
+	height: 100vh;
 	z-index: 90;
 	padding: calc(var(--header-height) + 5rem) 0 5rem;
-	overflow: hidden auto;
+	overflow-x: hidden;
+	overflow-y: auto;
 
 	background: rgba(var(--primary), 0.9);
 	backdrop-filter: blur(0.5rem);
@@ -43,6 +44,10 @@ const StyledContainer = styled(Container)`
 const StyledSearch = styled(Search)`
 	width: 80%;
 	margin: 0 auto;
+
+	@media screen and (max-width: 400px) {
+		min-width: 1rem;
+	}
 `;
 
 const Phones = styled.div`

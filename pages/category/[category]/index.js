@@ -1,10 +1,11 @@
+import { useState } from 'react';
 import axios from 'axios';
 import { declOfNum } from '../../../helpers/declaration';
 // components
 import Head from 'next/head';
 import { Breadcrumb } from '../../../components/breadcrumb';
-import { SecondLevel } from '../../../components/secondLevel';
 import styled from '@emotion/styled';
+import { Elements } from '../../../components/elements';
 
 const Wrapper = styled.div`
 	width: 100%;
@@ -24,11 +25,15 @@ const Heading = styled.h1`
 	}
 `;
 
-const Category = ({ categoryData, categoryItems }) => {
+const Category = ({ categoryData, elements }) => {
 	const breadcrumbData = [
 		{ name: 'Каталог', href: '/category' },
 		{ name: categoryData.name, href: `/category/${categoryData.id}` }
 	];
+
+	const [isReady, setIsReady] = useState(true);
+
+	console.log('asdf');
 
 	return (
 		<>
@@ -41,10 +46,10 @@ const Category = ({ categoryData, categoryItems }) => {
 					{categoryData.name}
 					<br />
 					<span>
-						({categoryItems.length} {declOfNum(categoryItems.length, ['элемент', 'элемента', 'элементов'])})
+						({elements.length} {declOfNum(elements.length, ['элемент', 'элемента', 'элементов'])})
 					</span>
 				</Heading>
-				<SecondLevel categoryItems={categoryItems} categoryId={categoryData.id} />
+				<Elements isReady={isReady} elements={elements} />
 			</Wrapper>
 		</>
 	);
@@ -55,23 +60,24 @@ export default Category;
 export const getServerSideProps = async ctx => {
 	if (!ctx?.query || !ctx.query.category || isNaN(ctx.query.category)) return { notFound: true };
 
-	// menu
-	const { data: menu } = await axios.get(
-		`${process.env.NEXT_PUBLIC_API}/categories?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}`
+	// category data
+	const { data: categoryData } = await axios.get(
+		`${process.env.NEXT_PUBLIC_API}/categories?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&id=${ctx.query.category}`
+	);
+	if (!categoryData || !categoryData.length) return { notFound: true };
+
+	// items
+	const additionalFields = 'additional_fields=url,brand,images';
+	const { data: elements } = await axios.get(
+		`${process.env.NEXT_PUBLIC_API}/elements?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&limit=250&category=${ctx.query.category}&${additionalFields}`
 	);
 
-	const categoryData = menu.find(m => m.id === Number(ctx.query.category));
-	if (!categoryData) return { notFound: true };
-
-	// categoryItems
-	const categoryItems = menu
-		.filter(m => m.level === 2)
-		.filter(second => categoryData.left < second.left && second.right < categoryData.right);
+	if (!elements || !elements.length) return { notFound: true };
 
 	return {
 		props: {
-			categoryData,
-			categoryItems
+			categoryData: categoryData[0],
+			elements
 		}
 	};
 };
