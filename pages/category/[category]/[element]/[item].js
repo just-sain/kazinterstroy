@@ -125,6 +125,7 @@ const Info = styled.ul`
 
 		span:last-of-type {
 			color: rgb(var(--secondary));
+			text-align: end;
 		}
 
 		@media screen and (max-width: 420px) {
@@ -199,6 +200,7 @@ const PropertiesItem = styled.li`
 	gap: 1rem;
 
 	color: rgb(var(--gray));
+	text-align: end;
 	font-size: 1.8rem;
 	font-weight: 400;
 

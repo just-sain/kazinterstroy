@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router';
 // components
 import styled from '@emotion/styled';
-import { css } from '@emotion/css';
 import { AiFillCaretRight } from 'react-icons/ai';
 
 // size: 's' | 'm' | 'l'
@@ -45,6 +44,14 @@ const StyledButton = styled.button`
 	}
 `;
 
+const RightIcon = styled(AiFillCaretRight)`
+	width: auto;
+	height: 100%;
+	margin-left: 0.25rem;
+
+	transform: scale(125%);
+`;
+
 export const Button = ({
 	children,
 	size = 'm',
@@ -66,17 +73,7 @@ export const Button = ({
 			{...props}
 			onClick={!href ? props.onClick : () => push(href)}>
 			<span>{children}</span>
-			{withArrow && (
-				<AiFillCaretRight
-					className={css`
-						width: auto;
-						height: 100%;
-						margin-left: 0.25rem;
-
-						transform: scale(125%);
-					`}
-				/>
-			)}
+			{withArrow && <RightIcon />}
 		</StyledButton>
 	);
 };

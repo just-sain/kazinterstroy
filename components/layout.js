@@ -36,7 +36,7 @@ const Main = styled.div`
 const BgItem = styled.img`
 	width: 100%;
 	height: auto;
-	opacity: 0.05;
+	opacity: 0.075;
 
 	pointer-events: none;
 	object-fit: contain;

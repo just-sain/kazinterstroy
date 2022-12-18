@@ -1,10 +1,8 @@
 import { memo } from 'react';
-import { format } from 'date-fns';
 // components
 import { List } from './list';
 import { Container } from './container';
 import styled from '@emotion/styled';
-import { css } from '@emotion/css';
 
 const StyledFooter = styled.footer`
 	width: 100%;
@@ -74,6 +72,10 @@ const Map = styled.iframe`
 	}
 `;
 
+const Bottom = styled.div`
+	color: rgb(var(--light-gray));
+`;
+
 export const Footer = memo(() => {
 	return (
 		<StyledFooter>
@@ -113,12 +115,7 @@ export const Footer = memo(() => {
 					</List>
 					<Map src='https://yandex.ru/map-widget/v1/?um=constructor%3A09c7f4a4a087808079f28245bf8ab598e9609a06e555f8a5586d6e7ed9ab7da3&amp;source=constructor'></Map>
 				</StyledContainer>
-				<div
-					className={css`
-						color: rgb(var(--light-gray));
-					`}>
-					Авторское право © {format(new Date(), 'yyyy')} KazInterStroy All rights reserved.
-				</div>
+				<Bottom>Авторское право © 2023 KazInterStroy All rights reserved.</Bottom>
 			</FooterWrapper>
 		</StyledFooter>
 	);

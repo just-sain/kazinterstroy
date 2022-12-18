@@ -13,7 +13,7 @@ const StyledHeader = styled(motion.header)`
 	height: var(--header-height);
 	z-index: 100;
 
-	background: rgba(${({ isMenuOpen }) => (isMenuOpen ? `var(--bg), 1` : `var(--primary), 0.3`)});
+	background: rgba(${({ ismenuopen }) => (ismenuopen ? `var(--bg), 1` : `var(--primary), 0.3`)});
 	backdrop-filter: blur(0.5rem);
 
 	color: rgb(var(--black));
@@ -154,7 +154,7 @@ const Burger = styled.div`
 		transition: opacity 0.4s ease 0s, background 0.4s ease 0s, transform 0.4s ease 0s, width 0.4s ease 0s;
 
 		${props =>
-			props.isMenuOpen &&
+			props.ismenuopen &&
 			css`
 				background: rgb(var(--error));
 
@@ -190,7 +190,7 @@ const Burger = styled.div`
 export const Header = memo(({ isMenuOpen, setIsMenuOpen }) => {
 	return (
 		<StyledHeader
-			isMenuOpen={isMenuOpen}
+			ismenuopen={isMenuOpen ? 1 : 0}
 			initial={{ opacity: 0, translateY: '-100%' }}
 			transition={{ delay: 0.6, duration: 0.6 }}
 			animate={{ opacity: 1, translateY: 0 }}>
@@ -235,7 +235,7 @@ export const Header = memo(({ isMenuOpen, setIsMenuOpen }) => {
 						</Phone>
 					</Phones>
 					<StyledSearch onSearch={text => router.push(`/search?search=${text}`)} />
-					<Burger onClick={() => setIsMenuOpen(!isMenuOpen)} isMenuOpen={isMenuOpen}>
+					<Burger onClick={() => setIsMenuOpen(!isMenuOpen)} ismenuopen={isMenuOpen ? 1 : 0}>
 						<div />
 						<div />
 						<div />
