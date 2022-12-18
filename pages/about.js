@@ -4,6 +4,7 @@ import Head from 'next/head';
 import styled from '@emotion/styled';
 import { Companies } from '../components/companies';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const Section = styled.section`
 	width: 80%;
@@ -68,6 +69,21 @@ const Picture = styled.div`
 	}
 `;
 
+const Docs = styled.h4`
+	width: 100%;
+
+	color: rgb(var(--gray));
+	text-align: center;
+	word-break: break-word;
+	font-size: 2rem;
+	font-weight: 400;
+
+	a {
+		color: rgb(var(--primary));
+		text-decoration: underline;
+	}
+`;
+
 const StyledCompanies = styled(Companies)`
 	margin-top: 10rem;
 `;
@@ -86,6 +102,11 @@ const AboutPage = ({ text, photo, companiesData }) => {
 				<Picture>
 					<Image src={`https:${photo}`} alt='we' fill sizes='100%' />
 				</Picture>
+				<Divider />
+				<Docs>
+					Вы также можете просмотреть наши <br />
+					<Link href='/docs'>благодарственные письма</Link> и <Link href='/docs'>лицензию</Link>
+				</Docs>
 			</Section>
 			<StyledCompanies companiesData={companiesData} />
 		</>

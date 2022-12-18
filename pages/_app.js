@@ -34,6 +34,8 @@ const App = ({ Component, pageProps, router }) => {
 
 					<link rel='apple-touch-icon' href='/favicon.ico' />
 					<link rel='shortcut icon' href='/favicon.ico' type='image/x-icon' />
+
+					<title>KazInterStroy - Интернет магазин</title>
 				</Head>
 				<Global styles={globalStyles} />
 				<Layout>

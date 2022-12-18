@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import styled from '@emotion/styled';
 
-const StyledArticle = styled(motion.div)`
+const StyledArticle = styled(motion.article)`
 	padding: 2rem 1.5rem;
 	overflow: hidden;
 

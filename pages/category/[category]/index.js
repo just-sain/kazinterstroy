@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { declOfNum } from '../../../helpers/declaration';
 // components
 import Head from 'next/head';
 import { Breadcrumb } from '../../../components/breadcrumb';
-import styled from '@emotion/styled';
 import { Elements } from '../../../components/elements';
+import styled from '@emotion/styled';
 
 const Wrapper = styled.div`
 	width: 100%;
@@ -25,15 +25,30 @@ const Heading = styled.h1`
 	}
 `;
 
-const Category = ({ categoryData, elements }) => {
+const Category = ({ categoryData }) => {
+	const [elements, setElements] = useState(null);
+	const [isReady, setIsReady] = useState(false);
+
+	useEffect(() => {
+		const additionalFields = 'additional_fields=url,brand,images';
+
+		axios
+			.get(
+				`${process.env.NEXT_PUBLIC_API}/elements?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&limit=250&category=${categoryData.id}&${additionalFields}`
+			)
+			.then(res => {
+				if (!res.data || !res.data.length) setElements([]);
+				else {
+					setElements(res.data);
+					setIsReady(true);
+				}
+			});
+	}, [categoryData]);
+
 	const breadcrumbData = [
 		{ name: 'Каталог', href: '/category' },
 		{ name: categoryData.name, href: `/category/${categoryData.id}` }
 	];
-
-	const [isReady, setIsReady] = useState(true);
-
-	console.log('asdf');
 
 	return (
 		<>
@@ -46,10 +61,11 @@ const Category = ({ categoryData, elements }) => {
 					{categoryData.name}
 					<br />
 					<span>
-						({elements.length} {declOfNum(elements.length, ['элемент', 'элемента', 'элементов'])})
+						({isReady && elements.length}{' '}
+						{isReady && declOfNum(elements.length, ['элемент', 'элемента', 'элементов'])})
 					</span>
 				</Heading>
-				<Elements isReady={isReady} elements={elements} />
+				<Elements isReady={isReady} elements={elements} setElements={setElements} />
 			</Wrapper>
 		</>
 	);
@@ -66,18 +82,9 @@ export const getServerSideProps = async ctx => {
 	);
 	if (!categoryData || !categoryData.length) return { notFound: true };
 
-	// items
-	const additionalFields = 'additional_fields=url,brand,images';
-	const { data: elements } = await axios.get(
-		`${process.env.NEXT_PUBLIC_API}/elements?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&limit=250&category=${ctx.query.category}&${additionalFields}`
-	);
-
-	if (!elements || !elements.length) return { notFound: true };
-
 	return {
 		props: {
-			categoryData: categoryData[0],
-			elements
+			categoryData: categoryData[0]
 		}
 	};
 };

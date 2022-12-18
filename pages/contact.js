@@ -1,6 +1,7 @@
 import client from '../lib/contentful';
 // components
 import Head from 'next/head';
+import Link from 'next/link';
 import { GrContactInfo, GrMail, GrMapLocation, GrLocationPin, GrFormClock, GrPhone } from 'react-icons/gr';
 import styled from '@emotion/styled';
 
@@ -29,13 +30,12 @@ const StyledContact = styled.section`
 
 const Heading = styled.h1`
 	display: flex;
-	justify-content: center;
+	justify-content: flex-start;
 	align-items: center;
 	gap: 1rem;
 
 	color: rgb(var(--black));
 	word-break: break-word;
-	text-align: center;
 	font-size: 3.2rem;
 	font-weight: 400;
 
@@ -46,6 +46,7 @@ const Heading = styled.h1`
 
 const Box = styled.div`
 	width: 100%;
+	margin-top: 3rem;
 `;
 
 const Line = styled.div`
@@ -103,6 +104,22 @@ const Line = styled.div`
 		span {
 			padding-left: 1rem;
 		}
+	}
+`;
+
+const Docs = styled.section`
+	width: 100%;
+	margin-top: 5rem;
+
+	color: rgb(var(--black));
+	word-break: break-word;
+	text-align: start;
+	font-size: 2rem;
+	font-weight: 400;
+
+	a {
+		color: rgb(var(--primary));
+		text-decoration: underline;
 	}
 `;
 
@@ -166,6 +183,10 @@ const Contact = ({ contactData }) => {
 					</Line>
 				</Box>
 			</StyledContact>
+			<Docs>
+				Вы также можете просмотреть наши
+				<Link href='/docs'>благодарственные письма</Link> и <Link href='/docs'>лицензию</Link>
+			</Docs>
 		</>
 	);
 };
@@ -173,12 +194,12 @@ const Contact = ({ contactData }) => {
 export default Contact;
 
 export const getStaticProps = async () => {
-	// companiesData
-	const companies = await client.getEntries({ content_type: 'contacts' });
+	// contact data
+	const contact = await client.getEntries({ content_type: 'contacts' });
 
 	return {
 		props: {
-			contactData: companies.items[0].fields
+			contactData: contact.items[0].fields
 		}
 	};
 };

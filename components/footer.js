@@ -1,4 +1,5 @@
-import { memo } from 'react';
+import { memo, useEffect, useState } from 'react';
+import client from '../lib/contentful';
 // components
 import { List } from './list';
 import { Container } from './container';
@@ -77,6 +78,14 @@ const Bottom = styled.div`
 `;
 
 export const Footer = memo(() => {
+	const [contactData, setContactData] = useState(null);
+
+	useEffect(() => {
+		client.getEntries({ content_type: 'contacts' }).then(res => {
+			setContactData(res.items[0].fields);
+		});
+	}, []);
+
 	return (
 		<StyledFooter>
 			<FooterWrapper maxW='l'>
@@ -84,12 +93,14 @@ export const Footer = memo(() => {
 					<List>
 						<h6>Контакты</h6>
 						<li>
-							<a href='tel:+77083266420'>+7 (708) 326 64 20</a>
+							<a href={contactData ? `tel:${contactData.phone}` : '#'}>{contactData && contactData.phone}</a>
 						</li>
 						<li>
 							Городской:
 							<br />
-							<a href='tel:+77273231030'>+7 (727) 32 31 030</a>
+							<a href={contactData ? `tel:${contactData.city_phone}` : '#'}>
+								{contactData && contactData.city_phone}
+							</a>
 						</li>
 						<li>
 							<a href='mailto:kazinterstroy@mail.ru'>kazinterstroy@mail.ru</a>
@@ -97,9 +108,9 @@ export const Footer = memo(() => {
 					</List>
 					<List>
 						<h6>Адрес</h6>
-						<li>Республика Казахстан, г. Алматы, ул. Масанчи 78 офис 400</li>
-						<li>Индекс: 050012</li>
-						<li>Режим работы: ПН - ПТ, 9:00 - 18:00</li>
+						<li>{contactData && contactData.address}</li>
+						<li>Индекс: {contactData && contactData.index}</li>
+						<li>Режим работы: {contactData && contactData.timetable}</li>
 					</List>
 					<List>
 						<h6>О нас</h6>
@@ -107,10 +118,13 @@ export const Footer = memo(() => {
 							<a href='/about'>О нас</a>
 						</li>
 						<li>
-							<a href='/contacts'>Контакты</a>
+							<a href='/contact'>Контакты</a>
 						</li>
 						<li>
-							<a href='#'>Документы</a>
+							<a href='/docs'>Документы</a>
+						</li>
+						<li>
+							<a href='/docs'>Благодарственные письма</a>
 						</li>
 					</List>
 					<Map
