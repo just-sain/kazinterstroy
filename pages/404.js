@@ -668,6 +668,14 @@ export const Error404Page = () => {
 	return (
 		<>
 			<Head>
+				<meta name='description' content='Ошибка 404, страница не найдена / KazInterStroy ' />
+
+				<meta property='og:title' content='Страница не найдена / KazInterStroy' />
+				<meta property='og:description' content='Ошибка 404, страница не найдена / KazInterStroy' />
+
+				<meta name='twitter:title' content='Страница не найдена / KazInterStroy' />
+				<meta name='twitter:description' content='Ошибка 404, страница не найдена / KazInterStroy' />
+
 				<title>404, страница не найдена / KazInterStroy</title>
 			</Head>
 			<Wrapper>

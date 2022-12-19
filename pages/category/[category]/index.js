@@ -53,6 +53,27 @@ const Category = ({ categoryData }) => {
 	return (
 		<>
 			<Head>
+				<meta
+					name='description'
+					content={`${categoryData.name}. Рассмотрите наши продукты и выберите себе нужный товар / KazInterStroy`}
+				/>
+				<meta
+					name='keywords'
+					content={`kazinterstroy, интернет магазин, kazstroy, казинтерстрой, казстрой, каталог, категория, меню, товары, ${categoryData.name}`}
+				/>
+
+				<meta property='og:title' content={`${categoryData.name} / KazInterStroy`} />
+				<meta
+					property='og:description'
+					content={`${categoryData.name}. Рассмотрите наши продукты и выберите себе нужный товар / KazInterStroy`}
+				/>
+
+				<meta name='twitter:title' content={`${categoryData.name} / KazInterStroy`} />
+				<meta
+					name='twitter:description'
+					content={`${categoryData.name}. Рассмотрите наши продукты и выберите себе нужный товар / KazInterStroy`}
+				/>
+
 				<title>{categoryData.name} / KazInterStroy</title>
 			</Head>
 			<Wrapper>

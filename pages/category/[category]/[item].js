@@ -15,6 +15,7 @@ import 'swiper/css';
 import 'swiper/css/zoom';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-cards';
+import Head from 'next/head';
 
 const StyledButton = styled(Button)`
 	width: 100%;
@@ -245,93 +246,118 @@ const Item = ({ categoryData, item }) => {
 	];
 
 	return (
-		<Wrapper>
-			<Breadcrumb links={breadcrumbData} withMarginBottom />
-			<Heading>{item.name}</Heading>
-			<Grid>
-				<Carousel>
-					<StyledSwiper
-						title='Кликните 2 раза что бы увеличить картинку'
-						effect={'cards'}
-						grabCursor={true}
-						centeredSlides={true}
-						autoplay={{ delay: 2500, disableOnInteraction: false }}
-						zoom={true}
-						pagination={{ dynamicBullets: true, clickable: true }}
-						modules={[Autoplay, Zoom, Pagination, EffectCards]}>
-						{item.images.map(i => (
-							<StyledSwiperSlide key={i}>
-								<div className='swiper-zoom-container'>
-									<img src={i} />
-								</div>
-							</StyledSwiperSlide>
-						))}
-					</StyledSwiper>
-				</Carousel>
-				<div>
-					<Info>
-						<h2>{item.full_name}</h2>
-						<li>
-							<span>Брэнд</span>
-							<hr />
-							<span>{item.brand}</span>
-						</li>
-						<li>
-							<span>Код товара</span>
-							<hr />
-							<span>{item.article}</span>
-						</li>
-						<li>
-							<span>В наличи</span>
-							<hr />
-							<span
-								style={{
-									color:
-										declOfQuantity(item.quantity) === 'Нет в наличи'
-											? 'rgb(var(--error))'
-											: 'rgb(var(--secondary))'
-								}}>
-								{declOfQuantity(item.quantity)}
-							</span>
-						</li>
-						{item.warranty && (
+		<>
+			<Head>
+				<meta name='description' content={`${item.full_name} все за ${priceRule(item.price1)} / KazInterStroy`} />
+				<meta
+					name='keywords'
+					content={`kazinterstroy, интернет магазин, элемент, продукт, товар, ${item.name}, ${item.price1}, ${item.full_name}`}
+				/>
+
+				<meta property='og:title' content={`${item.name} / KazInterStroy`} />
+				<meta
+					property='og:description'
+					content={`${item.full_name} все за ${priceRule(item.price1)} / KazInterStroy`}
+				/>
+				<meta property='og:image' content={item.images[0]} />
+
+				<meta name='twitter:title' content={`${item.name} / KazInterStroy`} />
+				<meta
+					name='twitter:description'
+					content={`${item.full_name} все за ${priceRule(item.price1)} / KazInterStroy`}
+				/>
+				<meta name='twitter:image' content={item.images[0]} />
+
+				<title>{item.name} / KazInterStroy</title>
+			</Head>
+			<Wrapper>
+				<Breadcrumb links={breadcrumbData} withMarginBottom />
+				<Heading>{item.name}</Heading>
+				<Grid>
+					<Carousel>
+						<StyledSwiper
+							title='Кликните 2 раза что бы увеличить картинку'
+							effect={'cards'}
+							grabCursor={true}
+							centeredSlides={true}
+							autoplay={{ delay: 2500, disableOnInteraction: false }}
+							zoom={true}
+							pagination={{ dynamicBullets: true, clickable: true }}
+							modules={[Autoplay, Zoom, Pagination, EffectCards]}>
+							{item.images.map(i => (
+								<StyledSwiperSlide key={i}>
+									<div className='swiper-zoom-container'>
+										<img src={i} />
+									</div>
+								</StyledSwiperSlide>
+							))}
+						</StyledSwiper>
+					</Carousel>
+					<div>
+						<Info>
+							<h2>{item.full_name}</h2>
 							<li>
-								<span>Гарантия</span>
+								<span>Брэнд</span>
 								<hr />
-								<span>{item.warranty}</span>
+								<span>{item.brand}</span>
 							</li>
-						)}
-						<li>
-							<span>Артикул-PartNumber</span>
-							<hr />
-							<span>{item.article_pn}</span>
-						</li>
-					</Info>
-					<Price>
-						Цена
-						<br />
-						<span>{priceRule(item.price1)}</span>
-					</Price>
-					<StyledButton background='cash' color='white' href={`https://wa.me/${contact.phone}`} size='l'>
-						Купить
-						<BsCartCheckFill />
-					</StyledButton>
-				</div>
-			</Grid>
-			<DetailText dangerouslySetInnerHTML={{ __html: item.detailtext }} />
-			{item.properties && (
-				<Properties>
-					<Heading>Характеристики</Heading>
-					{Object.keys(item.properties).map(p => (
-						<PropertiesItem key={p}>
-							<span>{p}</span>
-							<hr />
-							<span>{item.properties[p]}</span>
-						</PropertiesItem>
-					))}
-				</Properties>
-			)}
-		</Wrapper>
+							<li>
+								<span>Код товара</span>
+								<hr />
+								<span>{item.article}</span>
+							</li>
+							<li>
+								<span>В наличи</span>
+								<hr />
+								<span
+									style={{
+										color:
+											declOfQuantity(item.quantity) === 'Нет в наличи'
+												? 'rgb(var(--error))'
+												: 'rgb(var(--secondary))'
+									}}>
+									{declOfQuantity(item.quantity)}
+								</span>
+							</li>
+							{item.warranty && (
+								<li>
+									<span>Гарантия</span>
+									<hr />
+									<span>{item.warranty}</span>
+								</li>
+							)}
+							<li>
+								<span>Артикул-PartNumber</span>
+								<hr />
+								<span>{item.article_pn}</span>
+							</li>
+						</Info>
+						<Price>
+							Цена
+							<br />
+							<span>{priceRule(item.price1)}</span>
+						</Price>
+						<StyledButton background='cash' color='white' href={`https://wa.me/${contact.phone}`} size='l'>
+							Купить
+							<BsCartCheckFill />
+						</StyledButton>
+					</div>
+				</Grid>
+				<DetailText dangerouslySetInnerHTML={{ __html: item.detailtext }} />
+				{item.properties && (
+					<Properties>
+						<Heading>Характеристики</Heading>
+						{Object.keys(item.properties).map(p => (
+							<PropertiesItem key={p}>
+								<span>{p}</span>
+								<hr />
+								<span>{item.properties[p]}</span>
+							</PropertiesItem>
+						))}
+					</Properties>
+				)}
+			</Wrapper>
+		</>
 	);
 };
 
@@ -349,7 +375,7 @@ export const getServerSideProps = async ctx => {
 	if (!categoryData || !categoryData.length) return { notFound: true };
 
 	// item
-	const additionalFields = 'images,brand,description,instructions,weight,warranty,detailtext,properties';
+	const additionalFields = 'images,brand,warranty,detailtext,properties';
 	const { data: item } = await axios.get(
 		`${process.env.NEXT_PUBLIC_API}/element-info?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&article=${ctx.query.item}&additional_fields=${additionalFields}`
 	);

@@ -81,6 +81,35 @@ const Search = () => {
 	return (
 		<>
 			<Head>
+				<meta
+					name='description'
+					content={
+						!query.search ? 'Поисковик / KazInterStroy ' : `Поиск по запросу: ${query.search} / KazInterStroy`
+					}
+				/>
+				<meta
+					name='keywords'
+					content={`kazinterstroy, интернет магазин, kazstroy, казинтерстрой, казстрой, ${
+						!query.search ? '' : query.search
+					}, поисковик, поиск`}
+				/>
+
+				<meta property='og:title' content='Поиск / KazInterStroy' />
+				<meta
+					property='og:description'
+					content={
+						!query.search ? 'Поисковик / KazInterStroy ' : `Поиск по запросу: ${query.search} / KazInterStroy`
+					}
+				/>
+
+				<meta name='twitter:title' content={`Поиск / KazInterStroy`} />
+				<meta
+					name='twitter:description'
+					content={
+						!query.search ? 'Поисковик / KazInterStroy ' : `Поиск по запросу: ${query.search} / KazInterStroy`
+					}
+				/>
+
 				<title>Результаты по запросу {query.search ?? ''} / KazInterStroy</title>
 			</Head>
 			<Wrapper>

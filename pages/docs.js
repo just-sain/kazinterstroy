@@ -69,11 +69,28 @@ const Item = styled(Link)`
 `;
 
 export const Docs = ({ documents, letters }) => {
-	console.log('🚀 ~ file: docs.js:36 ~ Docs ~ docs', documents);
 	return (
 		<>
 			<Head>
-				<title>документы и благодарственные письма / KazInterStroy</title>
+				<meta name='description' content='Благодарственные письма и документы нашей компании / KazInterStroy ' />
+				<meta
+					name='keywords'
+					content='kazinterstroy, интернет магазин, kazstroy, казинтерстрой, казстрой, благодарственные письма, документы, благодарственное письмо, письма, документ, отзывы, сотрудничество'
+				/>
+
+				<meta property='og:title' content='Документы и благодарственные письма / KazInterStroy' />
+				<meta
+					property='og:description'
+					content='Благодарственные письма и документы нашей компании / KazInterStroy'
+				/>
+
+				<meta name='twitter:title' content='Документы и благодарственные письма / KazInterStroy' />
+				<meta
+					name='twitter:description'
+					content='Благодарственные письма и документы нашей компании / KazInterStroy'
+				/>
+
+				<title>Документы и благодарственные письма / KazInterStroy</title>
 			</Head>
 			{documents && (
 				<Section>

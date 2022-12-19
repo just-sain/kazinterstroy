@@ -181,6 +181,27 @@ const Contact = () => {
 	return (
 		<>
 			<Head>
+				<meta
+					name='description'
+					content='Контакты нашей компании: почта, номер телефона, адрес, режим работы / KazInterStroy '
+				/>
+				<meta
+					name='keywords'
+					content='kazinterstroy, интернет магазин, kazstroy, казинтерстрой, казстрой, контакты, номер телефона, номер, мобильный, почта, адрес'
+				/>
+
+				<meta property='og:title' content='Контакты / KazInterStroy' />
+				<meta
+					property='og:description'
+					content='Контакты нашей компании: почта, номер телефона, адрес, режим работы / KazInterStroy'
+				/>
+
+				<meta name='twitter:title' content='Контакты / KazInterStroy' />
+				<meta
+					name='twitter:description'
+					content='Контакты нашей компании: почта, номер телефона, адрес, режим работы / KazInterStroy'
+				/>
+
 				<title>Контакты / KazInterStroy</title>
 			</Head>
 			<MapSection>

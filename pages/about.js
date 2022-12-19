@@ -92,6 +92,18 @@ const AboutPage = ({ text, photo, companiesData }) => {
 	return (
 		<>
 			<Head>
+				<meta name='description' content='Страница о компании и о нашем коллективе / KazInterStroy ' />
+				<meta
+					name='keywords'
+					content='kazinterstroy, интернет магазин, kazstroy, казинтерстрой, казстрой, о нас, about, о компании'
+				/>
+
+				<meta property='og:title' content='О компании / KazInterStroy' />
+				<meta property='og:description' content='Страница о компании и о нашем коллективе / KazInterStroy' />
+
+				<meta name='twitter:title' content='О компании / KazInterStroy' />
+				<meta name='twitter:description' content='Страница о компании и о нашем коллективе / KazInterStroy' />
+
 				<title>О компании / KazInterStroy</title>
 			</Head>
 			<Section>

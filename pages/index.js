@@ -183,6 +183,18 @@ const HomePage = ({ title, contentImage, description, sliderData, companiesData 
 	return (
 		<>
 			<Head>
+				<meta name='description' content='kazinterstroy - Интернет магазин / KazInterStroy ' />
+				<meta
+					name='keywords'
+					content='kazinterstroy, интернет магазин, kazstroy, казинтерстрой, казстрой, главная страница, сотрудничество'
+				/>
+
+				<meta property='og:title' content='Главная страница / KazInterStroy' />
+				<meta property='og:description' content='kazinterstroy - Интернет магазин / KazInterStroy' />
+
+				<meta name='twitter:title' content='Главная страница / KazInterStroy' />
+				<meta name='twitter:description' content='kazinterstroy - Интернет магазин / KazInterStroy' />
+
 				<title>KazInterStroy - Интернет магазин</title>
 			</Head>
 			<Carousel>
