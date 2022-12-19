@@ -11,7 +11,7 @@ import { AiFillCaretRight } from 'react-icons/ai';
 // withArrow?: boolean
 
 const StyledButton = styled.button`
-	padding: ${({ size }) => (size === 's' ? `1rem 1.5rem` : size === 'm' ? `1.25rem 2.5rem` : `2rem 3rem`)};
+	padding: ${({ size }) => (size === 's' ? `1rem 1.5rem` : size === 'm' ? `1.25rem 2.5rem` : `1.75rem 3rem`)};
 
 	display: flex;
 	justify-content: space-between;

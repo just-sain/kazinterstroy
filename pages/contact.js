@@ -4,7 +4,8 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { GrContactInfo, GrMail, GrMapLocation, GrLocationPin, GrFormClock, GrPhone } from 'react-icons/gr';
 import styled from '@emotion/styled';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { AppContext } from '../context/app.context';
 
 // map section
 const MapSection = styled.section`
@@ -24,6 +25,7 @@ const MapContainer = styled.div`
 const Map = styled.iframe`
 	width: 100%;
 	height: 100%;
+	z-index: 5;
 
 	border: none;
 `;
@@ -31,7 +33,7 @@ const Map = styled.iframe`
 const LoaderWrapper = styled.div`
 	width: 100%;
 	height: 100%;
-	z-index: 5;
+	z-index: ${({ ismapload }) => (ismapload ? `-1` : `1`)};
 	opacity: ${({ ismapload }) => (ismapload ? `0` : `1`)};
 
 	display: flex;
@@ -172,8 +174,9 @@ const Docs = styled.section`
 	}
 `;
 
-const Contact = ({ contactData }) => {
+const Contact = () => {
 	const [isMapLoad, setIsMapLoad] = useState(false);
+	const { contact } = useContext(AppContext);
 
 	return (
 		<>
@@ -201,42 +204,42 @@ const Contact = ({ contactData }) => {
 							<GrMapLocation />
 							Адрес
 						</p>
-						<span>{contactData.address}</span>
+						<span>{contact.address}</span>
 					</Line>
 					<Line>
 						<p>
 							<GrLocationPin />
 							Индекс
 						</p>
-						<span>{contactData.index}</span>
+						<span>{contact.index}</span>
 					</Line>
 					<Line>
 						<p>
 							<GrPhone />
 							Телефон
 						</p>
-						<span>{contactData.phone}</span>
+						<span>{contact.phone}</span>
 					</Line>
 					<Line>
 						<p>
 							<GrPhone />
 							Городской телефон
 						</p>
-						<span>{contactData.city_phone}</span>
+						<span>{contact.city_phone}</span>
 					</Line>
 					<Line>
 						<p>
 							<GrMail />
 							Почта
 						</p>
-						<span>{contactData.mail}</span>
+						<span>{contact.mail}</span>
 					</Line>
 					<Line>
 						<p>
 							<GrFormClock />
 							График работы
 						</p>
-						<span>{contactData.timetable}</span>
+						<span>{contact.timetable}</span>
 					</Line>
 				</Box>
 			</StyledContact>
@@ -249,14 +252,3 @@ const Contact = ({ contactData }) => {
 };
 
 export default Contact;
-
-export const getStaticProps = async () => {
-	// contact data
-	const contact = await client.getEntries({ content_type: 'contacts' });
-
-	return {
-		props: {
-			contactData: contact.items[0].fields
-		}
-	};
-};

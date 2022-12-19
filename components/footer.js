@@ -1,5 +1,5 @@
-import { memo, useEffect, useState } from 'react';
-import client from '../lib/contentful';
+import { memo, useContext, useState } from 'react';
+import { AppContext } from '../context/app.context';
 // components
 import { List } from './list';
 import { Container } from './container';
@@ -84,7 +84,7 @@ const Map = styled.iframe`
 const LoaderWrapper = styled.div`
 	width: 100%;
 	height: 100%;
-	z-index: 5;
+	z-index: ${({ ismapload }) => (ismapload ? `-1` : `1`)};
 	opacity: ${({ ismapload }) => (ismapload ? `0` : `1`)};
 
 	display: flex;
@@ -103,7 +103,7 @@ const LoaderWrapper = styled.div`
 const Loader = styled.div`
 	width: 10rem;
 	height: 10rem;
-	display: inline-block;
+	display: block;
 	position: relative;
 
 	&::after,
@@ -129,14 +129,8 @@ const Bottom = styled.div`
 `;
 
 export const Footer = memo(() => {
-	const [contactData, setContactData] = useState(null);
+	const { contact } = useContext(AppContext);
 	const [isMapLoad, setIsMapLoad] = useState(false);
-
-	useEffect(() => {
-		client.getEntries({ content_type: 'contacts' }).then(res => {
-			setContactData(res.items[0].fields);
-		});
-	}, []);
 
 	return (
 		<StyledFooter>
@@ -145,14 +139,12 @@ export const Footer = memo(() => {
 					<List>
 						<h6>Контакты</h6>
 						<li>
-							<a href={contactData ? `tel:${contactData.phone}` : '#'}>{contactData && contactData.phone}</a>
+							<a href={contact ? `tel:${contact.phone}` : '#'}>{contact && contact.phone}</a>
 						</li>
 						<li>
 							Городской:
 							<br />
-							<a href={contactData ? `tel:${contactData.city_phone}` : '#'}>
-								{contactData && contactData.city_phone}
-							</a>
+							<a href={contact ? `tel:${contact.city_phone}` : '#'}>{contact && contact.city_phone}</a>
 						</li>
 						<li>
 							<a href='mailto:kazinterstroy@mail.ru'>kazinterstroy@mail.ru</a>
@@ -160,9 +152,9 @@ export const Footer = memo(() => {
 					</List>
 					<List>
 						<h6>Адрес</h6>
-						<li>{contactData && contactData.address}</li>
-						<li>Индекс: {contactData && contactData.index}</li>
-						<li>Режим работы: {contactData && contactData.timetable}</li>
+						<li>{contact && contact.address}</li>
+						<li>Индекс: {contact && contact.index}</li>
+						<li>Режим работы: {contact && contact.timetable}</li>
 					</List>
 					<List>
 						<h6>О нас</h6>

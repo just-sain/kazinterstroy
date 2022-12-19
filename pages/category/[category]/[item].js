@@ -5,12 +5,25 @@ import { priceRule } from '../../../helpers/price';
 // components
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Breadcrumb } from '../../../components/breadcrumb';
+import { Button } from '../../../components/button';
+import { BsCartCheckFill } from 'react-icons/bs';
 import styled from '@emotion/styled';
 // styles for swiper
 import 'swiper/css';
 import 'swiper/css/zoom';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-cards';
+
+const StyledButton = styled(Button)`
+	width: 100%;
+	margin-top: 1.5rem;
+
+	justify-content: center;
+
+	span {
+		text-align: center;
+	}
+`;
 
 const Wrapper = styled.div`
 	width: 100%;
@@ -268,7 +281,13 @@ const Item = ({ categoryData, item }) => {
 						<li>
 							<span>В наличи</span>
 							<hr />
-							<span style={{ color: declOfQuantity(item.quantity) === 'Нет в наличи' && 'rgb(var(--error))' }}>
+							<span
+								style={{
+									color:
+										declOfQuantity(item.quantity) === 'Нет в наличи'
+											? 'rgb(var(--error))'
+											: 'rgb(var(--secondary))'
+								}}>
 								{declOfQuantity(item.quantity)}
 							</span>
 						</li>
@@ -290,6 +309,14 @@ const Item = ({ categoryData, item }) => {
 						<br />
 						<span>{priceRule(item.price1)}</span>
 					</Price>
+					<StyledButton
+						background='cash'
+						color='white'
+						href='https://api.whatsapp.com/send?phone=79ХХХХХХХХХ'
+						size='l'>
+						Купить
+						<BsCartCheckFill />
+					</StyledButton>
 				</div>
 			</Grid>
 			<DetailText dangerouslySetInnerHTML={{ __html: item.detailtext }} />
