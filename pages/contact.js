@@ -4,6 +4,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { GrContactInfo, GrMail, GrMapLocation, GrLocationPin, GrFormClock, GrPhone } from 'react-icons/gr';
 import styled from '@emotion/styled';
+import { useState } from 'react';
 
 // map section
 const MapSection = styled.section`
@@ -11,15 +12,63 @@ const MapSection = styled.section`
 	height: 40rem;
 `;
 
-const Map = styled.iframe`
+const MapContainer = styled.div`
 	width: 100%;
 	height: 40rem;
-
-	border: none;
 
 	position: absolute;
 	top: var(--header-height);
 	left: 0;
+`;
+
+const Map = styled.iframe`
+	width: 100%;
+	height: 100%;
+
+	border: none;
+`;
+
+const LoaderWrapper = styled.div`
+	width: 100%;
+	height: 100%;
+	z-index: 5;
+	opacity: ${({ ismapload }) => (ismapload ? `0` : `1`)};
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	background: rgb(var(--black));
+
+	position: absolute;
+	top: 0;
+	left: 0;
+
+	transition: opacity 0.4s ease 0.4s, z-index 0s ease 0.8s;
+`;
+
+const Loader = styled.div`
+	width: 10rem;
+	height: 10rem;
+	display: inline-block;
+	position: relative;
+
+	&::after,
+	&::before {
+		content: '';
+		box-sizing: border-box;
+		width: 10rem;
+		height: 10rem;
+		border-radius: 50%;
+		border: 1rem solid #fff;
+		position: absolute;
+		left: 0;
+		top: 0;
+		animation: animMapLoader 2s linear infinite;
+	}
+	&::after {
+		animation-delay: 1s;
+	}
 `;
 
 // contact section
@@ -124,15 +173,23 @@ const Docs = styled.section`
 `;
 
 const Contact = ({ contactData }) => {
+	const [isMapLoad, setIsMapLoad] = useState(false);
+
 	return (
 		<>
 			<Head>
 				<title>Контакты / KazInterStroy</title>
 			</Head>
 			<MapSection>
-				<Map
-					loading='lazy'
-					src='https://yandex.ru/map-widget/v1/?um=constructor%3A09c7f4a4a087808079f28245bf8ab598e9609a06e555f8a5586d6e7ed9ab7da3&amp;source=constructor'></Map>
+				<MapContainer>
+					<Map
+						loading='lazy'
+						src='https://yandex.ru/map-widget/v1/?um=constructor%3A09c7f4a4a087808079f28245bf8ab598e9609a06e555f8a5586d6e7ed9ab7da3&amp;source=constructor'
+						onLoad={() => setIsMapLoad(true)}></Map>
+					<LoaderWrapper ismapload={isMapLoad ? 1 : 0}>
+						<Loader />
+					</LoaderWrapper>
+				</MapContainer>
 			</MapSection>
 			<StyledContact>
 				<Heading>

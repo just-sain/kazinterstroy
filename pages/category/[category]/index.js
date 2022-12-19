@@ -37,7 +37,7 @@ const Category = ({ categoryData }) => {
 				`${process.env.NEXT_PUBLIC_API}/elements?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&limit=250&category=${categoryData.id}&${additionalFields}`
 			)
 			.then(res => {
-				if (!res.data || !res.data.length) setElements([]);
+				if (!res.data || !res.data?.length) setElements([]);
 				else {
 					setElements(res.data);
 					setIsReady(true);
@@ -65,7 +65,7 @@ const Category = ({ categoryData }) => {
 						{isReady && declOfNum(elements.length, ['элемент', 'элемента', 'элементов'])})
 					</span>
 				</Heading>
-				<Elements isReady={isReady} elements={elements} setElements={setElements} />
+				<Elements isReady={isReady} elements={elements} />
 			</Wrapper>
 		</>
 	);

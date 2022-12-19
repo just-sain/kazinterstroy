@@ -1,8 +1,7 @@
 // components
-import { motion } from 'framer-motion';
 import styled from '@emotion/styled';
 
-const StyledArticle = styled(motion.div)`
+const StyledArticle = styled.article`
 	padding: 2rem 1.5rem;
 	overflow: hidden;
 
@@ -34,7 +33,7 @@ const Mirage = styled.div`
 	background-color: rgb(var(--real-white));
 	background-repeat: no-repeat;
 	background-position: -215px 0, 0 0, 15px 150px, 15px 180px;
-	animation: mirage 1.5s infinite;
+	animation: mirage 0.8s infinite;
 `;
 
 const Poster = styled.div`
@@ -83,10 +82,7 @@ const Price = styled(Mirage)`
 
 export const MirageArticle = () => {
 	return (
-		<StyledArticle
-			transition={{ duration: 0.3 }}
-			initial={{ opacity: 0, translateY: '20%' }}
-			animate={{ opacity: 1, translateY: '0' }}>
+		<StyledArticle>
 			<div>
 				<Poster>
 					<PosterImg />

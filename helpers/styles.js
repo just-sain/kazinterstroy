@@ -128,6 +128,16 @@ const globalStyles = css`
 			background-position: 215px 0, 0 0, 15px 150px, 15px 180px;
 		}
 	}
+	@keyframes animMapLoader {
+		0% {
+			transform: scale(0);
+			opacity: 1;
+		}
+		100% {
+			transform: scale(1);
+			opacity: 0;
+		}
+	}
 `;
 
 export default globalStyles;

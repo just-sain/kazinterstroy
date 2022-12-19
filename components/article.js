@@ -76,13 +76,9 @@ const Price = styled.h3`
 	}
 `;
 
-export const Article = ({ href, articleData }) => {
+export const Article = ({ href, articleData, ...props }) => {
 	return (
-		<StyledArticle
-			transition={{ duration: 0.8 }}
-			initial={{ opacity: 0, translateY: '30%' }}
-			animate={{ opacity: 1, translateY: '0' }}
-			exit={{ opacity: 0, scale: 0 }}>
+		<StyledArticle {...props}>
 			<Link href={href} passHref>
 				<Poster src={articleData.images[0]} alt={articleData.name} />
 				<Name>{articleData.name}</Name>

@@ -1,8 +1,10 @@
-import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
+import { useReducedMotion } from 'framer-motion';
+// components
 import { Article } from './article';
 import { MirageArticle } from './mirage-article';
 import { MdOutlineSort } from 'react-icons/md';
+import styled from '@emotion/styled';
 
 export const Grid = styled.div`
 	display: grid;
@@ -21,7 +23,6 @@ export const Grid = styled.div`
 `;
 
 // sort
-
 const Panel = styled.div`
 	width: 100%;
 `;
@@ -43,7 +44,6 @@ const Sort = styled.div`
 
 const Menu = styled.div`
 	width: 18rem;
-	padding: 0.75rem 1.5rem;
 
 	cursor: pointer;
 	background: rgb(var(--primary));
@@ -57,6 +57,8 @@ const Menu = styled.div`
 	position: relative;
 
 	p {
+		padding: 0.75rem 1.5rem;
+
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
@@ -93,38 +95,46 @@ const DropDownMenuItem = styled.div`
 `;
 
 // elements: []
-export const Elements = ({ isReady, elements, setElements }) => {
+export const Elements = ({ isReady, elements }) => {
+	const shouldReduceMotion = useReducedMotion(); // for animation on sort
+
 	// sort
 	const sorts = [
 		{ name: 'По новинке', property: 'newest' },
-		{ name: 'По популярности', property: 'popular' },
 		{ name: 'По цене', property: 'price' },
 		{ name: 'По алфавиту', property: 'title' }
 	];
 	const [isDropDownMenuOpen, setIsDropDownMenuOpen] = useState(false);
 	const [selectedSort, setSelectedSort] = useState(sorts[0]);
-
+	const [sortedElements, setSortedElements] = useState([]);
 	useEffect(() => {
-		if (isReady && elements.length) {
-			if (selectedSort.property === 'newest') {
-				console.log(selectedSort.property);
-				const sortedElements = [];
-				sortedElements.push(...elements.filter(e => e.isnew));
-				sortedElements.push(...elements.filter(e => !e.isnew));
-				setElements(sortedElements);
-			} else if (selectedSort.property === 'price') {
-				setElements(elements.sort((a, b) => (a.price1 > b.price2 ? -1 : 1)));
-				console.log();
-			} else if (selectedSort.property === 'title') {
-				console.log(selectedSort.property);
-				setElements(elements.sort((a, b) => a.name - b.name));
-			}
-		}
-	}, [selectedSort]);
+		setSortedElements(!elements ? [] : elements);
+	}, [elements]);
 
 	const handleDropDownMenuClick = i => {
-		setSelectedSort(sorts[i]);
 		setIsDropDownMenuOpen(false);
+		setSelectedSort(sorts[i]);
+
+		if (isReady && elements.length) {
+			if (sorts[i].property === 'newest') {
+				const newElements = [];
+				newElements.push(...elements.filter(e => e.isnew));
+				newElements.push(...elements.filter(e => !e.isnew));
+				setSortedElements(newElements);
+			} else if (sorts[i].property === 'price') {
+				setSortedElements(elements.sort((a, b) => (a.price1 > b.price2 ? -1 : 1)));
+			} else {
+				setSortedElements(
+					elements.sort((a, b) => {
+						var nameA = a.name.toLowerCase(),
+							nameB = b.name.toLowerCase();
+						if (nameA < nameB) return -1;
+						if (nameA > nameB) return 1;
+						return 0;
+					})
+				);
+			}
+		}
 	};
 
 	return (
@@ -149,16 +159,21 @@ export const Elements = ({ isReady, elements, setElements }) => {
 					</Menu>
 				</Sort>
 			</Panel>
-			<Grid>
-				{isReady ? (
-					<>
-						{elements.length &&
-							elements.map(e => (
-								<Article key={e.article} articleData={e} href={`/category/${e.category}/${e.article}`} />
+			<>
+				{isReady && !!sortedElements.length ? (
+					<Grid>
+						{!!sortedElements.length &&
+							sortedElements.map(e => (
+								<Article
+									key={e.article}
+									articleData={e}
+									href={`/category/${e.category}/${e.article}`}
+									layout={shouldReduceMotion ? false : true}
+								/>
 							))}
-					</>
+					</Grid>
 				) : (
-					<>
+					<Grid>
 						<MirageArticle />
 						<MirageArticle />
 						<MirageArticle />
@@ -166,9 +181,9 @@ export const Elements = ({ isReady, elements, setElements }) => {
 						<MirageArticle />
 						<MirageArticle />
 						<MirageArticle />
-					</>
+					</Grid>
 				)}
-			</Grid>
+			</>
 		</>
 	);
 };
