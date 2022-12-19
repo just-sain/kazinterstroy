@@ -4,6 +4,7 @@ import { useReducedMotion } from 'framer-motion';
 import { Article } from './article';
 import { MirageArticle } from './mirage-article';
 import { MdOutlineSort } from 'react-icons/md';
+import { TbArrowsDownUp } from 'react-icons/tb';
 import styled from '@emotion/styled';
 
 export const Grid = styled.div`
@@ -94,6 +95,18 @@ const DropDownMenuItem = styled.div`
 	}
 `;
 
+const ReverseIcon = styled(TbArrowsDownUp)`
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 1rem;
+
+	cursor: pointer;
+
+	color: rgb(var(--primary));
+	font-size: 2.8rem;
+`;
+
 // elements: []
 export const Elements = ({ isReady, elements }) => {
 	const shouldReduceMotion = useReducedMotion(); // for animation on sort
@@ -122,7 +135,7 @@ export const Elements = ({ isReady, elements }) => {
 				newElements.push(...elements.filter(e => !e.isnew));
 				setSortedElements(newElements);
 			} else if (sorts[i].property === 'price') {
-				setSortedElements(elements.sort((a, b) => (a.price1 > b.price2 ? -1 : 1)));
+				setSortedElements(elements.sort((a, b) => (a.price1 > b.price1 ? -1 : 1)));
 			} else {
 				setSortedElements(
 					elements.sort((a, b) => {
@@ -157,6 +170,12 @@ export const Elements = ({ isReady, elements }) => {
 							</DropDownMenu>
 						)}
 					</Menu>
+					<ReverseIcon
+						onClick={() => {
+							const newElements = sortedElements.reverse();
+							setSortedElements(newElements);
+						}}
+					/>
 				</Sort>
 			</Panel>
 			<>

@@ -1,7 +1,9 @@
-import axios from 'axios';
+import { useContext } from 'react';
 import { Autoplay, Zoom, Pagination, EffectCards } from 'swiper'; // required modules for swiper
+import axios from 'axios';
 import { declOfQuantity } from '../../../helpers/declaration';
 import { priceRule } from '../../../helpers/price';
+import { AppContext } from '../../../context/app.context';
 // components
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Breadcrumb } from '../../../components/breadcrumb';
@@ -235,6 +237,7 @@ const PropertiesItem = styled.li`
 `;
 
 const Item = ({ categoryData, item }) => {
+	const { contact } = useContext(AppContext);
 	const breadcrumbData = [
 		{ name: 'Каталог', href: '/category' },
 		{ name: categoryData.name, href: `/category/${categoryData.id}` },
@@ -309,11 +312,7 @@ const Item = ({ categoryData, item }) => {
 						<br />
 						<span>{priceRule(item.price1)}</span>
 					</Price>
-					<StyledButton
-						background='cash'
-						color='white'
-						href='https://api.whatsapp.com/send?phone=79ХХХХХХХХХ'
-						size='l'>
+					<StyledButton background='cash' color='white' href={`https://wa.me/${contact.phone}`} size='l'>
 						Купить
 						<BsCartCheckFill />
 					</StyledButton>
