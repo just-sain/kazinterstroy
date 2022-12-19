@@ -120,6 +120,7 @@ export const Elements = ({ isReady, elements }) => {
 	const [isDropDownMenuOpen, setIsDropDownMenuOpen] = useState(false);
 	const [selectedSort, setSelectedSort] = useState(sorts[0]);
 	const [sortedElements, setSortedElements] = useState([]);
+
 	useEffect(() => {
 		setSortedElements(!elements ? [] : elements);
 	}, [elements]);
@@ -129,14 +130,16 @@ export const Elements = ({ isReady, elements }) => {
 		setSelectedSort(sorts[i]);
 
 		if (isReady && elements.length) {
-			if (sorts[i].property === 'newest') {
+			if (selectedSort.property === sorts[i].property) {
+				setSortedElements(elements.reverse());
+			} else if (sorts[i].property === 'newest') {
 				const newElements = [];
 				newElements.push(...elements.filter(e => e.isnew));
 				newElements.push(...elements.filter(e => !e.isnew));
 				setSortedElements(newElements);
 			} else if (sorts[i].property === 'price') {
 				setSortedElements(elements.sort((a, b) => (a.price1 > b.price1 ? -1 : 1)));
-			} else {
+			} else if (sorts[i].property === 'title') {
 				setSortedElements(
 					elements.sort((a, b) => {
 						var nameA = a.name.toLowerCase(),
@@ -170,12 +173,6 @@ export const Elements = ({ isReady, elements }) => {
 							</DropDownMenu>
 						)}
 					</Menu>
-					<ReverseIcon
-						onClick={() => {
-							const newElements = sortedElements.reverse();
-							setSortedElements(newElements);
-						}}
-					/>
 				</Sort>
 			</Panel>
 			<>
