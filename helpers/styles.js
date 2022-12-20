@@ -138,6 +138,23 @@ const globalStyles = css`
 			opacity: 0;
 		}
 	}
+	@keyframes catalogRotation {
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
+	}
+
+	@keyframes catalogRotationBack {
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(-360deg);
+		}
+	}
 `;
 
 export default globalStyles;

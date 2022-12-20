@@ -2,87 +2,9 @@ import client from '../lib/contentful';
 // components
 import Head from 'next/head';
 import Image from 'next/image';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Pagination } from 'swiper'; // required modules for swiper js
-import styled from '@emotion/styled';
-// styles for swiper.js
-import 'swiper/css';
-import 'swiper/css/pagination';
 import { Companies } from '../components/companies';
-
-// slider (swiper js)
-const Carousel = styled.section`
-	width: 100%;
-	height: calc(60rem - 3rem);
-
-	--swiper-pagination-color: rgb(var(--primary));
-
-	@media screen and (max-width: 1440px) {
-		height: calc(50rem - 3rem);
-	}
-	@media screen and (max-width: 1240px) {
-		height: calc(40rem - 3rem);
-	}
-	@media screen and (max-width: 768px) {
-		height: calc(30rem - 3rem);
-	}
-	@media screen and (max-width: 600px) {
-		height: calc(25rem - 3rem);
-	}
-	@media screen and (max-width: 450px) {
-		height: calc(20rem - 3rem);
-	}
-	@media screen and (max-width: 300px) {
-		height: calc(15rem - 3rem);
-	}
-`;
-
-const StyledSwiper = styled(Swiper)`
-	width: 100vw;
-	height: 60rem;
-
-	background: rgb(var(--bg));
-
-	position: absolute;
-	top: var(--header-height);
-	left: 0;
-
-	@media screen and (max-width: 1440px) {
-		height: 50rem;
-	}
-	@media screen and (max-width: 1240px) {
-		height: 40rem;
-	}
-	@media screen and (max-width: 768px) {
-		height: 30rem;
-	}
-	@media screen and (max-width: 600px) {
-		height: 25rem;
-	}
-	@media screen and (max-width: 450px) {
-		height: 20rem;
-	}
-	@media screen and (max-width: 300px) {
-		height: 15rem;
-	}
-`;
-
-const StyledSwiperSlide = styled(SwiperSlide)`
-	background: rgb(var(--bg));
-
-	display: flex;
-	justify-content: center;
-	align-items: center;
-
-	img {
-		width: 100%;
-		height: 100%;
-
-		display: block;
-		object-fit: cover;
-		object-position: center;
-	}
-`;
+import styled from '@emotion/styled';
+import { Slider } from '../components/slider';
 
 // about section
 const About = styled.section`
@@ -197,23 +119,7 @@ const HomePage = ({ title, contentImage, description, sliderData, companiesData 
 
 				<title>KazInterStroy - Интернет магазин</title>
 			</Head>
-			<Carousel>
-				<StyledSwiper
-					grabCursor={true}
-					centeredSlides={true}
-					autoplay={{
-						delay: 2500,
-						disableOnInteraction: false
-					}}
-					pagination={{ clickable: true, dynamicBullets: true }}
-					modules={[Autoplay, Pagination]}>
-					{sliderData.map(s => (
-						<StyledSwiperSlide key={s}>
-							<Image src={`https:${s}`} alt={s} fill sizes='100%' />
-						</StyledSwiperSlide>
-					))}
-				</StyledSwiper>
-			</Carousel>
+			<Slider sliderData={sliderData} />
 			<About>
 				<AboutImg>
 					<Image src={`https:${contentImage}`} alt='KazInterStroy' fill sizes='100%' />
@@ -230,13 +136,19 @@ export default HomePage;
 
 export const getStaticProps = async () => {
 	const home = await client.getEntries({ content_type: 'home' });
+	const slider = await client.getEntries({ content_type: 'slider' });
 
 	// sliderData
 	const sliderData = [];
-	for (let i = 0; i < home.items[0].fields.slider.length; i++) {
-		sliderData.push(home.items[0].fields.slider[i].fields.file.url);
+	if (!slider.items.length) sliderData.push('/slider-plug.webp'); // if sliderData is empty
+	else {
+		for (let i = 0; i < slider.items.length; i++) {
+			sliderData.push({
+				image: slider.items[i].fields.image.fields.file.url,
+				link: slider.items[i].fields.link
+			});
+		}
 	}
-	if (!sliderData.length) sliderData.push('/slider-plug.webp'); // if sliderData is empty
 
 	// companiesData
 	const companies = await client.getEntries({ content_type: 'componies' });

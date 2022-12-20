@@ -16,6 +16,7 @@ import 'swiper/css/zoom';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-cards';
 import Head from 'next/head';
+import Image from 'next/image';
 
 const StyledButton = styled(Button)`
 	width: 100%;
@@ -28,7 +29,7 @@ const StyledButton = styled(Button)`
 	}
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled.article`
 	width: 100%;
 `;
 
@@ -103,6 +104,21 @@ const StyledSwiperSlide = styled(SwiperSlide)`
 
 	background: rgb(var(--bg));
 	border-radius: 2rem;
+`;
+
+const ImageContainer = styled.div`
+	width: 100%;
+	height: 100%;
+	/* overflow: hidden; */
+
+	background: rgb(var(--bg));
+	border-radius: 2rem;
+
+	position: relative;
+
+	&.swiper-slide-zoomed {
+		cursor: zoom-out;
+	}
 `;
 
 // info
@@ -286,9 +302,9 @@ const Item = ({ categoryData, item }) => {
 							modules={[Autoplay, Zoom, Pagination, EffectCards]}>
 							{item.images.map(i => (
 								<StyledSwiperSlide key={i}>
-									<div className='swiper-zoom-container'>
-										<img src={i} />
-									</div>
+									<ImageContainer className='swiper-zoom-container'>
+										<Image src={i} alt={i} fill sizes='100%' />
+									</ImageContainer>
 								</StyledSwiperSlide>
 							))}
 						</StyledSwiper>
