@@ -241,15 +241,24 @@ const PropertiesItem = styled.li`
 		border-bottom: 0.1rem dotted rgb(var(--light-gray));
 	}
 
+	span {
+		text-align: start;
+
+		&:last-of-type {
+			text-align: end;
+
+			@media screen and (max-width: 420px) {
+				word-break: break-word;
+				text-align: start;
+				font-size: 1.4rem;
+			}
+		}
+	}
+
 	@media screen and (max-width: 420px) {
 		display: grid;
 		grid-template-columns: 1fr;
 		gap: 0rem;
-	}
-
-	@media screen and (max-width: 250px) {
-		font-size: 1.4rem;
-		word-break: break-word;
 	}
 `;
 
