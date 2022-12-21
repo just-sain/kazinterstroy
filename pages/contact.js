@@ -265,8 +265,8 @@ const Contact = () => {
 				</Box>
 			</StyledContact>
 			<Docs>
-				Вы также можете просмотреть наши
-				<Link href='/docs'>благодарственные письма</Link> и <Link href='/docs'>лицензию</Link>
+				Вы также можете просмотреть наши <Link href='/docs'>благодарственные письма</Link> и{' '}
+				<Link href='/docs'>лицензию</Link>
 			</Docs>
 		</>
 	);

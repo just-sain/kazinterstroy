@@ -26,7 +26,7 @@ const variants = {
 
 const App = ({ Component, pageProps, router }) => {
 	return (
-		<AppContextProvider key={router.asPath}>
+		<AppContextProvider>
 			<AnimatePresence mode='wait'>
 				<motion.div
 					key={router.route}
