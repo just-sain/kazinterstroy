@@ -42,6 +42,11 @@ const StyledButton = styled.button`
 	&:focus {
 		background: rgba(var(--${({ background }) => background}), 0.85);
 	}
+
+	&:disabled {
+		cursor: no-drop;
+		opacity: 0.5;
+	}
 `;
 
 const RightIcon = styled(AiFillCaretRight)`
@@ -54,6 +59,7 @@ const RightIcon = styled(AiFillCaretRight)`
 
 export const Button = ({
 	children,
+	disabled = false,
 	size = 'm',
 	background = 'primary',
 	color = 'white',
@@ -66,12 +72,13 @@ export const Button = ({
 
 	return (
 		<StyledButton
+			disabled={disabled}
 			size={size}
 			isBold={isBold}
 			background={background}
 			color={color}
-			{...props}
-			onClick={!href ? props.onClick : () => push(href)}>
+			onClick={!href ? props.onClick : () => push(href)}
+			{...props}>
 			<span>{children}</span>
 			{withArrow && <RightIcon />}
 		</StyledButton>

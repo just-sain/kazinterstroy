@@ -1,12 +1,11 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 // components
-import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { Header } from './header';
 import { Menu } from './menu';
 import { Footer } from './footer';
 import styled from '@emotion/styled';
-import Image from 'next/image';
 
 const Wrapper = styled.div`
 	min-height: 100vh;
@@ -20,7 +19,7 @@ const Wrapper = styled.div`
 
 // main
 const Main = styled.div`
-	max-width: var(--container-s);
+	max-width: var(--container-l);
 	width: 100%;
 	margin: 0 auto;
 	padding: calc(var(--header-height) + 3rem) 0 15rem;
@@ -29,7 +28,7 @@ const Main = styled.div`
 	display: grid;
 	justify-items: center;
 
-	@media screen and (max-width: 1070px) {
+	@media screen and (max-width: 1470px) {
 		padding: calc(var(--header-height) + 3rem) 1rem 15rem;
 	}
 `;
@@ -62,8 +61,8 @@ const BgImg = styled(Image)`
 `;
 
 const Layout = ({ children }) => {
-	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const { events } = useRouter();
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
 
 	useEffect(() => {
 		const handleRouteChange = url => {

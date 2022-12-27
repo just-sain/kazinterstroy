@@ -1,7 +1,9 @@
+import axios from 'axios';
 import { createContext, useEffect, useState } from 'react';
 import client from '../lib/contentful';
 
 export const AppContext = createContext({
+	menu: null,
 	contact: {
 		address: '',
 		index: '',
@@ -13,6 +15,7 @@ export const AppContext = createContext({
 });
 
 export const AppContextProvider = ({ children }) => {
+	const [menuState, setMenuState] = useState(null);
 	const [contactState, setContactState] = useState({
 		address: '',
 		index: '',
@@ -33,7 +36,14 @@ export const AppContextProvider = ({ children }) => {
 				timetable: res.items[0].fields.timetable
 			});
 		});
+
+		axios
+			.get(`${process.env.NEXT_PUBLIC_API}/categories?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}`)
+			.then(res => {
+				console.log(res.data);
+				setMenuState(res.data);
+			});
 	}, []);
 
-	return <AppContext.Provider value={{ contact: contactState }}>{children}</AppContext.Provider>;
+	return <AppContext.Provider value={{ contact: contactState, menu: menuState }}>{children}</AppContext.Provider>;
 };

@@ -1,7 +1,5 @@
-import client from '../lib/contentful';
 // components
 import Head from 'next/head';
-import Link from 'next/link';
 import { GrContactInfo, GrMail, GrMapLocation, GrLocationPin, GrFormClock, GrPhone } from 'react-icons/gr';
 import styled from '@emotion/styled';
 import { useContext, useState } from 'react';
@@ -158,22 +156,6 @@ const Line = styled.div`
 	}
 `;
 
-const Docs = styled.section`
-	width: 100%;
-	margin-top: 5rem;
-
-	color: rgb(var(--black));
-	word-break: break-word;
-	text-align: start;
-	font-size: 2rem;
-	font-weight: 400;
-
-	a {
-		color: rgb(var(--primary));
-		text-decoration: underline;
-	}
-`;
-
 const Contact = () => {
 	const [isMapLoad, setIsMapLoad] = useState(false);
 	const { contact } = useContext(AppContext);
@@ -264,10 +246,6 @@ const Contact = () => {
 					</Line>
 				</Box>
 			</StyledContact>
-			<Docs>
-				Вы также можете просмотреть наши <Link href='/docs'>благодарственные письма</Link> и{' '}
-				<Link href='/docs'>лицензию</Link>
-			</Docs>
 		</>
 	);
 };

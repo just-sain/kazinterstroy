@@ -1,5 +1,9 @@
 import { css } from '@emotion/react';
 
+// old font family:
+// --font-family-primary: -apple-system, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+// Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
 const globalStyles = css`
 	:root {
 		--header-height: 7rem;
@@ -29,9 +33,7 @@ const globalStyles = css`
 		--real-gray: 187, 187, 187;
 		--black-gray: 35, 35, 35;
 		--light-gray: 160, 160, 160;
-
-		--font-family-primary: -apple-system, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
-			Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+		--font-family-primary: 'Roboto', sans-serif;
 	}
 
 	* {

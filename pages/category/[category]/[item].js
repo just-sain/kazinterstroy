@@ -1,22 +1,20 @@
-import { useContext } from 'react';
 import { Autoplay, Zoom, Pagination, EffectCards } from 'swiper'; // required modules for swiper
 import axios from 'axios';
 import { declOfQuantity } from '../../../helpers/declaration';
 import { priceRule } from '../../../helpers/price';
-import { AppContext } from '../../../context/app.context';
 // components
+import Head from 'next/head';
+import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Breadcrumb } from '../../../components/breadcrumb';
 import { Button } from '../../../components/button';
-import { BsCartCheckFill } from 'react-icons/bs';
+import { BsCartPlusFill } from 'react-icons/bs';
 import styled from '@emotion/styled';
 // styles for swiper
 import 'swiper/css';
 import 'swiper/css/zoom';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-cards';
-import Head from 'next/head';
-import Image from 'next/image';
 
 const StyledButton = styled(Button)`
 	width: 100%;
@@ -24,8 +22,11 @@ const StyledButton = styled(Button)`
 
 	justify-content: center;
 
-	span {
-		text-align: center;
+	text-align: center;
+
+	svg {
+		margin-left: 0.5rem;
+		font-size: 3.6rem;
 	}
 `;
 
@@ -263,12 +264,24 @@ const PropertiesItem = styled.li`
 `;
 
 const Item = ({ categoryData, item }) => {
-	const { contact } = useContext(AppContext);
 	const breadcrumbData = [
 		{ name: 'Каталог', href: '/category' },
 		{ name: categoryData.name, href: `/category/${categoryData.id}` },
-		{ name: item.name, href: `/category/${categoryData.id}/${item.id}` }
+		{ name: item.name, href: `/category/${categoryData.id}/${item.article}` }
 	];
+
+	const addCartHandle = () => {
+		const elementsIdString = localStorage.getItem('cart');
+
+		if (elementsIdString) {
+			const elementsId = elementsIdString.split(',');
+			const filtered = [item.article, ...elementsId];
+
+			localStorage.setItem('cart', filtered);
+		} else {
+			localStorage.setItem('cart', item.article);
+		}
+	};
 
 	return (
 		<>
@@ -297,7 +310,7 @@ const Item = ({ categoryData, item }) => {
 			</Head>
 			<Wrapper>
 				<Breadcrumb links={breadcrumbData} withMarginBottom />
-				<Heading>{item.name}</Heading>
+				<Heading title={item.full_name}>{item.name}</Heading>
 				<Grid>
 					<Carousel>
 						<StyledSwiper
@@ -362,9 +375,8 @@ const Item = ({ categoryData, item }) => {
 							<br />
 							<span>{priceRule(item.price1)}</span>
 						</Price>
-						<StyledButton background='cash' color='white' href={`https://wa.me/${contact.phone}`} size='l'>
-							Купить
-							<BsCartCheckFill />
+						<StyledButton onClick={addCartHandle} background='cash' color='white' size='l'>
+							Добавить в корзину <BsCartPlusFill />
 						</StyledButton>
 					</div>
 				</Grid>

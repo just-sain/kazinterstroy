@@ -1,10 +1,10 @@
-import { useRouter } from 'next/router';
 import { memo } from 'react';
 // components
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Container } from './container';
 import { Search } from './search';
+import { BsCart } from 'react-icons/bs';
 import { FaPhoneAlt } from 'react-icons/fa';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -15,7 +15,7 @@ const StyledHeader = styled(motion.header)`
 	height: var(--header-height);
 	z-index: 100;
 
-	background: rgba(${({ ismenuopen }) => (ismenuopen ? `var(--bg), 1` : `var(--primary), 0.3`)});
+	background: rgba(${({ ismenuopen }) => (ismenuopen ? `var(--bg), 1` : `var(--primary), 0.4`)});
 	backdrop-filter: blur(0.5rem);
 
 	color: rgb(var(--black));
@@ -36,12 +36,10 @@ const StyledContainer = styled(Container)`
 `;
 
 const LeftBlock = styled(motion.div)`
-	width: 100%;
-
 	display: flex;
 	align-items: center;
 	justify-content: flex-start;
-	gap: 1rem;
+	gap: 2rem;
 `;
 
 const Logo = styled.div`
@@ -80,7 +78,7 @@ const HeaderMenu = styled.menu`
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
-	gap: 1rem;
+	gap: 1.5rem;
 
 	color: rgb(var(--black));
 	font-size: 2rem;
@@ -88,6 +86,10 @@ const HeaderMenu = styled.menu`
 
 	@media screen and (max-width: 1040px) {
 		display: none;
+	}
+
+	li {
+		cursor: pointer;
 	}
 `;
 
@@ -137,7 +139,8 @@ const Icon = styled(FaPhoneAlt)`
 `;
 
 const StyledSearch = styled(Search)`
-	max-width: 25rem;
+	min-width: 20rem;
+	width: 20rem;
 
 	@media screen and (max-width: 570px) {
 		display: none;
@@ -197,6 +200,26 @@ const Burger = styled.div`
 	}
 `;
 
+const Cart = styled(Link)`
+	margin: 0 1rem;
+	cursor: pointer;
+
+	svg {
+		color: rgb(var(--black));
+
+		transform: scale(1.75);
+		transition: color 0.4s ease 0s;
+
+		&:hover {
+			color: rgb(var(--primary));
+		}
+	}
+
+	@media screen and (max-width: 570px) {
+		display: none;
+	}
+`;
+
 // isMenuOpen: boolean
 
 export const Header = memo(({ isMenuOpen, setIsMenuOpen }) => {
@@ -224,12 +247,6 @@ export const Header = memo(({ isMenuOpen, setIsMenuOpen }) => {
 							<Link href='/'>Главная</Link>
 						</li>
 						<li>
-							<Link href='/category'>Каталог</Link>
-						</li>
-						<li>
-							<Link href='/about'>О нас</Link>
-						</li>
-						<li>
 							<Link href='/contact'>Контакты</Link>
 						</li>
 					</HeaderMenu>
@@ -249,6 +266,9 @@ export const Header = memo(({ isMenuOpen, setIsMenuOpen }) => {
 						</Phone>
 					</Phones>
 					<StyledSearch />
+					<Cart href='/cart'>
+						<BsCart />
+					</Cart>
 					<Burger onClick={() => setIsMenuOpen(!isMenuOpen)} ismenuopen={isMenuOpen ? 1 : 0}>
 						<div />
 						<div />

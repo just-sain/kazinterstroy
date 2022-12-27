@@ -71,6 +71,10 @@ const App = ({ Component, pageProps, router }) => {
 						<link rel='apple-touch-icon' type='image/x-icon' href='/favicon.ico' />
 						<link rel='shortcut icon' type='image/x-icon' href='/favicon.ico' />
 
+						<link rel='preconnect' href='https://fonts.googleapis.com' />
+						<link rel='preconnect' href='https://fonts.gstatic.com' />
+						<link href='https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap' />
+
 						<title>KazInterStroy - Интернет магазин</title>
 					</Head>
 					<Global styles={globalStyles} />

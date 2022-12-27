@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 
+// maxW: 's' | 'm' | 'l';
 export const Container = styled.div`
 	max-width: var(--container-${props => props.maxW ?? 's'});
 	width: 100%;
