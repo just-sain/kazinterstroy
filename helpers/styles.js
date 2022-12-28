@@ -157,6 +157,15 @@ const globalStyles = css`
 			transform: rotate(-360deg);
 		}
 	}
+
+	@keyframes snow {
+		0% {
+			background-position: 0px 0px, 0px 0px, 0px 0px;
+		}
+		100% {
+			background-position: 600px 1800px, 600px 1200px, 600px 600px;
+		}
+	}
 `;
 
 export default globalStyles;
