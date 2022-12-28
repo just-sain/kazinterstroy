@@ -4,6 +4,8 @@ import { declOfQuantity } from '../helpers/declaration';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import styled from '@emotion/styled';
+import { BsHeart, BsHeartFill } from 'react-icons/bs';
+import { useEffect, useState } from 'react';
 
 const StyledArticle = styled(motion.article)`
 	padding: 2rem 1.5rem;
@@ -76,7 +78,63 @@ const Price = styled.h3`
 	}
 `;
 
+const ToCart = styled.button`
+	width: 4rem;
+	height: 4rem;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	border-radius: 50%;
+	background: rgba(var(--black), 0.1);
+
+	color: rgb(var(--primary));
+	font-size: 2rem;
+
+	position: absolute;
+	bottom: 1.5rem;
+	right: 1.5rem;
+`;
+
 export const Article = ({ href, articleData, ...props }) => {
+	const [inCart, setInCart] = useState(false);
+
+	useEffect(() => {
+		const elementsIdString = localStorage.getItem('cart');
+
+		if (elementsIdString) {
+			const elementsId = elementsIdString.split(',');
+
+			if (elementsId.find(e => e === String(articleData.article))) {
+				setInCart(true);
+			}
+		}
+	}, []);
+
+	const cartHandle = () => {
+		const elementsIdString = localStorage.getItem('cart');
+
+		if (elementsIdString) {
+			const elementsId = elementsIdString.split(',');
+
+			if (!elementsId.find(e => e === String(articleData.article))) {
+				const filtered = [articleData.article, ...elementsId];
+
+				localStorage.setItem('cart', filtered);
+				setInCart(true);
+			} else {
+				const filtered = elementsId.filter(e => e !== String(articleData.article));
+
+				localStorage.setItem('cart', filtered);
+				setInCart(false);
+			}
+		} else {
+			localStorage.setItem('cart', articleData.article);
+			setInCart(true);
+		}
+	};
+
 	return (
 		<StyledArticle {...props}>
 			<Link href={href} passHref>
@@ -98,6 +156,7 @@ export const Article = ({ href, articleData, ...props }) => {
 					<span>{priceRule(articleData.price1)}</span> (шт)
 				</Price>
 			</div>
+			<ToCart onClick={cartHandle}>{!inCart ? <BsHeart /> : <BsHeartFill />}</ToCart>
 		</StyledArticle>
 	);
 };

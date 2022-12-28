@@ -159,16 +159,10 @@ export const Footer = memo(() => {
 					<List>
 						<h6>О нас</h6>
 						<li>
-							<a href='/about'>О нас</a>
+							<a href='/'>Главная</a>
 						</li>
 						<li>
 							<a href='/contact'>Контакты</a>
-						</li>
-						<li>
-							<a href='/docs'>Документы</a>
-						</li>
-						<li>
-							<a href='/docs'>Благодарственные письма</a>
 						</li>
 					</List>
 					<MapContainer>

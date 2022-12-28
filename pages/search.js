@@ -118,7 +118,7 @@ const Search = () => {
 					Результаты по запросу <b>{query.search}</b>
 					<br />
 					<span>
-						({elements.length} {declOfNum(elements.length, ['элемент', 'элемента', 'элементов'])})
+						({elements.length} {declOfNum(elements.length, ['товар', 'товара', 'товаров'])})
 					</span>
 				</Heading>
 				{!elements.length && isReady ? (

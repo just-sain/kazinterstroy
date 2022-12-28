@@ -1,10 +1,11 @@
 import { useRouter } from 'next/router';
-import { memo, useState } from 'react';
+import { memo, useContext, useState } from 'react';
 // components
 import Link from 'next/link';
 import { BsArrowBarLeft, BsArrowReturnRight, BsArrowBarRight } from 'react-icons/bs';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
+import { AppContext } from '../context/app.context';
 
 const Wrapper = styled.div`
 	width: 100%;
@@ -129,7 +130,61 @@ const Title = styled.h1`
 	}
 `;
 
-export const Catalog = memo(({ menu, ...props }) => {
+const LoaderContainer = styled.div`
+	width: 100%;
+	padding: 7.5rem 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+`;
+
+const Loader = styled.span`
+	width: 7rem;
+	height: 7rem;
+	border-radius: 50%;
+	display: inline-block;
+	position: relative;
+	border: 0.5rem solid;
+	border-color: rgb(var(--black)) rgb(var(--black)) transparent;
+	box-sizing: border-box;
+	animation: catalogRotation 1s linear infinite;
+	&::after {
+		content: '';
+		box-sizing: border-box;
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		margin: auto;
+		border: 0.4rem solid;
+		border-color: transparent rgb(var(--primary));
+		width: 5rem;
+		height: 5rem;
+		border-radius: 50%;
+		animation: catalogRotationBack 0.5s linear infinite;
+		transform-origin: center center;
+	}
+`;
+
+export const Catalog = memo(({ ...props }) => {
+	const { menu } = useContext(AppContext);
+
+	return (
+		<Wrapper {...props}>
+			<Title>Наш Каталог</Title>
+			{menu ? (
+				<Category menu={menu} />
+			) : (
+				<LoaderContainer>
+					<Loader />
+				</LoaderContainer>
+			)}
+		</Wrapper>
+	);
+});
+
+const Category = memo(({ menu, ...props }) => {
 	const router = useRouter();
 
 	const [firstLevel] = useState(menu ? menu.filter(m => m.level === 1) : []);
@@ -143,45 +198,38 @@ export const Catalog = memo(({ menu, ...props }) => {
 	};
 
 	return (
-		<Wrapper {...props}>
-			<Title>Наш Каталог</Title>
-			{!menu ? (
-				<p>Loading</p>
-			) : (
-				<Box>
-					<FirstLevelMenu isMenuSelect={isMenuSelect}>
-						{firstLevel.map(first => (
-							<MenuItem
-								key={first.id}
-								isSelected={selectMenu.id === first.id}
-								onClick={() => onFirstLevelMenuClick(first)}>
-								{first.name}
-								<div>
-									<BsArrowBarRight />
-								</div>
+		<Box {...props}>
+			<FirstLevelMenu isMenuSelect={isMenuSelect}>
+				{firstLevel.map(first => (
+					<MenuItem
+						key={first.id}
+						isSelected={selectMenu.id === first.id}
+						onClick={() => onFirstLevelMenuClick(first)}>
+						{first.name}
+						<div>
+							<BsArrowBarRight />
+						</div>
+					</MenuItem>
+				))}
+			</FirstLevelMenu>
+			<SecondLevelMenu isMenuSelect={isMenuSelect}>
+				<ul>
+					<Heading>
+						<BackArrow onClick={() => setIsMenuSelect(false)} />
+						{selectMenu.name}
+					</Heading>
+					{secondLevel
+						.filter(second => selectMenu.left < second.left && second.right < selectMenu.right)
+						.map(second => (
+							<MenuItem key={second.id} onClick={() => router.push(`/category/${second.id}`)}>
+								{second.name}
+								<Link href={`/category/${second.id}`}>
+									<BsArrowReturnRight />
+								</Link>
 							</MenuItem>
 						))}
-					</FirstLevelMenu>
-					<SecondLevelMenu isMenuSelect={isMenuSelect}>
-						<ul>
-							<Heading>
-								<BackArrow onClick={() => setIsMenuSelect(false)} />
-								{selectMenu.name}
-							</Heading>
-							{secondLevel
-								.filter(second => selectMenu.left < second.left && second.right < selectMenu.right)
-								.map(second => (
-									<MenuItem key={second.id} onClick={() => router.push(`/category/${second.id}`)}>
-										{second.name}
-										<Link href={`/category/${second.id}`}>
-											<BsArrowReturnRight />
-										</Link>
-									</MenuItem>
-								))}
-						</ul>
-					</SecondLevelMenu>
-				</Box>
-			)}
-		</Wrapper>
+				</ul>
+			</SecondLevelMenu>
+		</Box>
 	);
 });

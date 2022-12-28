@@ -8,13 +8,14 @@ import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Breadcrumb } from '../../../components/breadcrumb';
 import { Button } from '../../../components/button';
-import { BsCartPlusFill } from 'react-icons/bs';
+import { BsCartPlusFill, BsTrash } from 'react-icons/bs';
 import styled from '@emotion/styled';
 // styles for swiper
 import 'swiper/css';
 import 'swiper/css/zoom';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-cards';
+import { useEffect, useState } from 'react';
 
 const StyledButton = styled(Button)`
 	width: 100%;
@@ -264,22 +265,45 @@ const PropertiesItem = styled.li`
 `;
 
 const Item = ({ categoryData, item }) => {
+	const [inCart, setInCart] = useState(false);
 	const breadcrumbData = [
 		{ name: 'Каталог', href: '/category' },
 		{ name: categoryData.name, href: `/category/${categoryData.id}` },
 		{ name: item.name, href: `/category/${categoryData.id}/${item.article}` }
 	];
 
-	const addCartHandle = () => {
+	useEffect(() => {
 		const elementsIdString = localStorage.getItem('cart');
 
 		if (elementsIdString) {
 			const elementsId = elementsIdString.split(',');
-			const filtered = [item.article, ...elementsId];
 
-			localStorage.setItem('cart', filtered);
+			if (elementsId.find(e => e === String(item.article))) {
+				setInCart(true);
+			}
+		}
+	}, []);
+
+	const cartHandle = () => {
+		const elementsIdString = localStorage.getItem('cart');
+
+		if (elementsIdString) {
+			const elementsId = elementsIdString.split(',');
+
+			if (!elementsId.find(e => e === String(item.article))) {
+				const filtered = [item.article, ...elementsId];
+
+				localStorage.setItem('cart', filtered);
+				setInCart(true);
+			} else {
+				const filtered = elementsId.filter(e => e !== String(item.article));
+
+				localStorage.setItem('cart', filtered);
+				setInCart(false);
+			}
 		} else {
 			localStorage.setItem('cart', item.article);
+			setInCart(true);
 		}
 	};
 
@@ -375,8 +399,16 @@ const Item = ({ categoryData, item }) => {
 							<br />
 							<span>{priceRule(item.price1)}</span>
 						</Price>
-						<StyledButton onClick={addCartHandle} background='cash' color='white' size='l'>
-							Добавить в корзину <BsCartPlusFill />
+						<StyledButton onClick={cartHandle} background={inCart ? 'error' : 'cash'} color='white' size='l'>
+							{!inCart ? (
+								<>
+									Добавить в корзину <BsCartPlusFill />
+								</>
+							) : (
+								<>
+									Удалить с корзины <BsTrash />
+								</>
+							)}
 						</StyledButton>
 					</div>
 				</Grid>

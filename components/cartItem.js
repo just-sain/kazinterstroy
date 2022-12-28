@@ -41,8 +41,17 @@ const Grid = styled.div`
 				left: 50%;
 
 				transform: translate(-50%, -50%);
+
+				@media screen and (max-width: 720px) {
+					width: 100%;
+					height: 40%;
+				}
 			}
 		`}
+
+	@media screen and (max-width: 720px) {
+		grid-template-columns: 1fr;
+	}
 `;
 
 const Img = styled(Link)`
@@ -62,6 +71,11 @@ const Img = styled(Link)`
 
 		object-fit: contain;
 		object-position: center;
+	}
+
+	@media screen and (max-width: 720px) {
+		width: 100%;
+		height: 35rem;
 	}
 `;
 

@@ -7,8 +7,6 @@ import { Slider } from '../components/slider';
 import { Catalog } from '../components/catalog';
 
 const HomePage = ({ sliderData }) => {
-	const { menu } = useContext(AppContext);
-
 	return (
 		<>
 			<Head>
@@ -27,7 +25,7 @@ const HomePage = ({ sliderData }) => {
 				<title>KazInterStroy - Интернет магазин</title>
 			</Head>
 			<Slider sliderData={sliderData} />
-			{menu && <Catalog menu={menu} style={{ marginTop: '7.5rem' }} />}
+			<Catalog style={{ marginTop: '7.5rem' }} />
 		</>
 	);
 };

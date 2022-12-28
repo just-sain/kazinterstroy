@@ -40,7 +40,6 @@ export const AppContextProvider = ({ children }) => {
 		axios
 			.get(`${process.env.NEXT_PUBLIC_API}/categories?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}`)
 			.then(res => {
-				console.log(res.data);
 				setMenuState(res.data);
 			});
 	}, []);

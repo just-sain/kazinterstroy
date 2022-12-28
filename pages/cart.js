@@ -1,13 +1,14 @@
 import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
+import { AppContext } from '../context/app.context';
 import { declOfNum } from '../helpers/declaration';
+import { priceRule } from '../helpers/price';
 // components
 import Head from 'next/head';
 import { CartItem } from '../components/cartItem';
-import { Button } from '../components/button';
 import { BsCartX, BsCashStack } from 'react-icons/bs';
 import styled from '@emotion/styled';
-import { AppContext } from '../context/app.context';
+import { css } from '@emotion/react';
 
 const Heading = styled.h1`
 	margin-bottom: 3rem;
@@ -29,7 +30,7 @@ const Grid = styled.div`
 	display: grid;
 	justify-items: stretch;
 	align-content: start;
-	gap: 3rem;
+	gap: 5rem;
 `;
 
 const NotFound = styled.div`
@@ -52,13 +53,49 @@ const Section = styled.section`
 	width: 100%;
 `;
 
-const StyledButton = styled(Button)`
-	max-width: 45rem;
-	width: 100%;
-	margin: 5rem auto 0;
+const TotalPrice = styled.p`
+	margin-top: 5rem;
 
 	text-align: center;
+	color: rgb(var(--gray));
+	font-size: 2.2rem;
+	font-weight: 400;
+
+	span {
+		font-weight: 600;
+	}
+`;
+
+const StyledButton = styled.a`
+	max-width: 45rem;
+	width: 100%;
+	margin: 1.5rem auto 0;
+	padding: 1.75rem 3rem;
+	${({ disabled }) =>
+		disabled &&
+		css`
+			pointer-events: none;
+			opacity: 0.5;
+		`}
+
+	display: flex;
+	text-align: center;
 	justify-content: center;
+
+	border-radius: 1rem;
+	background: rgb(var(--cash));
+
+	color: rgb(var(--white));
+	font-size: 2rem;
+	font-weight: 400;
+	text-decoration: none;
+
+	transition: background 0.4s ease 0s;
+
+	&:hover,
+	&:focus {
+		background: rgba(var(--cash), 0.85);
+	}
 
 	svg {
 		margin-left: 1rem;
@@ -71,6 +108,13 @@ const CartPage = () => {
 	const [elements, setElements] = useState([]);
 	const [isReady, setIsReady] = useState(false);
 	const [notFound, setNotFound] = useState(false);
+
+	let totalPrice = 0;
+	if (elements.length) {
+		for (let i in elements) {
+			totalPrice += elements[i].price1;
+		}
+	}
 
 	useEffect(() => {
 		const storageItemsId = localStorage.getItem('cart');
@@ -103,7 +147,7 @@ const CartPage = () => {
 				Корзина
 				<br />
 				{isReady && elements.length && (
-					<span>({`${elements.length} ${declOfNum(elements.length, ['элемент', 'элемента', 'элементов'])}`})</span>
+					<span>({`${elements.length} ${declOfNum(elements.length, ['товар', 'товара', 'товаров'])}`})</span>
 				)}
 			</Heading>
 			<Section>
@@ -119,13 +163,15 @@ const CartPage = () => {
 						))}
 					</Grid>
 				)}
+				<TotalPrice>
+					Общая сумма: <span>{priceRule(totalPrice)}</span>
+				</TotalPrice>
 				<StyledButton
-					disabled={true}
-					background='cash'
+					disabled={notFound || !elements.length || !!elements.find(e => e.quantity === 0)}
 					color='white'
 					size='l'
 					href={`https://wa.me/${contact.phone}`}>
-					Купить
+					Оплатить
 					<BsCashStack />
 				</StyledButton>
 			</Section>

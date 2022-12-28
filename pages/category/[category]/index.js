@@ -82,8 +82,7 @@ const Category = ({ categoryData }) => {
 					{categoryData.name}
 					<br />
 					<span>
-						({isReady && elements.length}{' '}
-						{isReady && declOfNum(elements.length, ['элемент', 'элемента', 'элементов'])})
+						({isReady && elements.length} {isReady && declOfNum(elements.length, ['товар', 'товара', 'товаров'])})
 					</span>
 				</Heading>
 				<Elements isReady={isReady} elements={elements} />

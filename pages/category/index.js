@@ -1,12 +1,8 @@
 // components
 import Head from 'next/head';
-import { useContext } from 'react';
 import { Catalog } from '../../components/catalog';
-import { AppContext } from '../../context/app.context';
 
 const Category = () => {
-	const { menu } = useContext(AppContext);
-
 	return (
 		<>
 			<Head>
@@ -30,7 +26,7 @@ const Category = () => {
 
 				<title>Каталог / KazInterStroy</title>
 			</Head>
-			{menu && <Catalog menu={menu} />}
+			<Catalog />
 		</>
 	);
 };

@@ -1,6 +1,7 @@
-import { memo } from 'react';
+import { memo, useEffect, useState } from 'react';
 // components
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Container } from './container';
 import { Search } from './search';
@@ -8,7 +9,6 @@ import { BsCart } from 'react-icons/bs';
 import { FaPhoneAlt } from 'react-icons/fa';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import Image from 'next/image';
 
 const StyledHeader = styled(motion.header)`
 	width: 100%;
@@ -204,15 +204,38 @@ const Cart = styled(Link)`
 	margin: 0 1rem;
 	cursor: pointer;
 
-	svg {
-		color: rgb(var(--black));
+	color: rgb(var(--black));
 
+	position: relative;
+
+	svg {
 		transform: scale(1.75);
 		transition: color 0.4s ease 0s;
+	}
 
-		&:hover {
-			color: rgb(var(--primary));
-		}
+	&:hover {
+		color: rgb(var(--primary));
+	}
+
+	span {
+		width: 2rem;
+		height: 2rem;
+
+		display: flex;
+		justify-content: center;
+		align-items: center;
+
+		background: rgb(var(--secondary));
+		border-radius: 50%;
+
+		color: rgb(var(--white));
+		text-align: center;
+		font-size: 1.4rem;
+		font-weight: 600;
+
+		position: absolute;
+		bottom: -1rem;
+		left: -1rem;
 	}
 
 	@media screen and (max-width: 570px) {
@@ -223,6 +246,18 @@ const Cart = styled(Link)`
 // isMenuOpen: boolean
 
 export const Header = memo(({ isMenuOpen, setIsMenuOpen }) => {
+	const [cartCount, setCartCount] = useState(0);
+
+	useEffect(() => {
+		const elementsIdString = localStorage.getItem('cart');
+
+		if (elementsIdString) {
+			const elementsId = elementsIdString.split(',');
+			const filtered = elementsId.filter((c, index) => elementsId.indexOf(c) === index);
+			setCartCount(!filtered.length ? 0 : filtered.length);
+		}
+	}, []);
+
 	return (
 		<StyledHeader
 			ismenuopen={isMenuOpen ? 1 : 0}
@@ -268,6 +303,7 @@ export const Header = memo(({ isMenuOpen, setIsMenuOpen }) => {
 					<StyledSearch />
 					<Cart href='/cart'>
 						<BsCart />
+						<span>{cartCount}</span>
 					</Cart>
 					<Burger onClick={() => setIsMenuOpen(!isMenuOpen)} ismenuopen={isMenuOpen ? 1 : 0}>
 						<div />
