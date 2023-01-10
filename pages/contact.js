@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { GrContactInfo, GrMail, GrMapLocation, GrLocationPin, GrFormClock, GrPhone } from 'react-icons/gr';
 import styled from '@emotion/styled';
 import { useContext, useState } from 'react';
-import { AppContext } from '../context/app.context';
+import { Store } from '../utils/store';
 
 // map section
 const MapSection = styled.section`
@@ -158,7 +158,8 @@ const Line = styled.div`
 
 const Contact = () => {
 	const [isMapLoad, setIsMapLoad] = useState(false);
-	const { contact } = useContext(AppContext);
+	const { state } = useContext(Store);
+	const { contact } = state;
 
 	return (
 		<>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { declOfNum } from '../../../helpers/declaration';
+import { declOfNum } from '../../../utils/declaration';
 // components
 import Head from 'next/head';
 import { Breadcrumb } from '../../../components/breadcrumb';

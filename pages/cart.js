@@ -1,8 +1,7 @@
-import { useContext, useEffect, useState } from 'react';
-import axios from 'axios';
-import { AppContext } from '../context/app.context';
-import { declOfNum } from '../helpers/declaration';
-import { priceRule } from '../helpers/price';
+import { useContext, useState } from 'react';
+import { Store } from '../utils/store';
+import { declOfNum } from '../utils/declaration';
+import { priceRule } from '../utils/price';
 // components
 import Head from 'next/head';
 import { CartItem } from '../components/cartItem';
@@ -104,39 +103,18 @@ const StyledButton = styled.a`
 `;
 
 const CartPage = () => {
-	const { contact } = useContext(AppContext);
-	const [elements, setElements] = useState([]);
-	const [isReady, setIsReady] = useState(false);
-	const [notFound, setNotFound] = useState(false);
+	const { state } = useContext(Store);
+	const {
+		contact,
+		cart: { cartItems }
+	} = state;
 
 	let totalPrice = 0;
-	if (elements.length) {
-		for (let i in elements) {
-			totalPrice += elements[i].price1;
+	if (cartItems.length) {
+		for (let i in cartItems) {
+			totalPrice += cartItems[i].price1;
 		}
 	}
-
-	useEffect(() => {
-		const storageItemsId = localStorage.getItem('cart');
-
-		if (storageItemsId) {
-			if (!!storageItemsId.split(',')) {
-				axios
-					.get(
-						`${process.env.NEXT_PUBLIC_API}/element-info?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&article=${storageItemsId}&additional_fields=brand,images`
-					)
-					.then(res => {
-						if (!res.data || res.data?.status === 'error') setNotFound(true);
-						else {
-							setElements(res.data);
-							setIsReady(true);
-						}
-					});
-			} else setNotFound(true);
-		} else {
-			setNotFound(true);
-		}
-	}, [elements]);
 
 	return (
 		<>
@@ -145,20 +123,22 @@ const CartPage = () => {
 			</Head>
 			<Heading>
 				Корзина
-				<br />
-				{isReady && elements.length && (
-					<span>({`${elements.length} ${declOfNum(elements.length, ['товар', 'товара', 'товаров'])}`})</span>
+				{!!cartItems.length && (
+					<>
+						<br />
+						<span>({`${cartItems.length} ${declOfNum(cartItems.length, ['товар', 'товара', 'товаров'])}`})</span>
+					</>
 				)}
 			</Heading>
 			<Section>
-				{notFound ? (
+				{!cartItems.length ? (
 					<NotFound>
 						<p>Ваша корзина пуста</p>
 						<BsCartX />
 					</NotFound>
 				) : (
 					<Grid>
-						{elements.map(e => (
+						{cartItems.map(e => (
 							<CartItem key={e.article} elementData={e} />
 						))}
 					</Grid>
@@ -167,7 +147,7 @@ const CartPage = () => {
 					Общая сумма: <span>{priceRule(totalPrice)}</span>
 				</TotalPrice>
 				<StyledButton
-					disabled={notFound || !elements.length || !!elements.find(e => e.quantity === 0)}
+					disabled={!cartItems.length || !!cartItems.find(e => e.quantity === 0)}
 					color='white'
 					size='l'
 					href={`https://wa.me/${contact.phone}`}>

@@ -1,10 +1,10 @@
 import Layout from '../components/layout';
-import globalStyles from '../helpers/styles';
+import globalStyles from '../utils/styles';
+import StoreProvider from '../utils/store';
 // components
 import Head from 'next/head';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Global } from '@emotion/react';
-import { AppContextProvider } from '../context/app.context';
 
 const variants = {
 	initialState: { opacity: 0, clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)' },
@@ -26,7 +26,7 @@ const variants = {
 
 const App = ({ Component, pageProps, router }) => {
 	return (
-		<AppContextProvider>
+		<StoreProvider>
 			<AnimatePresence mode='wait'>
 				<motion.div
 					key={router.route}
@@ -83,7 +83,7 @@ const App = ({ Component, pageProps, router }) => {
 					</Layout>
 				</motion.div>
 			</AnimatePresence>
-		</AppContextProvider>
+		</StoreProvider>
 	);
 };
 

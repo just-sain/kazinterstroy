@@ -1,6 +1,6 @@
 import { useContext } from 'react';
-import { AppContext } from '../context/app.context';
-import client from '../lib/contentful';
+import { Store } from '../utils/store';
+import client from '../utils/contentful';
 // components
 import Head from 'next/head';
 import { Slider } from '../components/slider';

@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router';
 import { memo, useContext, useState } from 'react';
+import { Store } from '../utils/store';
 // components
 import Link from 'next/link';
 import { BsArrowBarLeft, BsArrowReturnRight, BsArrowBarRight } from 'react-icons/bs';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
-import { AppContext } from '../context/app.context';
 
 const Wrapper = styled.div`
 	width: 100%;
@@ -168,7 +168,8 @@ const Loader = styled.span`
 `;
 
 export const Catalog = memo(({ ...props }) => {
-	const { menu } = useContext(AppContext);
+	const { state } = useContext(Store);
+	const { menu } = state;
 
 	return (
 		<Wrapper {...props}>

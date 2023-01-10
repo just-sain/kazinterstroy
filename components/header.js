@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from 'react';
+import { memo, useContext } from 'react';
 // components
 import Link from 'next/link';
 import Image from 'next/image';
@@ -9,6 +9,7 @@ import { BsCart } from 'react-icons/bs';
 import { FaPhoneAlt } from 'react-icons/fa';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { Store } from '../utils/store';
 
 const StyledHeader = styled(motion.header)`
 	width: 100%;
@@ -246,17 +247,10 @@ const Cart = styled(Link)`
 // isMenuOpen: boolean
 
 export const Header = memo(({ isMenuOpen, setIsMenuOpen }) => {
-	const [cartCount, setCartCount] = useState(0);
-
-	useEffect(() => {
-		const elementsIdString = localStorage.getItem('cart');
-
-		if (elementsIdString) {
-			const elementsId = elementsIdString.split(',');
-			const filtered = elementsId.filter((c, index) => elementsId.indexOf(c) === index);
-			setCartCount(!filtered.length ? 0 : filtered.length);
-		}
-	}, []);
+	const { state } = useContext(Store);
+	const {
+		cart: { cartItems }
+	} = state;
 
 	return (
 		<StyledHeader
@@ -303,7 +297,7 @@ export const Header = memo(({ isMenuOpen, setIsMenuOpen }) => {
 					<StyledSearch />
 					<Cart href='/cart'>
 						<BsCart />
-						<span>{cartCount}</span>
+						<span>{!cartItems.length ? '0' : cartItems.length}</span>
 					</Cart>
 					<Burger onClick={() => setIsMenuOpen(!isMenuOpen)} ismenuopen={isMenuOpen ? 1 : 0}>
 						<div />

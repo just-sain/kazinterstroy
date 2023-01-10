@@ -1,6 +1,6 @@
 import { memo } from 'react';
-import { priceRule } from '../helpers/price';
-import { declOfQuantity } from '../helpers/declaration';
+import { priceRule } from '../utils/price';
+import { declOfQuantity } from '../utils/declaration';
 // components
 import Image from 'next/image';
 import Link from 'next/link';

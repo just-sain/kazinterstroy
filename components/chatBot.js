@@ -40,7 +40,7 @@ const Chat = styled.iframe`
 
 	position: fixed;
 	bottom: 6.5rem;
-	right: ${({ showChat }) => (showChat ? `1.5rem` : `-30%`)};
+	right: ${({ showChat }) => (showChat ? `1.5rem` : `-40%`)};
 
 	transition: right 0.6s ease 0s;
 

@@ -1,7 +1,7 @@
 import { Autoplay, Zoom, Pagination, EffectCards } from 'swiper'; // required modules for swiper
 import axios from 'axios';
-import { declOfQuantity } from '../../../helpers/declaration';
-import { priceRule } from '../../../helpers/price';
+import { declOfQuantity } from '../../../utils/declaration';
+import { priceRule } from '../../../utils/price';
 // components
 import Head from 'next/head';
 import Image from 'next/image';
@@ -15,7 +15,8 @@ import 'swiper/css';
 import 'swiper/css/zoom';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-cards';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { Store } from '../../../utils/store';
 
 const StyledButton = styled(Button)`
 	width: 100%;
@@ -265,45 +266,27 @@ const PropertiesItem = styled.li`
 `;
 
 const Item = ({ categoryData, item }) => {
-	const [inCart, setInCart] = useState(false);
+	const { state, dispatch } = useContext(Store);
+	const {
+		cart: { cartItems }
+	} = state;
 	const breadcrumbData = [
 		{ name: 'Каталог', href: '/category' },
 		{ name: categoryData.name, href: `/category/${categoryData.id}` },
 		{ name: item.name, href: `/category/${categoryData.id}/${item.article}` }
 	];
 
-	useEffect(() => {
-		const elementsIdString = localStorage.getItem('cart');
-
-		if (elementsIdString) {
-			const elementsId = elementsIdString.split(',');
-
-			if (elementsId.find(e => e === String(item.article))) {
-				setInCart(true);
-			}
-		}
-	}, []);
+	// console.log(cartItems);
 
 	const cartHandle = () => {
-		const elementsIdString = localStorage.getItem('cart');
-
-		if (elementsIdString) {
-			const elementsId = elementsIdString.split(',');
-
-			if (!elementsId.find(e => e === String(item.article))) {
-				const filtered = [item.article, ...elementsId];
-
-				localStorage.setItem('cart', filtered);
-				setInCart(true);
+		if (!!cartItems) {
+			if (!cartItems.find(e => e.article === Number(item.article))) {
+				dispatch({ type: 'CART_ADD_ITEM', payload: item });
 			} else {
-				const filtered = elementsId.filter(e => e !== String(item.article));
-
-				localStorage.setItem('cart', filtered);
-				setInCart(false);
+				dispatch({ type: 'CART_REMOVE_ITEM', payload: item });
 			}
 		} else {
-			localStorage.setItem('cart', item.article);
-			setInCart(true);
+			dispatch({ type: 'CART_REMOVE_ITEM', payload: item });
 		}
 	};
 
@@ -349,7 +332,7 @@ const Item = ({ categoryData, item }) => {
 							{item.images.map(i => (
 								<StyledSwiperSlide key={i}>
 									<ImageContainer className='swiper-zoom-container'>
-										<Image src={i} alt={i} fill sizes='100%' />
+										<Image priority src={i} alt={i} fill sizes='100%' />
 									</ImageContainer>
 								</StyledSwiperSlide>
 							))}
@@ -399,8 +382,12 @@ const Item = ({ categoryData, item }) => {
 							<br />
 							<span>{priceRule(item.price1)}</span>
 						</Price>
-						<StyledButton onClick={cartHandle} background={inCart ? 'error' : 'cash'} color='white' size='l'>
-							{!inCart ? (
+						<StyledButton
+							onClick={cartHandle}
+							background={cartItems.find(i => i.article === item.article) ? 'error' : 'cash'}
+							color='white'
+							size='l'>
+							{!cartItems.find(i => i.article === item.article) ? (
 								<>
 									Добавить в корзину <BsCartPlusFill />
 								</>

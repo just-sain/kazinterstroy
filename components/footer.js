@@ -1,5 +1,5 @@
 import { memo, useContext, useState } from 'react';
-import { AppContext } from '../context/app.context';
+import { Store } from '../utils/store';
 // components
 import { List } from './list';
 import { Container } from './container';
@@ -129,7 +129,8 @@ const Bottom = styled.div`
 `;
 
 export const Footer = memo(() => {
-	const { contact } = useContext(AppContext);
+	const { state } = useContext(Store);
+	const { contact } = state;
 	const [isMapLoad, setIsMapLoad] = useState(false);
 
 	return (

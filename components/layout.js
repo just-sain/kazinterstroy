@@ -64,7 +64,7 @@ const BgImg = styled(Image)`
 const SnowEffect = styled.div`
 	width: 100%;
 	height: 100%;
-	opacity: 0.4;
+	opacity: 0.2;
 
 	pointer-events: none;
 	background-image: url('/snow1.png'), url('/snow2.png'), url('/snow3.png');

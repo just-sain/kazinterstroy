@@ -1,5 +1,5 @@
-import { priceRule } from '../helpers/price';
-import { declOfQuantity } from '../helpers/declaration';
+import { priceRule } from '../utils/price';
+import { declOfQuantity } from '../utils/declaration';
 // components
 import Link from 'next/link';
 import { motion } from 'framer-motion';
