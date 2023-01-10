@@ -78,11 +78,11 @@ const SnowEffect = styled.div`
 
 const Layout = ({ children }) => {
 	const { events } = useRouter();
-	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const [isBurgerMenuOpen, setIsBurgerMenuOpen] = useState(false);
 
 	useEffect(() => {
 		const handleRouteChange = url => {
-			setIsMenuOpen(false);
+			setIsBurgerMenuOpen(false);
 		};
 
 		events.on('routeChangeStart', handleRouteChange);
@@ -94,8 +94,8 @@ const Layout = ({ children }) => {
 
 	return (
 		<Wrapper>
-			<Header isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
-			<Menu isOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+			<Header isBurgerMenuOpen={isBurgerMenuOpen} setIsBurgerMenuOpen={setIsBurgerMenuOpen} />
+			<Menu isOpen={isBurgerMenuOpen} setIsBurgerMenuOpen={setIsBurgerMenuOpen} />
 			<Main>{children}</Main>
 			<Bg>
 				<BgImg src='/bg-item.png' alt='bg' priority fill sizes='100%' />

@@ -167,7 +167,7 @@ const StyledMenu = styled.menu`
 `;
 
 // isOpen: boolean;
-export const Menu = ({ isOpen, setIsMenuOpen, ...props }) => {
+export const Menu = ({ isOpen, setIsBurgerMenuOpen, ...props }) => {
 	return (
 		<Wrapper isOpen={isOpen} {...props}>
 			<StyledContainer maxW='m'>

@@ -1,9 +1,11 @@
-import { memo, useContext } from 'react';
+import { memo, useContext, useState } from 'react';
 // components
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { Button } from './button';
 import { Container } from './container';
+import { Catalog } from './catalog';
 import { Search } from './search';
 import { BsCart } from 'react-icons/bs';
 import { FaPhoneAlt } from 'react-icons/fa';
@@ -16,7 +18,7 @@ const StyledHeader = styled(motion.header)`
 	height: var(--header-height);
 	z-index: 100;
 
-	background: rgba(${({ ismenuopen }) => (ismenuopen ? `var(--bg), 1` : `var(--primary), 0.4`)});
+	background: rgba(${({ ismenuopen }) => (ismenuopen ? `var(--bg), 1` : `var(--white), 0.85`)});
 	backdrop-filter: blur(0.5rem);
 
 	color: rgb(var(--black));
@@ -244,68 +246,84 @@ const Cart = styled(Link)`
 	}
 `;
 
-// isMenuOpen: boolean
+// isBurgerMenuOpen: boolean
 
-export const Header = memo(({ isMenuOpen, setIsMenuOpen }) => {
+export const Header = memo(({ isBurgerMenuOpen, setIsBurgerMenuOpen }) => {
 	const { state } = useContext(Store);
 	const {
 		cart: { cartItems }
 	} = state;
 
+	const [isCatalogOpen, setIsCatalogOpen] = useState(false);
+
+	const onCatalogClick = () => {
+		setIsCatalogOpen(!isCatalogOpen);
+	};
+
 	return (
-		<StyledHeader
-			ismenuopen={isMenuOpen ? 1 : 0}
-			initial={{ opacity: 0, translateY: '-100%' }}
-			transition={{ delay: 0.6, duration: 0.6 }}
-			animate={{ opacity: 1, translateY: 0 }}>
-			<StyledContainer maxW='l'>
-				<LeftBlock
-					initial={{ opacity: 0, translateY: '-100%' }}
-					transition={{ delay: 0.8, duration: 0.6 }}
-					animate={{ opacity: 1, translateY: 0 }}>
-					<Logo>
-						<Link href='/'>
-							<LogoImage>
-								<Image src='/logo.png' alt='KazInterStroy' priority fill sizes='100%' />
-							</LogoImage>
-							KazInterStroy
-						</Link>
-					</Logo>
-					<HeaderMenu>
-						<li>
-							<Link href='/'>Главная</Link>
-						</li>
-						<li>
-							<Link href='/contact'>Контакты</Link>
-						</li>
-					</HeaderMenu>
-				</LeftBlock>
-				<RightBlock
-					initial={{ opacity: 0, translateY: '-100%' }}
-					transition={{ delay: 1, duration: 0.6 }}
-					animate={{ opacity: 1, translateY: 0 }}>
-					<Phones>
-						<Phone href='tel:+77013597588'>
-							<Icon />
-							<span>+7 (708) 326 64 20</span>
-						</Phone>
-						<Phone href='tel:+77273231030'>
-							<Icon />
-							<span>+7 (727) 32 31 030</span>
-						</Phone>
-					</Phones>
-					<StyledSearch />
-					<Cart href='/cart'>
-						<BsCart />
-						<span>{!cartItems.length ? '0' : cartItems.length}</span>
-					</Cart>
-					<Burger onClick={() => setIsMenuOpen(!isMenuOpen)} ismenuopen={isMenuOpen ? 1 : 0}>
-						<div />
-						<div />
-						<div />
-					</Burger>
-				</RightBlock>
-			</StyledContainer>
-		</StyledHeader>
+		<>
+			{isCatalogOpen && <Catalog />}
+			<StyledHeader
+				ismenuopen={isBurgerMenuOpen ? 1 : 0 || isCatalogOpen ? 1 : 0}
+				initial={{ opacity: 0, translateY: '-100%' }}
+				transition={{ delay: 0.6, duration: 0.6 }}
+				animate={{ opacity: 1, translateY: 0 }}>
+				<StyledContainer maxW='l'>
+					<LeftBlock
+						initial={{ opacity: 0, translateY: '-100%' }}
+						transition={{ delay: 0.8, duration: 0.6 }}
+						animate={{ opacity: 1, translateY: 0 }}>
+						<Logo>
+							<Link href='/'>
+								<LogoImage>
+									<Image src='/logo.png' alt='KazInterStroy' priority fill sizes='100%' />
+								</LogoImage>
+								KazInterStroy
+							</Link>
+						</Logo>
+						<HeaderMenu>
+							<Button
+								onClick={onCatalogClick}
+								background={!isCatalogOpen ? 'primary' : 'secondary'}
+								color='white'
+								size='m'>
+								Каталог
+							</Button>
+							<li>
+								<Link href='/'>Главная</Link>
+							</li>
+							<li>
+								<Link href='/contact'>Контакты</Link>
+							</li>
+						</HeaderMenu>
+					</LeftBlock>
+					<RightBlock
+						initial={{ opacity: 0, translateY: '-100%' }}
+						transition={{ delay: 1, duration: 0.6 }}
+						animate={{ opacity: 1, translateY: 0 }}>
+						<Phones>
+							<Phone href='tel:+77013597588'>
+								<Icon />
+								<span>+7 (708) 326 64 20</span>
+							</Phone>
+							<Phone href='tel:+77273231030'>
+								<Icon />
+								<span>+7 (727) 32 31 030</span>
+							</Phone>
+						</Phones>
+						<StyledSearch />
+						<Cart href='/cart'>
+							<BsCart />
+							<span>{!cartItems.length ? '0' : cartItems.length}</span>
+						</Cart>
+						<Burger onClick={() => setIsBurgerMenuOpen(!isBurgerMenuOpen)} ismenuopen={isBurgerMenuOpen ? 1 : 0}>
+							<div />
+							<div />
+							<div />
+						</Burger>
+					</RightBlock>
+				</StyledContainer>
+			</StyledHeader>
+		</>
 	);
 });

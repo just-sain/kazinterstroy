@@ -4,7 +4,7 @@ import client from '../utils/contentful';
 // components
 import Head from 'next/head';
 import { Slider } from '../components/slider';
-import { Catalog } from '../components/catalog';
+import { CatalogBlock } from '../components/catalogBlock';
 
 const HomePage = ({ sliderData }) => {
 	return (
@@ -25,7 +25,7 @@ const HomePage = ({ sliderData }) => {
 				<title>KazInterStroy - Интернет магазин</title>
 			</Head>
 			<Slider sliderData={sliderData} />
-			<Catalog style={{ marginTop: '7.5rem' }} />
+			<CatalogBlock style={{ marginTop: '7.5rem' }} />
 		</>
 	);
 };
