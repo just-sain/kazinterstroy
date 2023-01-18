@@ -1,4 +1,4 @@
-## Getting Started
+## getting started
 
 # first, add .env file to root directory and add:
 
