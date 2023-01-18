@@ -1,13 +1,19 @@
-import { Html, Head, Main, NextScript } from 'next/document'
+import NextDocument, { Head, Html, Main, NextScript } from 'next/document';
 
-export default function Document() {
-  return (
-    <Html lang="en">
-      <Head />
-      <body>
-        <Main />
-        <NextScript />
-      </body>
-    </Html>
-  )
+// every page must have:
+// <title>PAGE TITLE</title>
+// <meta name='description' content="homepage" />
+
+export default class Document extends NextDocument {
+	render() {
+		return (
+			<Html lang='ru'>
+				<Head />
+				<body>
+					<Main />
+					<NextScript />
+				</body>
+			</Html>
+		);
+	}
 }
