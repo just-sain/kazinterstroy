@@ -1,17 +1,18 @@
 import { memo, useContext, useState } from 'react';
+import { Store } from '../utils/store';
 // components
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Button } from './button';
 import { Container } from './container';
 import { Catalog } from './catalog';
 import { Search } from './search';
+// icons
 import { BsCart } from 'react-icons/bs';
-import { FaPhoneAlt } from 'react-icons/fa';
+import { FaPhoneAlt, FaListUl, FaRegWindowClose } from 'react-icons/fa';
+// styles
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { Store } from '../utils/store';
 
 const StyledHeader = styled(motion.header)`
 	width: 100%;
@@ -38,6 +39,7 @@ const StyledContainer = styled(Container)`
 	align-items: center;
 `;
 
+// left block
 const LeftBlock = styled(motion.div)`
 	display: flex;
 	align-items: center;
@@ -77,6 +79,28 @@ const LogoImage = styled.div`
 	}
 `;
 
+const CategoryButton = styled.button`
+	padding: 1rem 1.75rem;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 0.5rem;
+
+	background: rgb(var(--primary));
+	border-radius: 1.25rem;
+
+	color: rgb(var(--white));
+	font-size: 1.8rem;
+	font-weight: 600;
+
+	transition: background 0.4s ease 0s;
+
+	&:hover {
+		background: rgba(var(--primary-dark), 0.85);
+	}
+`;
+
 const HeaderMenu = styled.menu`
 	display: flex;
 	justify-content: flex-end;
@@ -96,6 +120,7 @@ const HeaderMenu = styled.menu`
 	}
 `;
 
+// right block
 const RightBlock = styled(motion.div)`
 	display: flex;
 	align-items: center;
@@ -104,7 +129,7 @@ const RightBlock = styled(motion.div)`
 `;
 
 const Phones = styled.div`
-	width: 17rem;
+	width: 19rem;
 
 	display: flex;
 	flex-direction: column;
@@ -282,13 +307,10 @@ export const Header = memo(({ isBurgerMenuOpen, setIsBurgerMenuOpen }) => {
 							</Link>
 						</Logo>
 						<HeaderMenu>
-							<Button
-								onClick={onCatalogClick}
-								background={!isCatalogOpen ? 'primary' : 'secondary'}
-								color='white'
-								size='m'>
-								Каталог
-							</Button>
+							<CategoryButton onClick={onCatalogClick}>
+								{!isCatalogOpen ? <FaListUl /> : <FaRegWindowClose />}
+								<span>Каталог</span>
+							</CategoryButton>
 							<li>
 								<Link href='/'>Главная</Link>
 							</li>

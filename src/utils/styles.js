@@ -1,9 +1,5 @@
 import { css } from '@emotion/react';
 
-// old font family:
-// --font-family-primary: -apple-system, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
-// Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-
 const globalStyles = css`
 	:root {
 		--header-height: 7rem;
@@ -17,7 +13,7 @@ const globalStyles = css`
 		--inner-shadow: inset 0.3rem 0.3rem 0.6rem #d0d0d0, inset -0.3rem -0.3rem 0.6rem #f8f8f8;
 		--inner-shadow-0: inset 0 0 0 #d0d0d0, inset 0 0 0 #f8f8f8;
 
-		--bg: 251, 254, 253;
+		--bg: 255, 255, 255;
 		--darker-bg: 241, 244, 243;
 
 		--primary: 34, 138, 218;
@@ -26,7 +22,7 @@ const globalStyles = css`
 		--cash: 17, 140, 79;
 		--error: 235, 75, 75;
 
-		--white: 255, 250, 250;
+		--white: 255, 255, 255;
 		--real-white: 255, 255, 255;
 		--darker-white: 222, 222, 222;
 		--black: 12, 10, 15;
@@ -34,7 +30,8 @@ const globalStyles = css`
 		--real-gray: 187, 187, 187;
 		--black-gray: 35, 35, 35;
 		--light-gray: 160, 160, 160;
-		--font-family-primary: 'Roboto', sans-serif;
+
+		--font-family-primary: 'Inter', sans-serif;
 	}
 
 	* {

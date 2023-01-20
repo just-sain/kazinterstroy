@@ -115,11 +115,15 @@ const Search = () => {
 			<Wrapper>
 				<Breadcrumb links={breadcrumbData} withMarginBottom />
 				<Heading>
-					Результаты по запросу <b>{query.search}</b>
-					<br />
-					<span>
-						({elements.length} {declOfNum(elements.length, ['товар', 'товара', 'товаров'])})
-					</span>
+					Результат по запросу <b>{query.search}</b>
+					{!!elements.length && (
+						<>
+							<br />
+							<span>
+								({elements.length} {declOfNum(elements.length, ['товар', 'товара', 'товаров'])})
+							</span>
+						</>
+					)}
 				</Heading>
 				{!elements.length && isReady ? (
 					<NotFound>Ничего не найдено</NotFound>

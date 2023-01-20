@@ -1,6 +1,6 @@
-## getting started
+# getting started
 
-# first, add .env file to root directory and add:
+## first, add .env file to root directory and add:
 
 ```
 NEXT_PUBLIC_SELF_DOMAIN='http://localhost:8080'
@@ -14,7 +14,7 @@ NEXT_PUBLIC_CONTENTFUL_SPACE='space token'
 NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN='access token for cms'
 ```
 
-# second, install node packages:
+## second, install node packages:
 
 ```bash
 npm i
@@ -24,7 +24,7 @@ yarn install
 pnpm install
 ```
 
-# third, run the development server:
+## third, run the development server:
 
 ```bash
 npm run dev

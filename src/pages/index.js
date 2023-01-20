@@ -1,10 +1,7 @@
-import { useContext } from 'react';
-import { Store } from '../utils/store';
 import client from '../utils/contentful';
 // components
 import Head from 'next/head';
 import { Slider } from '../components/slider';
-import { CatalogBlock } from '../components/catalogBlock';
 
 const HomePage = ({ sliderData }) => {
 	return (
@@ -25,7 +22,10 @@ const HomePage = ({ sliderData }) => {
 				<title>KazInterStroy - Интернет магазин</title>
 			</Head>
 			<Slider sliderData={sliderData} />
-			<CatalogBlock style={{ marginTop: '7.5rem' }} />
+			<div style={{ marginTop: '10rem' }}>
+				<div>block of content</div>
+				<p>aklsdf;kajsds;lkdf;lasjkdfl;;laksdfjlasdf</p>
+			</div>
 		</>
 	);
 };
