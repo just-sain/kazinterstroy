@@ -1,4 +1,4 @@
-import { memo, useContext, useState } from 'react';
+import { memo, useContext, useEffect, useRef, useState } from 'react';
 import { Store } from '../utils/store';
 // components
 import Link from 'next/link';
@@ -22,22 +22,18 @@ const StyledHeader = styled(motion.header)`
 	background: rgba(${({ ismenuopen }) => (ismenuopen ? `var(--bg), 1` : `var(--white), 0.85`)});
 	backdrop-filter: blur(0.5rem);
 
-	color: rgb(var(--black));
-
-	position: fixed;
-	top: 0;
-	left: 0;
-
 	transition: background 0.4s ease 0.2s;
 `;
 
 const StyledContainer = styled(Container)`
-	height: 100%;
+	height: calc(var(--header-height) - 6rem);
 
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 `;
+
+//
 
 // left block
 const LeftBlock = styled(motion.div)`
@@ -79,28 +75,6 @@ const LogoImage = styled.div`
 	}
 `;
 
-const CategoryButton = styled.button`
-	padding: 1rem 1.75rem;
-
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	gap: 0.5rem;
-
-	background: rgb(var(--primary));
-	border-radius: 1.25rem;
-
-	color: rgb(var(--white));
-	font-size: 1.8rem;
-	font-weight: 600;
-
-	transition: background 0.4s ease 0s;
-
-	&:hover {
-		background: rgba(var(--primary-dark), 0.85);
-	}
-`;
-
 const HeaderMenu = styled.menu`
 	display: flex;
 	justify-content: flex-end;
@@ -129,13 +103,10 @@ const RightBlock = styled(motion.div)`
 `;
 
 const Phones = styled.div`
-	width: 19rem;
-
 	display: flex;
-	flex-direction: column;
 	justify-content: space-between;
 	align-items: flex-start;
-	gap: 0.5rem;
+	gap: 3rem;
 
 	@media screen and (max-width: 1040px) {
 		display: none;
@@ -164,15 +135,6 @@ const Icon = styled(FaPhoneAlt)`
 	height: 2.2rem;
 
 	color: rgb(var(--primary));
-`;
-
-const StyledSearch = styled(Search)`
-	min-width: 20rem;
-	width: 20rem;
-
-	@media screen and (max-width: 570px) {
-		display: none;
-	}
 `;
 
 const Burger = styled.div`
@@ -225,6 +187,69 @@ const Burger = styled.div`
 
 	@media screen and (max-width: 1040px) {
 		display: flex;
+	}
+`;
+
+// bottom side, it is also sticky
+const Sticky = styled.div`
+	width: 100%;
+	height: calc(var(--header-height) - 6rem);
+
+	position: sticky;
+	top: 0;
+	left: 0;
+`;
+
+const BottomSide = styled(StyledContainer)`
+	margin: 0 auto;
+
+	justify-content: space-between;
+	gap: 1.5rem;
+`;
+
+const CatalogButton = styled.button`
+	padding: 1rem 1.75rem;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 0.5rem;
+
+	background: rgb(var(--primary));
+	border-radius: 1rem;
+
+	color: rgb(var(--white));
+	font-size: 1.6rem;
+	font-weight: 600;
+
+	transition: background 0.4s ease 0s, color 0.4s ease 0s;
+
+	&:hover {
+		background: rgba(var(--primary-dark), 0.85);
+	}
+
+	@media screen and (max-width: 570px) {
+		padding: 0 0;
+
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 0;
+
+		background: none;
+		border-radius: none;
+
+		color: rgb(var(--primary));
+		font-size: 2rem;
+
+		span {
+			display: none;
+		}
+
+		&:hover {
+			background: none;
+			color: rgb(var(--black));
+		}
 	}
 `;
 
@@ -281,6 +306,7 @@ export const Header = memo(({ isBurgerMenuOpen, setIsBurgerMenuOpen }) => {
 
 	const [isCatalogOpen, setIsCatalogOpen] = useState(false);
 
+	// events
 	const onCatalogClick = () => {
 		setIsCatalogOpen(!isCatalogOpen);
 	};
@@ -293,6 +319,19 @@ export const Header = memo(({ isBurgerMenuOpen, setIsBurgerMenuOpen }) => {
 				initial={{ opacity: 0, translateY: '-100%' }}
 				transition={{ delay: 0.6, duration: 0.6 }}
 				animate={{ opacity: 1, translateY: 0 }}>
+				<Sticky>
+					<BottomSide maxW='m'>
+						<CatalogButton onClick={onCatalogClick}>
+							{!isCatalogOpen ? <FaListUl /> : <FaRegWindowClose />}
+							<span>Каталог</span>
+						</CatalogButton>
+						<Search />
+						<Cart href='/cart'>
+							<BsCart />
+							<span>{!cartItems.length ? '0' : cartItems.length}</span>
+						</Cart>
+					</BottomSide>
+				</Sticky>
 				<StyledContainer maxW='l'>
 					<LeftBlock
 						initial={{ opacity: 0, translateY: '-100%' }}
@@ -306,11 +345,8 @@ export const Header = memo(({ isBurgerMenuOpen, setIsBurgerMenuOpen }) => {
 								KazInterStroy
 							</Link>
 						</Logo>
+
 						<HeaderMenu>
-							<CategoryButton onClick={onCatalogClick}>
-								{!isCatalogOpen ? <FaListUl /> : <FaRegWindowClose />}
-								<span>Каталог</span>
-							</CategoryButton>
 							<li>
 								<Link href='/'>Главная</Link>
 							</li>
@@ -333,11 +369,6 @@ export const Header = memo(({ isBurgerMenuOpen, setIsBurgerMenuOpen }) => {
 								<span>+7 (727) 32 31 030</span>
 							</Phone>
 						</Phones>
-						<StyledSearch />
-						<Cart href='/cart'>
-							<BsCart />
-							<span>{!cartItems.length ? '0' : cartItems.length}</span>
-						</Cart>
 						<Burger onClick={() => setIsBurgerMenuOpen(!isBurgerMenuOpen)} ismenuopen={isBurgerMenuOpen ? 1 : 0}>
 							<div />
 							<div />

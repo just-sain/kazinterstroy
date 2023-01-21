@@ -8,6 +8,7 @@ const initialState = {
 		? { cartItems: [], shippingAddress: {}, paymentMethod: '' }
 		: JSON.parse(Cookies.get('cart')),
 	menu: null,
+	catalog: null,
 	contact: {
 		address: '',
 		index: '',
@@ -25,6 +26,9 @@ const reducer = (state, action) => {
 		}
 		case 'ADD_MENU': {
 			return { ...state, menu: action.payload };
+		}
+		case 'ADD_CATALOG': {
+			return { ...state, catalog: action.payload };
 		}
 		case 'CART_ADD_ITEM': {
 			const newItem = action.payload;
@@ -92,35 +96,39 @@ export const Store = createContext({
 	...StoreContext
 });
 
-const loadMenu = async () => {
-	const res = await axios.get(
-		`${process.env.NEXT_PUBLIC_API}/categories?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}`
-	);
-	console.log(res.data);
-
-	return res.data;
-};
-
-const loadContact = async () => {
-	const contact = await client.getEntries({ content_type: 'contacts' });
-	return contact.items[0].fields;
-};
-
 export const StoreProvider = ({ children }) => {
 	const [state, dispatch] = useReducer(reducer, initialState);
 
 	useEffect(() => {
 		client.getEntries({ content_type: 'contacts' }).then(res => {
+			const data = {
+				address: res.items[0].fields.address,
+				index: res.items[0].fields.index,
+				phone: res.items[0].fields.phone,
+				city_phone: res.items[0].fields.city_phone,
+				mail: res.items[0].fields.mail,
+				timetable: res.items[0].fields.timetable
+			};
+
 			dispatch({
 				type: 'ADD_CONTACT',
-				payload: {
-					address: res.items[0].fields.address,
-					index: res.items[0].fields.index,
-					phone: res.items[0].fields.phone,
-					city_phone: res.items[0].fields.city_phone,
-					mail: res.items[0].fields.mail,
-					timetable: res.items[0].fields.timetable
-				}
+				payload: data
+			});
+		});
+
+		client.getEntries({ content_type: 'catalog' }).then(res => {
+			const data = res.items.map((item, index) => {
+				return {
+					name: item.fields.name,
+					categories: item.fields.categories.split(', ').map(id => Number(id)),
+					icon: item.fields.icon.fields.file.url,
+					id: index
+				};
+			});
+
+			dispatch({
+				type: 'ADD_CATALOG',
+				payload: data
 			});
 		});
 

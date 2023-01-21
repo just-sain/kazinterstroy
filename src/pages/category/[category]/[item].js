@@ -15,7 +15,7 @@ import 'swiper/css';
 import 'swiper/css/zoom';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-cards';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { Store } from '../../../utils/store';
 
 const StyledButton = styled(Button)`

@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 
 const globalStyles = css`
 	:root {
-		--header-height: 7rem;
+		--header-height: 12rem;
 
 		--container-l: 1440px;
 		--container-m: 1240px;

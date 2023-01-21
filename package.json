@@ -1,25 +1,25 @@
 {
-  "name": "kazinterstroy",
-  "version": "0.2.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev -p 8080",
-    "build": "next build",
-    "start": "next start -p 8080",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@emotion/react": "^11.10.5",
-    "@emotion/styled": "^11.10.5",
-    "@next/font": "13.1.2",
-    "axios": "^1.2.2",
-    "contentful": "^9.2.17",
-    "framer-motion": "^8.4.5",
-    "js-cookie": "^3.0.1",
-    "next": "13.1.2",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "react-icons": "^4.7.1",
-    "swiper": "^8.4.6"
-  }
+	"name": "kazinterstroy",
+	"version": "0.2.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev -p 8080",
+		"build": "next build",
+		"start": "next start -p 8080",
+		"lint": "next lint"
+	},
+	"dependencies": {
+		"@emotion/react": "^11.10.5",
+		"@emotion/styled": "^11.10.5",
+		"@next/font": "13.1.2",
+		"axios": "^1.2.2",
+		"contentful": "^9.2.17",
+		"framer-motion": "^8.4.5",
+		"js-cookie": "^3.0.1",
+		"next": "13.1.2",
+		"react": "18.2.0",
+		"react-dom": "18.2.0",
+		"react-icons": "^4.7.1",
+		"swiper": "^8.4.6"
+	}
 }

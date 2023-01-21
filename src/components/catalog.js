@@ -1,12 +1,14 @@
-import { useRouter } from 'next/router';
 import { memo, useContext, useState } from 'react';
 import { Store } from '../utils/store';
-import { catalogData } from '../data/catalog';
 // components
+import Image from 'next/image';
+import { Container } from './container';
+// icons
 import { BsChevronRight } from 'react-icons/bs';
+// styles
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
-import { Container } from './container';
+import Link from 'next/link';
 
 const Wrapper = styled.div`
 	width: 100vw;
@@ -22,7 +24,7 @@ const Wrapper = styled.div`
 `;
 
 const StyledContainer = styled(Container)`
-	width: var(--container-l);
+	max-width: var(--container-l);
 	height: calc(100vh - var(--header-height));
 	margin: 0 auto;
 `;
@@ -39,45 +41,50 @@ const LoaderContainer = styled.div`
 const Loader = styled.span`
 	width: 7rem;
 	height: 7rem;
-	border-radius: 50%;
+
 	display: inline-block;
-	position: relative;
+	border-radius: 50%;
 	border: 0.5rem solid;
 	border-color: rgb(var(--black)) rgb(var(--black)) transparent;
 	box-sizing: border-box;
+
+	position: relative;
 	animation: catalogRotation 1s linear infinite;
+
 	&::after {
 		content: '';
-		box-sizing: border-box;
+		width: 5rem;
+		height: 5rem;
+		margin: auto;
+
+		border: 0.4rem solid;
+		border-color: transparent rgb(var(--primary));
+		border-radius: 50%;
+
 		position: absolute;
 		left: 0;
 		right: 0;
 		top: 0;
 		bottom: 0;
-		margin: auto;
-		border: 0.4rem solid;
-		border-color: transparent rgb(var(--primary));
-		width: 5rem;
-		height: 5rem;
-		border-radius: 50%;
-		animation: catalogRotationBack 0.5s linear infinite;
+
 		transform-origin: center center;
+		animation: catalogRotationBack 0.5s linear infinite;
 	}
 `;
 
 export const Catalog = memo(({ ...props }) => {
 	const { state } = useContext(Store);
-	const { menu } = state;
+	const { menu, catalog } = state;
 
 	return (
-		<Wrapper>
+		<Wrapper {...props}>
 			<StyledContainer maxW='l'>
-				{!menu ? (
+				{!menu || !catalog ? (
 					<LoaderContainer>
 						<Loader />
 					</LoaderContainer>
 				) : (
-					<Category menu={menu} />
+					<Category menu={menu} catalog={catalog} />
 				)}
 			</StyledContainer>
 		</Wrapper>
@@ -119,9 +126,9 @@ const LeftSideItem = styled.li`
 	padding: 1rem;
 
 	display: grid;
-	grid-template-columns: 1.5rem 1fr 1.5rem;
+	grid-template-columns: auto 1fr auto;
 	align-items: center;
-	gap: 1rem;
+	gap: 0.5rem;
 
 	cursor: pointer;
 	border-radius: 1rem;
@@ -148,10 +155,17 @@ const LeftSideItem = styled.li`
 		`}
 `;
 
+const LeftSideIcon = styled.div`
+	width: 2.2rem;
+	height: 2.2rem;
+
+	position: relative;
+`;
+
 // right side
 const RightSide = styled.div`
 	width: 100%;
-	padding: 1rem 0 0.5rem 2rem;
+	padding: 1rem 0 2rem 3rem;
 	opacity: 0;
 	overflow-x: hidden;
 	overflow-y: auto;
@@ -166,7 +180,8 @@ const RightSide = styled.div`
 const Heading = styled.h3`
 	margin-bottom: 3rem;
 
-	font-size: 2.8rem;
+	color: rgb(var(--black));
+	font-size: 3rem;
 	font-weight: 700;
 `;
 
@@ -175,52 +190,125 @@ const ListContainer = styled.div`
 
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr;
+	justify-items: flex-start;
+	align-items: flex-start;
+	gap: 1.5rem;
+`;
+
+const ListColumn = styled.div`
+	display: grid;
+	grid-template-columns: 1fr;
+	justify-items: flex-start;
+	align-items: flex-start;
 	gap: 3rem;
 `;
 
-const Category = memo(({ menu, ...props }) => {
-	const router = useRouter();
+const List = styled.ul`
+	padding-left: 0.5rem;
 
-	const [firstLevel] = useState(menu ? menu.filter(m => m.level === 1) : []);
-	const [secondLevel] = useState(menu ? menu.filter(m => m.level === 2) : []);
-	const [thirdLevel] = useState(menu ? menu.filter(m => m.level === 3) : []);
-	const [fourthLevel] = useState(menu ? menu.filter(m => m.level === 4) : []);
-	const [fifthLevel] = useState(menu ? menu.filter(m => m.level === 4) : []);
-	const [selectMenu, setSelectMenu] = useState(firstLevel[0]);
-	const [isMenuSelect, setIsMenuSelect] = useState(false);
+	display: grid;
+	align-content: flex-start;
+	gap: 0.75rem;
+`;
 
-	const onFirstLevelMenuClick = selectedMenu => {
-		setSelectMenu(selectedMenu);
-		setIsMenuSelect(true);
+const ListTitle = styled.h4`
+	color: rgb(var(--black));
+	font-size: 1.8rem;
+	font-weight: 700;
+`;
+
+const ListItem = styled.li`
+	color: rgb(var(--gray));
+	font-size: 1.4rem;
+	font-weight: 500;
+
+	a:hover {
+		text-decoration: underline;
+		color: rgb(var(--primary));
+	}
+`;
+
+const Category = memo(({ menu, catalog, ...props }) => {
+	const [selectCatalog, setSelectCatalog] = useState(catalog[0]);
+	const [isCatalogSelect, setIsCatalogSelect] = useState(false);
+	const [selectCatalogCategories, setSelectCatalogCategories] = useState(
+		menu.filter(el => selectCatalog.categories.indexOf(el.id) > -1)
+	);
+
+	//  for divide category to 3 columns
+	let selectCatalogCategoriesColumns = [];
+	for (let i = 0; i < selectCatalogCategories.length + 1; i += Math.ceil(selectCatalogCategories.length / 3)) {
+		const nextValue = i + Math.ceil(selectCatalogCategories.length / 3);
+		const menuPart = selectCatalogCategories.slice(i, nextValue);
+
+		selectCatalogCategoriesColumns.push(menuPart);
+	}
+
+	// events
+	const onCatalogClick = selectedCatalog => {
+		setSelectCatalog(selectedCatalog);
+		setSelectCatalogCategories(menu.filter(el => selectedCatalog.categories.indexOf(el.id) > -1));
+		setIsCatalogSelect(true);
 	};
 
 	return (
 		<Box {...props}>
-			<LeftSide isMenuSelect={isMenuSelect}>
-				{catalogData.map(item => (
+			<LeftSide isMenuSelect={isCatalogSelect}>
+				{catalog.map(item => (
 					<LeftSideItem
 						key={item.id}
-						isSelected={selectMenu.id === item.id}
-						onClick={() => onFirstLevelMenuClick(item)}>
-						{item.icon}
+						isSelected={selectCatalog.id === item.id}
+						onClick={() => onCatalogClick(item)}>
+						<LeftSideIcon>
+							<Image src={item.icon} alt='' fill priority />
+						</LeftSideIcon>
 						<span>{item.name}</span>
 						<BsChevronRight />
 					</LeftSideItem>
 				))}
 			</LeftSide>
-			<RightSide isMenuSelect={isMenuSelect}>
-				<Heading>
-					{selectMenu.name}
-					<br />
-					<span style={{ color: 'green' }}>id: {selectMenu.id}</span>
-				</Heading>
+			<RightSide isMenuSelect={isCatalogSelect}>
+				<Heading>{selectCatalog.name}</Heading>
 
 				<ListContainer>
-					{/* {secondLevel
-						.filter(second => selectMenu.left < second.left && second.right < selectMenu.right)
-						.map(second => (
-							<li key={second.id} onClick={() => router.push(`/category/${second.id}`)}>
-								{second.name}
+					{selectCatalogCategoriesColumns.map(columnArray => (
+						<ListColumn>
+							{columnArray.map(firstLevel => (
+								<List key={firstLevel.id}>
+									<ListTitle>{firstLevel.name}</ListTitle>
+									{menu
+										.filter(
+											secondLevel =>
+												firstLevel.left < secondLevel.left && secondLevel.right < firstLevel.right
+										)
+										.map(secondLevel => (
+											<ListItem>
+												<Link href={`/category/${secondLevel.id}`}>{secondLevel.name}</Link>
+											</ListItem>
+										))}
+								</List>
+							))}
+						</ListColumn>
+					))}
+					{/* {selectCatalogCategories.map(firstLevel => (
+						<List key={firstLevel.id}>
+							<ListTitle>{firstLevel.name}</ListTitle>
+							{menu
+								.filter(
+									secondLevel => firstLevel.left < secondLevel.left && secondLevel.right < firstLevel.right
+								)
+								.map(secondLevel => (
+									<ListItem>
+										<Link href={`/category/${secondLevel.id}`}>{secondLevel.name}</Link>
+									</ListItem>
+								))}
+						</List>
+					))} */}
+					{/* {menu
+						.filter(el => selectCatalog.left < el.left && el.right < selectCatalog.right)
+						.map(el => (
+							<li key={el.id} onClick={() => router.push(`/category/${el.id}`)}>
+								{el.name}
 							</li>
 						))} */}
 				</ListContainer>
@@ -228,3 +316,23 @@ const Category = memo(({ menu, ...props }) => {
 		</Box>
 	);
 });
+
+// `/category/${el.id}`
+
+/*
+? code for divide category to 3 columns
+const menu = [1, 3, 4, 1, 4, 1, 2, 1, 1, 1];
+let result = [];
+
+console.log('/', Math.ceil(menu.length / 3))
+
+for (let i = 0; i < menu.length + 1; i += Math.ceil(menu.length / 3)) {
+    const nextValue = i + Math.ceil(menu.length / 3);
+    const menuPart = menu.slice(i, nextValue);
+
+    console.log('part', i, nextValue, menuPart);
+    result.push(menuPart);
+}
+
+console.log('result:', result);
+*/

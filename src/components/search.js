@@ -13,7 +13,7 @@ const Form = styled.form`
 	align-items: center;
 	gap: 1rem;
 
-	background: rgba(var(--white), 0.7);
+	background: rgba(var(--gray), 0.175);
 	backdrop-filter: blur(0.5rem);
 	border-radius: 0.5rem;
 
@@ -21,7 +21,7 @@ const Form = styled.form`
 
 	&:focus-within,
 	&:hover {
-		background: rgba(var(--white), 0.9);
+		background: rgba(var(--gray), 0.05);
 	}
 `;
 
