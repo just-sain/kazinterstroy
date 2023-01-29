@@ -1,12 +1,10 @@
 import { createContext, useEffect, useReducer } from 'react';
-import Cookies from 'js-cookie';
-import client from './contentful';
+import { parseCookies, setCookie } from 'nookies';
+import client from '../config/contentful';
 import axios from 'axios';
 
 const initialState = {
-	cart: !Cookies.get('cart')
-		? { cartItems: [], shippingAddress: {}, paymentMethod: '' }
-		: JSON.parse(Cookies.get('cart')),
+	cart: { cartItems: [], shippingAddress: {}, paymentMethod: '' },
 	menu: null,
 	catalog: null,
 	contact: {
@@ -30,31 +28,35 @@ const reducer = (state, action) => {
 		case 'ADD_CATALOG': {
 			return { ...state, catalog: action.payload };
 		}
+		case 'ADD_CART': {
+			return { ...state, cart: action.payload };
+		}
 		case 'CART_ADD_ITEM': {
 			const newItem = action.payload;
 			const existItem = state.cart.cartItems.find(item => item.article === newItem.article);
 
-			const cartItems = existItem
+			const newCartItems = existItem
 				? state.cart.cartItems.map(item => (item.article === existItem.article ? newItem : item))
 				: [...state.cart.cartItems, newItem];
-			Cookies.set('cart', JSON.stringify({ ...state.cart, cartItems }));
 
-			return { ...state, cart: { ...state.cart, cartItems } };
+			setCookie(null, 'cartItems', JSON.stringify(newCartItems), {
+				maxAge: 30 * 24 * 60 * 60,
+				path: '/'
+			});
+
+			return { ...state, cart: { ...state.cart, cartItems: newCartItems } };
 		}
 		case 'CART_REMOVE_ITEM': {
-			const cartItems = state.cart.cartItems.filter(item => item.article !== action.payload.article);
-			Cookies.set('cart', JSON.stringify({ ...state.cart, cartItems }));
-			return { ...state, cart: { ...state.cart, cartItems } };
-		}
-		case 'CART_RESET': {
-			return {
-				...state,
-				cart: {
-					cartItems: Cookies.get('cart')
-						? JSON.parse(Cookies.get('cart'))
-						: { cartItems: [], shippingAddress: {}, paymentMethod: '' }
-				}
-			};
+			const filteredCartItems = state.cart.cartItems.filter(item => item.article !== action.payload.article);
+
+			// Cookies.set('cart', JSON.stringify({ ...state.cart, cartItems }));
+			// destroyCookie(null, 'cart'); // to destroy the cookie
+			setCookie(null, 'cartItems', JSON.stringify(filteredCartItems), {
+				maxAge: 30 * 24 * 60 * 60,
+				path: '/'
+			});
+
+			return { ...state, cart: { ...state.cart, cartItems: filteredCartItems } };
 		}
 		case 'CART_CLEAR_ITEMS': {
 			return { ...state, cart: { ...state.cart, cartItems: [] } };
@@ -88,7 +90,7 @@ const reducer = (state, action) => {
 
 export const StoreContext = createContext({
 	dispatch: action => '',
-	state: { cart: [] }
+	state: { ...initialState }
 });
 
 export const Store = createContext({
@@ -98,8 +100,16 @@ export const Store = createContext({
 
 export const StoreProvider = ({ children }) => {
 	const [state, dispatch] = useReducer(reducer, initialState);
+	const cookies = parseCookies();
 
 	useEffect(() => {
+		dispatch({
+			type: 'ADD_CART',
+			payload: !cookies.cartItems
+				? { cartItems: [], shippingAddress: {}, paymentMethod: '' }
+				: { cartItems: JSON.parse(cookies.cartItems), shippingAddress: {}, paymentMethod: '' }
+		});
+
 		client.getEntries({ content_type: 'contacts' }).then(res => {
 			const data = {
 				address: res.items[0].fields.address,

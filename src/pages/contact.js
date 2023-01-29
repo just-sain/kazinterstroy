@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { GrContactInfo, GrMail, GrMapLocation, GrLocationPin, GrFormClock, GrPhone } from 'react-icons/gr';
 import styled from '@emotion/styled';
 import { useContext, useState } from 'react';
-import { Store } from '../utils/store';
+import { Store } from '../lib/store';
 
 // map section
 const MapSection = styled.section`

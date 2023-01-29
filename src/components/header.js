@@ -1,5 +1,5 @@
 import { memo, useContext, useEffect, useRef, useState } from 'react';
-import { Store } from '../utils/store';
+import { Store } from '../lib/store';
 // components
 import Link from 'next/link';
 import Image from 'next/image';
@@ -23,6 +23,10 @@ const StyledHeader = styled(motion.header)`
 	backdrop-filter: blur(0.5rem);
 
 	transition: background 0.4s ease 0.2s;
+
+	position: fixed;
+	top: 0;
+	left: 0;
 `;
 
 const StyledContainer = styled(Container)`
@@ -313,25 +317,12 @@ export const Header = memo(({ isBurgerMenuOpen, setIsBurgerMenuOpen }) => {
 
 	return (
 		<>
-			{isCatalogOpen && <Catalog />}
+			{isCatalogOpen && <Catalog closeCatalog={() => setIsCatalogOpen(false)} />}
 			<StyledHeader
 				ismenuopen={isBurgerMenuOpen ? 1 : 0 || isCatalogOpen ? 1 : 0}
 				initial={{ opacity: 0, translateY: '-100%' }}
 				transition={{ delay: 0.6, duration: 0.6 }}
 				animate={{ opacity: 1, translateY: 0 }}>
-				<Sticky>
-					<BottomSide maxW='m'>
-						<CatalogButton onClick={onCatalogClick}>
-							{!isCatalogOpen ? <FaListUl /> : <FaRegWindowClose />}
-							<span>Каталог</span>
-						</CatalogButton>
-						<Search />
-						<Cart href='/cart'>
-							<BsCart />
-							<span>{!cartItems.length ? '0' : cartItems.length}</span>
-						</Cart>
-					</BottomSide>
-				</Sticky>
 				<StyledContainer maxW='l'>
 					<LeftBlock
 						initial={{ opacity: 0, translateY: '-100%' }}
@@ -376,6 +367,19 @@ export const Header = memo(({ isBurgerMenuOpen, setIsBurgerMenuOpen }) => {
 						</Burger>
 					</RightBlock>
 				</StyledContainer>
+				<Sticky>
+					<BottomSide maxW='m'>
+						<CatalogButton onClick={onCatalogClick}>
+							{!isCatalogOpen ? <FaListUl /> : <FaRegWindowClose />}
+							<span>Каталог</span>
+						</CatalogButton>
+						<Search />
+						<Cart href='/cart'>
+							<BsCart />
+							<span>{!cartItems.length ? '0' : cartItems.length}</span>
+						</Cart>
+					</BottomSide>
+				</Sticky>
 			</StyledHeader>
 		</>
 	);

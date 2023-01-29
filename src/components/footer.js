@@ -1,5 +1,5 @@
 import { memo, useContext, useState } from 'react';
-import { Store } from '../utils/store';
+import { Store } from '../lib/store';
 // components
 import { List } from './list';
 import { Container } from './container';

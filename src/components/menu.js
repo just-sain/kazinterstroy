@@ -37,42 +37,14 @@ const StyledContainer = styled(Container)`
 
 	display: flex;
 	flex-direction: column;
-	justify-content: space-around;
+	justify-content: space-evenly;
 	align-items: flex-start;
 	gap: 2rem;
 `;
 
-const Flex = styled.div`
-	width: 100%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	gap: 1rem;
-
-	@media screen and (max-width: 300px) {
-		flex-direction: column;
-	}
-`;
-
-const StyledSearch = styled(Search)`
-	width: 80%;
-	padding: 1.2rem 2rem;
-
-	input {
-		font-size: 1.8rem;
-	}
-
-	@media screen and (max-width: 400px) {
-		min-width: 1rem;
-	}
-
-	@media screen and (max-width: 300px) {
-		width: 85%;
-	}
-`;
-
 const Cart = styled(Link)`
-	margin: 0 1rem;
+	width: 70%;
+	margin: 0 auto;
 	padding: 1.5rem 2rem;
 	cursor: pointer;
 
@@ -95,10 +67,6 @@ const Cart = styled(Link)`
 	svg {
 		transform: scale(1.75);
 		transition: color 0.4s ease 0s;
-	}
-
-	@media screen and (max-width: 300px) {
-		width: 70%;
 	}
 `;
 
@@ -171,12 +139,9 @@ export const Menu = ({ isOpen, setIsBurgerMenuOpen, ...props }) => {
 	return (
 		<Wrapper isOpen={isOpen} {...props}>
 			<StyledContainer maxW='m'>
-				<Flex>
-					<StyledSearch />
-					<Cart href='/cart'>
-						<BsCart />
-					</Cart>
-				</Flex>
+				<Cart href='/cart'>
+					<BsCart />
+				</Cart>
 				<StyledMenu>
 					<li>
 						<Link href='/'>Главная</Link>

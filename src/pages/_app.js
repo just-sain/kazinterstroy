@@ -1,5 +1,5 @@
-import globalStyles from '../utils/styles';
-import StoreProvider from '../utils/store';
+import globalStyles from '../lib/styles';
+import StoreProvider from '../lib/store';
 // components
 import { motion, AnimatePresence } from 'framer-motion';
 import Layout from '../components/layout';
@@ -56,17 +56,6 @@ const App = ({ Component, pageProps, router }) => {
 				<meta name='twitter:title' content='KazInterStroy' />
 				<meta name='twitter:description' content='KazInterStroy - Интернет магазин' />
 				<meta name='twitter:image' content='/logo.png' />
-
-				<link rel='icon' type='image/x-icon' href='/favicon.ico' />
-				<link rel='apple-touch-icon' type='image/x-icon' href='/favicon.ico' />
-				<link rel='shortcut icon' type='image/x-icon' href='/favicon.ico' />
-
-				<link rel='preconnect' href='https://fonts.googleapis.com' />
-				<link rel='preconnect' href='https://fonts.gstatic.com' />
-				<link
-					href='https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap'
-					rel='stylesheet'
-				/>
 
 				<title>KazInterStroy - Интернет магазин</title>
 			</Head>

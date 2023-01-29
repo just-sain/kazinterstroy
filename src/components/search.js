@@ -5,7 +5,6 @@ import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
 
 const Form = styled.form`
-	min-width: 25rem;
 	width: 100%;
 	padding: 0.7rem 1.5rem;
 

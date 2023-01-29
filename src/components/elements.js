@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
 // components
 import { Article } from './article';
@@ -6,6 +6,7 @@ import { MirageArticle } from './mirage-article';
 import { MdOutlineSort } from 'react-icons/md';
 import { TbArrowsDownUp } from 'react-icons/tb';
 import styled from '@emotion/styled';
+import { Store } from '../lib/store';
 
 export const Grid = styled.div`
 	display: grid;
@@ -110,6 +111,10 @@ const ReverseIcon = styled(TbArrowsDownUp)`
 // elements: []
 export const Elements = ({ isReady, elements }) => {
 	const shouldReduceMotion = useReducedMotion(); // for animation on sort
+	const { state, dispatch } = useContext(Store);
+	const {
+		cart: { cartItems }
+	} = state;
 
 	// sort
 	const sorts = [
@@ -179,12 +184,14 @@ export const Elements = ({ isReady, elements }) => {
 				{isReady && !!sortedElements.length ? (
 					<Grid>
 						{!!sortedElements.length &&
-							sortedElements.map(e => (
+							sortedElements.map(a => (
 								<Article
-									key={e.article}
-									articleData={e}
-									href={`/category/${e.category}/${e.article}`}
+									key={a.article}
+									articleData={a}
+									href={`/category/${a.category}/${a.article}`}
 									layout={shouldReduceMotion ? false : true}
+									isInCart={cartItems.find(e => e.article === Number(a.article))}
+									dispatch={dispatch}
 								/>
 							))}
 					</Grid>

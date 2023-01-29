@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useContext } from 'react';
 import { priceRule } from '../utils/price';
 import { declOfQuantity } from '../utils/declaration';
 // components
@@ -8,6 +8,7 @@ import { Button } from './button';
 import { BsTrash } from 'react-icons/bs';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
+import { Store } from '../lib/store';
 
 const Grid = styled.div`
 	overflow: hidden;
@@ -155,15 +156,13 @@ const Price = styled.p`
 `;
 
 export const CartItem = memo(({ elementData, ...props }) => {
+	const { state, dispatch } = useContext(Store);
+	const {
+		cart: { cartItems }
+	} = state;
+
 	const removeHandle = () => {
-		const elementsIdString = localStorage.getItem('cart');
-
-		if (elementsIdString) {
-			const elementsId = elementsIdString.split(',');
-			const filtered = elementsId.filter(e => e !== String(elementData.article));
-
-			localStorage.setItem('cart', filtered);
-		}
+		dispatch({ type: 'CART_REMOVE_ITEM', payload: elementData });
 	};
 
 	return (

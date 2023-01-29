@@ -97,41 +97,12 @@ const ToCart = styled.button`
 	right: 1.5rem;
 `;
 
-export const Article = ({ href, articleData, ...props }) => {
-	const [inCart, setInCart] = useState(false);
-
-	useEffect(() => {
-		const elementsIdString = localStorage.getItem('cart');
-
-		if (elementsIdString) {
-			const elementsId = elementsIdString.split(',');
-
-			if (elementsId.find(e => e === String(articleData.article))) {
-				setInCart(true);
-			}
-		}
-	}, []);
-
+export const Article = ({ href, articleData, dispatch, isInCart, ...props }) => {
 	const cartHandle = () => {
-		const elementsIdString = localStorage.getItem('cart');
-
-		if (elementsIdString) {
-			const elementsId = elementsIdString.split(',');
-
-			if (!elementsId.find(e => e === String(articleData.article))) {
-				const filtered = [articleData.article, ...elementsId];
-
-				localStorage.setItem('cart', filtered);
-				setInCart(true);
-			} else {
-				const filtered = elementsId.filter(e => e !== String(articleData.article));
-
-				localStorage.setItem('cart', filtered);
-				setInCart(false);
-			}
+		if (!isInCart) {
+			dispatch({ type: 'CART_ADD_ITEM', payload: articleData });
 		} else {
-			localStorage.setItem('cart', articleData.article);
-			setInCart(true);
+			dispatch({ type: 'CART_REMOVE_ITEM', payload: articleData });
 		}
 	};
 
@@ -156,7 +127,7 @@ export const Article = ({ href, articleData, ...props }) => {
 					<span>{priceRule(articleData.price1)}</span> (шт)
 				</Price>
 			</div>
-			<ToCart onClick={cartHandle}>{!inCart ? <BsHeart /> : <BsHeartFill />}</ToCart>
+			<ToCart onClick={cartHandle}>{!isInCart ? <BsHeart /> : <BsHeartFill />}</ToCart>
 		</StyledArticle>
 	);
 };

@@ -46,7 +46,7 @@ const Category = ({ categoryData }) => {
 	}, [categoryData]);
 
 	const breadcrumbData = [
-		{ name: 'Каталог', href: '/category' },
+		{ name: 'Каталог', href: '/' },
 		{ name: categoryData.name, href: `/category/${categoryData.id}` }
 	];
 

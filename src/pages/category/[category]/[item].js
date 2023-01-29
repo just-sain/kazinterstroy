@@ -16,7 +16,7 @@ import 'swiper/css/zoom';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-cards';
 import { useContext } from 'react';
-import { Store } from '../../../utils/store';
+import { Store } from '../../../lib/store';
 
 const StyledButton = styled(Button)`
 	width: 100%;
@@ -270,21 +270,16 @@ const Item = ({ categoryData, item }) => {
 	const {
 		cart: { cartItems }
 	} = state;
+
 	const breadcrumbData = [
-		{ name: 'Каталог', href: '/category' },
+		{ name: 'Каталог', href: '/' },
 		{ name: categoryData.name, href: `/category/${categoryData.id}` },
 		{ name: item.name, href: `/category/${categoryData.id}/${item.article}` }
 	];
 
-	// console.log(cartItems);
-
 	const cartHandle = () => {
-		if (!!cartItems) {
-			if (!cartItems.find(e => e.article === Number(item.article))) {
-				dispatch({ type: 'CART_ADD_ITEM', payload: item });
-			} else {
-				dispatch({ type: 'CART_REMOVE_ITEM', payload: item });
-			}
+		if (!cartItems.find(e => e.article === item.article)) {
+			dispatch({ type: 'CART_ADD_ITEM', payload: item });
 		} else {
 			dispatch({ type: 'CART_REMOVE_ITEM', payload: item });
 		}

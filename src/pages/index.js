@@ -1,4 +1,4 @@
-import client from '../utils/contentful';
+import client from '../config/contentful';
 // components
 import Head from 'next/head';
 import { Slider } from '../components/slider';

@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { Store } from '../utils/store';
+import { Store } from '../lib/store';
 import { declOfNum } from '../utils/declaration';
 import { priceRule } from '../utils/price';
 // components
@@ -109,12 +109,19 @@ const CartPage = () => {
 		cart: { cartItems }
 	} = state;
 
+	// for collect total price
 	let totalPrice = 0;
 	if (cartItems.length) {
 		for (let i in cartItems) {
 			totalPrice += cartItems[i].price1;
 		}
 	}
+
+	// events
+	const onSubmit = async () => {
+		const data = await sendRequest({ name: 'hello.js' }, '/api/email');
+		console.log(data);
+	};
 
 	return (
 		<>
@@ -150,7 +157,7 @@ const CartPage = () => {
 					disabled={!cartItems.length || !!cartItems.find(e => e.quantity === 0)}
 					color='white'
 					size='l'
-					href={`https://wa.me/${contact.phone}`}>
+					onClick={onSubmit}>
 					Оплатить
 					<BsCashStack />
 				</StyledButton>

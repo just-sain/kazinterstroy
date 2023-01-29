@@ -1,10 +1,10 @@
 import { memo, useContext, useState } from 'react';
-import { Store } from '../utils/store';
+import { Store } from '../lib/store';
 // components
 import Image from 'next/image';
 import { Container } from './container';
 // icons
-import { BsChevronRight } from 'react-icons/bs';
+import { BsChevronRight, BsChevronLeft } from 'react-icons/bs';
 // styles
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
@@ -72,7 +72,7 @@ const Loader = styled.span`
 	}
 `;
 
-export const Catalog = memo(({ ...props }) => {
+export const Catalog = memo(({ closeCatalog, ...props }) => {
 	const { state } = useContext(Store);
 	const { menu, catalog } = state;
 
@@ -84,7 +84,7 @@ export const Catalog = memo(({ ...props }) => {
 						<Loader />
 					</LoaderContainer>
 				) : (
-					<Category menu={menu} catalog={catalog} />
+					<Category menu={menu} catalog={catalog} closeCatalog={closeCatalog} />
 				)}
 			</StyledContainer>
 		</Wrapper>
@@ -100,6 +100,10 @@ const Box = styled.div`
 
 	@media screen and (max-width: 850px) {
 		grid-template-columns: 1fr;
+	}
+
+	@media screen and (max-width: 220px) {
+		word-break: break-all;
 	}
 `;
 
@@ -140,6 +144,10 @@ const LeftSideItem = styled.li`
 
 	svg {
 		font-size: 2rem;
+
+		@media screen and (max-width: 570px) {
+			display: none;
+		}
 	}
 
 	&:hover {
@@ -153,6 +161,10 @@ const LeftSideItem = styled.li`
 			background: rgba(var(--real-gray), 0.25);
 			color: rgb(var(--primary));
 		`}
+
+	@media screen and (max-width: 570px) {
+		grid-template-columns: auto 1fr;
+	}
 `;
 
 const LeftSideIcon = styled.div`
@@ -173,6 +185,8 @@ const RightSide = styled.div`
 	animation: fade-left 0.5s ease 0s forwards;
 
 	@media screen and (max-width: 850px) {
+		padding: 0.5rem 1rem 0.5rem 0;
+
 		display: ${({ isMenuSelect }) => (!isMenuSelect ? `none` : `block`)};
 	}
 `;
@@ -183,6 +197,37 @@ const Heading = styled.h3`
 	color: rgb(var(--black));
 	font-size: 3rem;
 	font-weight: 700;
+
+	@media screen and (max-width: 850px) {
+		margin-bottom: 1.5rem;
+	}
+
+	@media screen and (max-width: 570px) {
+		font-size: 2.4rem;
+	}
+`;
+
+const BackIcon = styled.div`
+	width: min-content;
+	margin-bottom: 2rem;
+
+	display: none;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 0.5rem;
+	cursor: pointer;
+
+	color: rgba(var(--black));
+	font-size: 1.6rem;
+	font-weight: 500;
+
+	svg {
+		font-size: 2rem;
+	}
+
+	@media screen and (max-width: 850px) {
+		display: flex;
+	}
 `;
 
 const ListContainer = styled.div`
@@ -193,6 +238,14 @@ const ListContainer = styled.div`
 	justify-items: flex-start;
 	align-items: flex-start;
 	gap: 1.5rem;
+
+	@media screen and (max-width: 850px) {
+		grid-template-columns: 1fr 1fr;
+	}
+
+	@media screen and (max-width: 570px) {
+		grid-template-columns: 1fr;
+	}
 `;
 
 const ListColumn = styled.div`
@@ -208,13 +261,17 @@ const List = styled.ul`
 
 	display: grid;
 	align-content: flex-start;
-	gap: 0.75rem;
+	gap: 1rem;
 `;
 
 const ListTitle = styled.h4`
 	color: rgb(var(--black));
 	font-size: 1.8rem;
 	font-weight: 700;
+
+	@media screen and (max-width: 570px) {
+		font-size: 1.6rem;
+	}
 `;
 
 const ListItem = styled.li`
@@ -228,7 +285,7 @@ const ListItem = styled.li`
 	}
 `;
 
-const Category = memo(({ menu, catalog, ...props }) => {
+const Category = memo(({ menu, catalog, closeCatalog, ...props }) => {
 	const [selectCatalog, setSelectCatalog] = useState(catalog[0]);
 	const [isCatalogSelect, setIsCatalogSelect] = useState(false);
 	const [selectCatalogCategories, setSelectCatalogCategories] = useState(
@@ -268,8 +325,13 @@ const Category = memo(({ menu, catalog, ...props }) => {
 				))}
 			</LeftSide>
 			<RightSide isMenuSelect={isCatalogSelect}>
-				<Heading>{selectCatalog.name}</Heading>
-
+				<Heading>
+					<BackIcon onClick={() => setIsCatalogSelect(false)}>
+						<BsChevronLeft />
+						<span>Назад</span>
+					</BackIcon>
+					{selectCatalog.name}
+				</Heading>
 				<ListContainer>
 					{selectCatalogCategoriesColumns.map(columnArray => (
 						<ListColumn>
@@ -282,8 +344,10 @@ const Category = memo(({ menu, catalog, ...props }) => {
 												firstLevel.left < secondLevel.left && secondLevel.right < firstLevel.right
 										)
 										.map(secondLevel => (
-											<ListItem>
-												<Link href={`/category/${secondLevel.id}`}>{secondLevel.name}</Link>
+											<ListItem key={secondLevel.id}>
+												<Link href={`/category/${secondLevel.id}`} onClick={closeCatalog}>
+													{secondLevel.name}
+												</Link>
 											</ListItem>
 										))}
 								</List>

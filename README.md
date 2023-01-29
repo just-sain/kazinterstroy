@@ -2,7 +2,12 @@
 
 ## first, add .env file to root directory and add:
 
+in project i use nodemailer, read about email password in nodemailer docs
+
 ```
+EMAIL='email'
+EMAIL_PWD='password'
+
 NEXT_PUBLIC_SELF_DOMAIN='http://localhost:8080'
 
 NEXT_PUBLIC_DOMAIN='domain of api'
