@@ -5,7 +5,10 @@ import { priceRule } from '../utils/price';
 // components
 import Head from 'next/head';
 import { CartItem } from '../components/cartItem';
+import { sendPostRequest } from '../lib/api';
+// icons
 import { BsCartX, BsCashStack } from 'react-icons/bs';
+// styles
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 
@@ -105,7 +108,6 @@ const StyledButton = styled.a`
 const CartPage = () => {
 	const { state } = useContext(Store);
 	const {
-		contact,
 		cart: { cartItems }
 	} = state;
 
@@ -119,8 +121,22 @@ const CartPage = () => {
 
 	// events
 	const onSubmit = async () => {
-		const data = await sendRequest({ name: 'hello.js' }, '/api/email');
-		console.log(data);
+		const data = {
+			contacts: {
+				name: 'Батут',
+				surname: 'Андреев',
+				email: 'Батор.some',
+				phone: '8777777777',
+				note: 'Батор.some'
+			},
+			subject: 'something',
+			cart: {
+				cartItems: cartItems,
+				totalPrice: totalPrice
+			}
+		};
+
+		const response = await sendPostRequest(data, '/api/email');
 	};
 
 	return (

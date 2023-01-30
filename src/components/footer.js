@@ -4,6 +4,7 @@ import { Store } from '../lib/store';
 import { List } from './list';
 import { Container } from './container';
 import styled from '@emotion/styled';
+import { getCurrentYear } from '../utils/date';
 
 const StyledFooter = styled.footer`
 	width: 100%;
@@ -176,7 +177,7 @@ export const Footer = memo(() => {
 						</LoaderWrapper>
 					</MapContainer>
 				</StyledContainer>
-				<Bottom>Авторское право © 2023 KazInterStroy All rights reserved.</Bottom>
+				<Bottom>Авторское право © {getCurrentYear()} KazInterStroy All rights reserved.</Bottom>
 			</FooterWrapper>
 		</StyledFooter>
 	);
