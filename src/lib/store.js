@@ -90,7 +90,7 @@ const reducer = (state, action) => {
 
 export const StoreContext = createContext({
 	dispatch: action => '',
-	state: { ...initialState }
+	state: initialState
 });
 
 export const Store = createContext({

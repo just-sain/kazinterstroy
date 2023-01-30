@@ -2,6 +2,7 @@ import client from '../config/contentful';
 // components
 import Head from 'next/head';
 import { Slider } from '../components/slider';
+import { Category } from '../components/category';
 
 const HomePage = ({ sliderData }) => {
 	return (
@@ -22,10 +23,7 @@ const HomePage = ({ sliderData }) => {
 				<title>KazInterStroy - Интернет магазин</title>
 			</Head>
 			<Slider sliderData={sliderData} />
-			<div style={{ marginTop: '10rem' }}>
-				<div>block of content</div>
-				<p>aklsdf;kajsds;lkdf;lasjkdfl;;laksdfjlasdf</p>
-			</div>
+			<Category style={{ marginTop: '10rem' }} />
 		</>
 	);
 };

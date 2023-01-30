@@ -111,6 +111,8 @@ const CartPage = () => {
 		cart: { cartItems }
 	} = state;
 
+	const [isSending, setIsSending] = useState(false);
+
 	// for collect total price
 	let totalPrice = 0;
 	if (cartItems.length) {
@@ -121,6 +123,8 @@ const CartPage = () => {
 
 	// events
 	const onSubmit = async () => {
+		setIsSending(true);
+
 		const data = {
 			contacts: {
 				name: 'Батут',
@@ -129,7 +133,6 @@ const CartPage = () => {
 				phone: '8777777777',
 				note: 'Батор.some'
 			},
-			subject: 'something',
 			cart: {
 				cartItems: cartItems,
 				totalPrice: totalPrice
@@ -137,6 +140,13 @@ const CartPage = () => {
 		};
 
 		const response = await sendPostRequest(data, '/api/email');
+		setIsSending(false);
+
+		if (response.data.success) {
+			alert('Ваша заявка успешно отправлена! В скором временем мы свяжемся с вами');
+		} else {
+			alert('Что-то пошло не так, пожалуйста попробуйте позже');
+		}
 	};
 
 	return (
@@ -170,11 +180,11 @@ const CartPage = () => {
 					Общая сумма: <span>{priceRule(totalPrice)}</span>
 				</TotalPrice>
 				<StyledButton
-					disabled={!cartItems.length || !!cartItems.find(e => e.quantity === 0)}
+					disabled={!cartItems.length || !!cartItems.find(e => e.quantity === 0) || isSending}
 					color='white'
 					size='l'
 					onClick={onSubmit}>
-					Оплатить
+					Оставить заявку
 					<BsCashStack />
 				</StyledButton>
 			</Section>

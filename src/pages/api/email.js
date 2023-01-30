@@ -2,35 +2,34 @@ import { mailOptions, transporter } from '../../config/nodemailer';
 import { getCurrentDate } from '../../utils/date';
 
 const generateEmailContent = data => {
-	const subject = data.subject;
-	console.log();
-
+	const subject = `Заказ от ${data.contacts.surname} ${data.contacts.name}`;
 	const text = JSON.stringify(data);
-
 	const html = `
 			<div style="width: 100%">
-				<h1 style='color: rgb(34, 138, 218);'>Заказ от ${data.contacts.surname} ${data.contacts.name}</h1>
-				<div style='font-size: 18px;'>
-					<p>дата: <span style='color: rgb(34, 138, 218)'>${getCurrentDate()}</span></p>
-					<p>имя: <span style='color: rgb(34, 138, 218)'>${`${data.contacts.name}`}</span></p>
+				<div style='font-size: 18px; font-weight: 600;'>
+					<p>Дата: <span style='color: rgb(34, 138, 218)'>${getCurrentDate()}</span></p>
+					<p>Имя: <span style='color: rgb(34, 138, 218)'>${`${data.contacts.name}`}</span></p>
 					<p>Фамилия: <span style='color: rgb(34, 138, 218)'>${data.contacts.surname}</span></p>
-					<p>email: <span style='color: rgb(34, 138, 218)'>${data.contacts.email}</span></p>
-					<p>телефон: <span style='color: rgb(34, 138, 218)'>${data.contacts.phone}</span></p>
-					<p>примечание: <span style='color: rgb(34, 138, 218)'>${data.contacts.note}</span></p>
-					<p>общая сумма: <span style='color: rgb(34, 138, 218)'>${data.cart.totalPrice}</span></p>
+					<p>Почта: <span style='color: rgb(34, 138, 218)'>${data.contacts.email}</span></p>
+					<p>Телефон: <span style='color: rgb(34, 138, 218)'>${data.contacts.phone}</span></p>
+					<p>Примечание: <span style='color: rgb(34, 138, 218)'>${data.contacts.note}</span></p>
+					<p>Общая сумма: <span style='color: rgb(34, 138, 218)'>${data.cart.totalPrice}</span></p>
 				</div>
+				<br />
 				<div style='display: flex; flex-direction: column; align-items: center; gap: 3rem;'>
 					${data.cart.cartItems.map(
 						(el, i) =>
-							`<div>
+							`<br />
+							<hr />
+							<br />
+							<div>
 							<h1>${String(i + 1)}. ${el.name}</h1>
 							<div style='display: flex; flex-direction: column; align-items: center; gap: 1rem'>
 								${el.images.map(
 									image => `
 									<img
-										style='width: 90%; height: auto; object-fit: contain; object-position: center'
+										style='width: 90%; height: auto; object-fit: contain; object-position: center; border-radius: 10px'
 										src='${image}'
-										alt='${image}'
 									/>
 								`
 								)}

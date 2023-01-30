@@ -1,12 +1,14 @@
 import { useContext, useEffect, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
+import { Store } from '../lib/store';
 // components
 import { Article } from './article';
 import { MirageArticle } from './mirage-article';
+// icons
 import { MdOutlineSort } from 'react-icons/md';
-import { TbArrowsDownUp } from 'react-icons/tb';
+import { BiHide } from 'react-icons/bi';
+// styles
 import styled from '@emotion/styled';
-import { Store } from '../lib/store';
 
 export const Grid = styled.div`
 	display: grid;
@@ -96,16 +98,21 @@ const DropDownMenuItem = styled.div`
 	}
 `;
 
-const ReverseIcon = styled(TbArrowsDownUp)`
-	display: flex;
-	justify-content: flex-start;
-	align-items: center;
-	gap: 1rem;
-
+const HideIcon = styled.button`
+	height: 100%;
 	cursor: pointer;
 
-	color: rgb(var(--primary));
+	display: flex;
+	align-items: center;
+
+	color: rgb(var(--${({ active }) => (active ? `primary` : `black`)}));
 	font-size: 2.8rem;
+
+	transition: color 0.3s ease 0s;
+
+	&:hover {
+		color: rgb(var(--secondary));
+	}
 `;
 
 // elements: []
@@ -118,30 +125,38 @@ export const Elements = ({ isReady, elements }) => {
 
 	// sort
 	const sorts = [
-		{ name: 'По новинке', property: 'newest' },
 		{ name: 'По цене', property: 'price' },
 		{ name: 'По алфавиту', property: 'title' }
 	];
 	const [isDropDownMenuOpen, setIsDropDownMenuOpen] = useState(false);
 	const [selectedSort, setSelectedSort] = useState(sorts[0]);
 	const [sortedElements, setSortedElements] = useState([]);
+	const [showHidden, setShowHidden] = useState(true);
 
 	useEffect(() => {
-		setSortedElements(!elements ? [] : elements);
+		if (!!elements && elements.length > 0) {
+			setSortedElements(elements.sort((a, b) => (a.price1 > b.price1 ? -1 : 1)));
+			handleShowHidden();
+		}
 	}, [elements]);
 
-	const handleDropDownMenuClick = i => {
-		setIsDropDownMenuOpen(false);
-		setSelectedSort(sorts[i]);
+	// events
+	const handleShowHidden = () => {
+		setShowHidden(!showHidden);
 
+		if (!showHidden) {
+			// hide elements which quantity equal 0
+			setSortedElements(sortedElements.filter(el => el.quantity !== 0));
+		} else {
+			// show all elements
+			handleSortElements(sorts.findIndex(s => s.property === selectedSort.property));
+		}
+	};
+
+	const handleSortElements = i => {
 		if (isReady && elements.length) {
 			if (selectedSort.property === sorts[i].property) {
 				setSortedElements(elements.reverse());
-			} else if (sorts[i].property === 'newest') {
-				const newElements = [];
-				newElements.push(...elements.filter(e => e.isnew));
-				newElements.push(...elements.filter(e => !e.isnew));
-				setSortedElements(newElements);
 			} else if (sorts[i].property === 'price') {
 				setSortedElements(elements.sort((a, b) => (a.price1 > b.price1 ? -1 : 1)));
 			} else if (sorts[i].property === 'title') {
@@ -156,6 +171,12 @@ export const Elements = ({ isReady, elements }) => {
 				);
 			}
 		}
+	};
+
+	const handleDropDownMenuClick = i => {
+		setIsDropDownMenuOpen(false);
+		setSelectedSort(sorts[i]);
+		handleSortElements(i);
 	};
 
 	return (
@@ -178,6 +199,9 @@ export const Elements = ({ isReady, elements }) => {
 							</DropDownMenu>
 						)}
 					</Menu>
+					<HideIcon title='скрыть элементы которых нет в наличии' active={showHidden} onClick={handleShowHidden}>
+						<BiHide />
+					</HideIcon>
 				</Sort>
 			</Panel>
 			<>

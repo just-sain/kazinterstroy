@@ -3,6 +3,7 @@ import { Store } from '../lib/store';
 // components
 import Image from 'next/image';
 import { Container } from './container';
+import { Preloader } from './preloader';
 // icons
 import { BsChevronRight, BsChevronLeft } from 'react-icons/bs';
 // styles
@@ -29,49 +30,6 @@ const StyledContainer = styled(Container)`
 	margin: 0 auto;
 `;
 
-// loader
-const LoaderContainer = styled.div`
-	width: 100%;
-	padding: 7.5rem 0;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-`;
-
-const Loader = styled.span`
-	width: 7rem;
-	height: 7rem;
-
-	display: inline-block;
-	border-radius: 50%;
-	border: 0.5rem solid;
-	border-color: rgb(var(--black)) rgb(var(--black)) transparent;
-	box-sizing: border-box;
-
-	position: relative;
-	animation: catalogRotation 1s linear infinite;
-
-	&::after {
-		content: '';
-		width: 5rem;
-		height: 5rem;
-		margin: auto;
-
-		border: 0.4rem solid;
-		border-color: transparent rgb(var(--primary));
-		border-radius: 50%;
-
-		position: absolute;
-		left: 0;
-		right: 0;
-		top: 0;
-		bottom: 0;
-
-		transform-origin: center center;
-		animation: catalogRotationBack 0.5s linear infinite;
-	}
-`;
-
 export const Catalog = memo(({ closeCatalog, ...props }) => {
 	const { state } = useContext(Store);
 	const { menu, catalog } = state;
@@ -79,13 +37,7 @@ export const Catalog = memo(({ closeCatalog, ...props }) => {
 	return (
 		<Wrapper {...props}>
 			<StyledContainer maxW='l'>
-				{!menu || !catalog ? (
-					<LoaderContainer>
-						<Loader />
-					</LoaderContainer>
-				) : (
-					<Category menu={menu} catalog={catalog} closeCatalog={closeCatalog} />
-				)}
+				{!menu || !catalog ? <Preloader /> : <Category menu={menu} catalog={catalog} closeCatalog={closeCatalog} />}
 			</StyledContainer>
 		</Wrapper>
 	);
@@ -317,7 +269,7 @@ const Category = memo(({ menu, catalog, closeCatalog, ...props }) => {
 						isSelected={selectCatalog.id === item.id}
 						onClick={() => onCatalogClick(item)}>
 						<LeftSideIcon>
-							<Image src={item.icon} alt='' fill priority />
+							<Image src={item.icon} alt={item.name} fill priority />
 						</LeftSideIcon>
 						<span>{item.name}</span>
 						<BsChevronRight />
@@ -334,7 +286,7 @@ const Category = memo(({ menu, catalog, closeCatalog, ...props }) => {
 				</Heading>
 				<ListContainer>
 					{selectCatalogCategoriesColumns.map(columnArray => (
-						<ListColumn>
+						<ListColumn key={columnArray.id}>
 							{columnArray.map(firstLevel => (
 								<List key={firstLevel.id}>
 									<ListTitle>{firstLevel.name}</ListTitle>
@@ -354,34 +306,11 @@ const Category = memo(({ menu, catalog, closeCatalog, ...props }) => {
 							))}
 						</ListColumn>
 					))}
-					{/* {selectCatalogCategories.map(firstLevel => (
-						<List key={firstLevel.id}>
-							<ListTitle>{firstLevel.name}</ListTitle>
-							{menu
-								.filter(
-									secondLevel => firstLevel.left < secondLevel.left && secondLevel.right < firstLevel.right
-								)
-								.map(secondLevel => (
-									<ListItem>
-										<Link href={`/category/${secondLevel.id}`}>{secondLevel.name}</Link>
-									</ListItem>
-								))}
-						</List>
-					))} */}
-					{/* {menu
-						.filter(el => selectCatalog.left < el.left && el.right < selectCatalog.right)
-						.map(el => (
-							<li key={el.id} onClick={() => router.push(`/category/${el.id}`)}>
-								{el.name}
-							</li>
-						))} */}
 				</ListContainer>
 			</RightSide>
 		</Box>
 	);
 });
-
-// `/category/${el.id}`
 
 /*
 ? code for divide category to 3 columns

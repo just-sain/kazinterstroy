@@ -3,6 +3,7 @@ import { AiOutlineSecurityScan, AiOutlineAudio } from 'react-icons/ai';
 import { SlScreenSmartphone } from 'react-icons/sl';
 import { BsTools, BsPlug } from 'react-icons/bs';
 import { GiCardboardBox } from 'react-icons/gi';
+import { FaNetworkWired } from 'react-icons/fa';
 
 export const catalogData = [
 	{
@@ -33,7 +34,7 @@ export const catalogData = [
 		id: 3
 	},
 	{
-		icon: <BsPlug />,
+		icon: <FaNetworkWired />,
 		name: 'Сетевое оборудование',
 		categories: [3547, 3451, 5650, 5739, 3706, 3787, 3595, 3724, 5618, 3619],
 		id: 4
