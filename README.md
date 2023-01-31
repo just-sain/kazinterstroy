@@ -5,8 +5,9 @@
 in project i use nodemailer, read about email password in nodemailer docs
 
 ```
-EMAIL='email'
+EMAIL='email of sender'
 EMAIL_PWD='password'
+SEND_TO_EMAIL='email of reciever'
 
 NEXT_PUBLIC_SELF_DOMAIN='http://localhost:8080'
 
