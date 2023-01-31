@@ -33,11 +33,8 @@ const reducer = (state, action) => {
 		}
 		case 'CART_ADD_ITEM': {
 			const newItem = action.payload;
-			const existItem = state.cart.cartItems.find(item => item.article === newItem.article);
 
-			const newCartItems = existItem
-				? state.cart.cartItems.map(item => (item.article === existItem.article ? newItem : item))
-				: [...state.cart.cartItems, newItem];
+			const newCartItems = [...state.cart.cartItems, newItem];
 
 			setCookie(null, 'cartItems', JSON.stringify(newCartItems), {
 				maxAge: 30 * 24 * 60 * 60,

@@ -4,8 +4,7 @@ import { declOfQuantity } from '../utils/declaration';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import styled from '@emotion/styled';
-import { BsHeart, BsHeartFill } from 'react-icons/bs';
-import { useEffect, useState } from 'react';
+import { BsCartPlusFill, BsCartXFill } from 'react-icons/bs';
 
 const StyledArticle = styled(motion.article)`
 	padding: 2rem 1.5rem;
@@ -87,22 +86,47 @@ const ToCart = styled.button`
 	align-items: center;
 
 	border-radius: 50%;
-	background: rgba(var(--black), 0.1);
+	background: rgba(var(--real-gray), 0.2);
 
-	color: rgb(var(--primary));
+	color: rgb(var(--${({ color }) => color}));
 	font-size: 2rem;
 
 	position: absolute;
 	bottom: 1.5rem;
 	right: 1.5rem;
+
+	&:disabled {
+		display: none;
+	}
 `;
 
 export const Article = ({ href, articleData, dispatch, isInCart, ...props }) => {
 	const cartHandle = () => {
+		const payload = {
+			article: articleData.article,
+			name: articleData.name,
+			brand: articleData.brand,
+			article_pn: articleData.article_pn,
+			href: `${process.env.NEXT_PUBLIC_SELF_DOMAIN}${href}`,
+			price1: articleData.price1,
+			quantity: articleData.quantity,
+			images: articleData.images
+		};
+
+		// interface of payload
+		// article: 0,     // id
+		// name: '',       // name
+		// brand: '',      // brand
+		// article_pn: '', // article part number
+		// href: '',       // link
+		// price1: 0,      // price
+		// quantity: 0,    // count in base
+		// images: [''],   // images
+
 		if (!isInCart) {
-			dispatch({ type: 'CART_ADD_ITEM', payload: articleData });
+			dispatch({ type: 'CART_ADD_ITEM', payload });
 		} else {
-			dispatch({ type: 'CART_REMOVE_ITEM', payload: articleData });
+			dispatch({ type: 'CART_REMOVE_ITEM', payload });
 		}
 	};
 
@@ -127,7 +151,13 @@ export const Article = ({ href, articleData, dispatch, isInCart, ...props }) => 
 					<span>{priceRule(articleData.price1)}</span> (шт)
 				</Price>
 			</div>
-			<ToCart onClick={cartHandle}>{!isInCart ? <BsHeart /> : <BsHeartFill />}</ToCart>
+			<ToCart
+				disabled={declOfQuantity(articleData.quantity) === 'Нет в наличи'}
+				title={!isInCart ? 'Добавить в корзину' : 'Удалить из корзины'}
+				onClick={cartHandle}
+				color={!isInCart ? 'cash' : 'error'}>
+				{!isInCart ? <BsCartPlusFill /> : <BsCartXFill />}
+			</ToCart>
 		</StyledArticle>
 	);
 };

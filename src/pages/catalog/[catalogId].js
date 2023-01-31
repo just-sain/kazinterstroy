@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { Store } from '../../lib/store';
 // components
 import { Error404Page } from '../404';
@@ -18,8 +18,7 @@ const Heading = styled.h1`
 	font-weight: 500;
 `;
 
-const ListContainer = styled.div`
-	margin-top: 3rem;
+const ListWrapper = styled.div`
 	width: 100%;
 
 	display: grid;
@@ -45,15 +44,33 @@ const ListColumn = styled.div`
 	gap: 3rem;
 `;
 
+const ListContainer = styled.div`
+	width: 100%;
+`;
+
 const List = styled.ul`
-	padding-left: 0.5rem;
+	padding-left: 1rem;
 
 	display: grid;
 	align-content: flex-start;
 	gap: 1rem;
+
+	border-left: 0.1rem solid rgb(var(--real-gray));
+
+	h4 {
+		font-size: 1.6rem;
+	}
+
+	transition: border-left 0.3s ease 0s;
+
+	&:hover {
+		border-left: 0.1rem solid rgb(var(--primary));
+	}
 `;
 
 const ListTitle = styled.h4`
+	margin-bottom: 1rem;
+
 	color: rgb(var(--black));
 	font-size: 1.8rem;
 	font-weight: 700;
@@ -94,7 +111,26 @@ const DynamicCatalogPage = ({ catalogId }) => {
 		}
 	}
 
-	console.log(selectCatalogCategoriesColumns);
+	const AutoFillCategoriesLvl = ({ currentLvl }) => {
+		return (
+			<ListItem key={currentLvl.id}>
+				{currentLvl.left + 1 === currentLvl.right ? (
+					<Link href={`/category/${currentLvl.id}`}>{currentLvl.name}</Link>
+				) : (
+					<>
+						<ListTitle>{currentLvl.name}</ListTitle>
+						<List>
+							{menu
+								.filter(nextLvl => currentLvl.left < nextLvl.left && nextLvl.right < currentLvl.right)
+								.map(nextLvl => (
+									<AutoFillCategoriesLvl currentLvl={nextLvl} key={nextLvl.id} />
+								))}
+						</List>
+					</>
+				)}
+			</ListItem>
+		);
+	};
 
 	return (
 		<Wrapper>
@@ -103,27 +139,27 @@ const DynamicCatalogPage = ({ catalogId }) => {
 			) : (
 				<>
 					<Heading>{selectedCatalog.name}</Heading>
-					<ListContainer>
+					<ListWrapper>
 						{selectCatalogCategoriesColumns.map((column, i) => (
 							<ListColumn key={i}>
 								{column.map(firstLevel => (
-									<List key={firstLevel.id}>
-										<ListTitle>{firstLevel.name}</ListTitle>
-										{menu
-											.filter(
-												secondLevel =>
-													firstLevel.left < secondLevel.left && secondLevel.right < firstLevel.right
-											)
-											.map(secondLevel => (
-												<ListItem key={secondLevel.id}>
-													<Link href={`/category/${secondLevel.id}`}>{secondLevel.name}</Link>
-												</ListItem>
-											))}
-									</List>
+									<ListContainer key={firstLevel.id}>
+										<List>
+											<ListTitle>{firstLevel.name}</ListTitle>
+											{menu
+												.filter(
+													secondLevel =>
+														firstLevel.left < secondLevel.left && secondLevel.right < firstLevel.right
+												)
+												.map(secondLevel => (
+													<AutoFillCategoriesLvl currentLvl={secondLevel} key={secondLevel.id} />
+												))}
+										</List>
+									</ListContainer>
 								))}
 							</ListColumn>
 						))}
-					</ListContainer>
+					</ListWrapper>
 				</>
 			)}
 		</Wrapper>
@@ -136,8 +172,6 @@ export const getServerSideProps = async ctx => {
 	if (!ctx?.query || !ctx.query.catalogId || isNaN(ctx.query.catalogId)) {
 		return { notFound: true };
 	}
-
-	console.log(ctx.query);
 
 	return {
 		props: {

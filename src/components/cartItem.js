@@ -8,7 +8,6 @@ import { Button } from './button';
 import { BsTrash } from 'react-icons/bs';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
-import { Store } from '../lib/store';
 
 const Grid = styled.div`
 	overflow: hidden;
@@ -155,12 +154,7 @@ const Price = styled.p`
 	font-weight: 600;
 `;
 
-export const CartItem = memo(({ elementData, ...props }) => {
-	const { state, dispatch } = useContext(Store);
-	const {
-		cart: { cartItems }
-	} = state;
-
+export const CartItem = memo(({ elementData, dispatch, ...props }) => {
 	const removeHandle = () => {
 		dispatch({ type: 'CART_REMOVE_ITEM', payload: elementData });
 	};
@@ -171,8 +165,8 @@ export const CartItem = memo(({ elementData, ...props }) => {
 				<Image src={elementData.images[0]} alt={elementData.name} fill sizes='100%' />
 			</Img>
 			<Column>
-				<Name href={`/category/${elementData.category}/${elementData.article}`} title={elementData.full_name}>
-					{elementData.full_name}
+				<Name href={`/category/${elementData.category}/${elementData.article}`} title={elementData.name}>
+					{elementData.name}
 				</Name>
 				<Info>
 					<InfoItem>

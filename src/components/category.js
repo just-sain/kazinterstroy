@@ -48,8 +48,6 @@ export const Category = ({ ...props }) => {
 	const { state } = useContext(Store);
 	const { catalog } = state;
 
-	console.log(catalog);
-
 	return (
 		<Wrapper {...props}>
 			<Heading>Наши категории</Heading>
@@ -60,7 +58,7 @@ export const Category = ({ ...props }) => {
 
 const Flex = styled(Link)`
 	height: 30rem;
-	padding: 3rem 1.5rem;
+	padding: 3rem;
 	z-index: 1;
 	cursor: pointer;
 
@@ -68,45 +66,23 @@ const Flex = styled(Link)`
 	justify-content: center;
 	align-items: center;
 
-	border-radius: 1rem;
+	box-shadow: var(--outer-shadow), var(--inner-shadow-0);
+	background: rgba(var(--real-white), 1);
+	border-radius: 1.5rem;
 
 	position: relative;
+	transition: box-shadow 0.3s ease 0s;
 
-	&:nth-child(1n + 1) {
-		background: linear-gradient(
-			165deg,
-			rgba(0, 159, 255, 0.85) 0%,
-			rgba(255, 1, 181, 0.85) 47%,
-			rgba(255, 0, 0, 0.85) 100%
-		);
-	}
-
-	&:nth-child(2n + 1) {
-		background: linear-gradient(
-			344deg,
-			rgba(255, 1, 181, 0.85) 0%,
-			rgba(0, 159, 255, 0.85) 24%,
-			rgba(255, 0, 176, 0.85) 64%,
-			rgba(255, 0, 0, 0.85) 100%
-		);
-	}
-
-	&:nth-child(3n + 1) {
-		background: linear-gradient(
-			168deg,
-			rgba(153, 0, 255, 0.85) 0%,
-			rgba(255, 0, 0, 0.85) 50%,
-			rgba(255, 149, 0, 0.85) 100%
-		);
+	&:hover {
+		box-shadow: var(--outer-shadow-0), var(--inner-shadow);
 	}
 `;
 
-const BgItem = styled.img`
-	width: 65%;
-	height: 65%;
+const Icon = styled.img`
+	width: 80%;
+	height: 80%;
 	z-index: -1;
-	opacity: 0.4;
-	filter: invert(100%);
+	opacity: 0.15;
 
 	pointer-events: none;
 	object-fit: contain;
@@ -120,10 +96,10 @@ const BgItem = styled.img`
 `;
 
 const Text = styled.p`
-	color: rgb(var(--white));
+	color: rgb(var(--primary));
 	text-align: center;
 	text-transform: uppercase;
-	text-shadow: 0 0 2.5rem rgb(var(--white));
+	text-shadow: 0 0 1.5rem rgba(var(--primary), 0.4);
 	font-size: 3rem;
 	font-weight: 700;
 
@@ -135,7 +111,7 @@ const Text = styled.p`
 const Item = ({ catalogData, ...props }) => {
 	return (
 		<Flex href={`/catalog/${catalogData.id}`} {...props}>
-			<BgItem src={`https:${catalogData.icon}`} />
+			<Icon src={`https:${catalogData.icon}`} alt={catalogData.name} />
 			<Text>{catalogData.name}</Text>
 		</Flex>
 	);

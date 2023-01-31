@@ -2,7 +2,6 @@ import { useRouter } from 'next/router';
 // components
 import styled from '@emotion/styled';
 import { AiFillCaretRight } from 'react-icons/ai';
-import Link from 'next/link';
 
 // size: 's' | 'm' | 'l'
 // bg: variable

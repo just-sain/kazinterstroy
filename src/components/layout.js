@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Header } from './header';
 import { Menu } from './menu';
-import { ChatBot } from './chatBot';
 import { Footer } from './footer';
 import styled from '@emotion/styled';
 
@@ -101,7 +100,6 @@ const Layout = ({ children }) => {
 				<BgImg src='/bg-item.png' alt='bg' priority fill sizes='100%' />
 			</Bg>
 			<SnowEffect />
-			<ChatBot />
 			<Footer />
 		</Wrapper>
 	);

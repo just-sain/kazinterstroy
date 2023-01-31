@@ -6,7 +6,6 @@ import { Article } from './article';
 import { MirageArticle } from './mirage-article';
 // icons
 import { MdOutlineSort } from 'react-icons/md';
-import { BiHide } from 'react-icons/bi';
 // styles
 import styled from '@emotion/styled';
 
@@ -47,7 +46,7 @@ const Sort = styled.div`
 `;
 
 const Menu = styled.div`
-	width: 18rem;
+	width: 20rem;
 
 	cursor: pointer;
 	background: rgb(var(--primary));
@@ -72,6 +71,7 @@ const Menu = styled.div`
 const DropDownMenu = styled.div`
 	width: 100%;
 	z-index: 5;
+	overflow: hidden;
 
 	background: rgb(var(--bg));
 	border-end-end-radius: 0.75rem;
@@ -90,28 +90,12 @@ const DropDownMenuItem = styled.div`
 	padding: 1rem 1.5rem;
 
 	border-bottom: 0.1rem solid rgb(var(--primary));
+	${({ active }) => (active ? `background: rgb(var(--black));` : ``)}
 
-	color: rgb(var(--primary));
+	color: rgb(var(--${({ active }) => (active ? `white` : `primary`)}));
 
 	&:last-of-type {
 		border-bottom: none;
-	}
-`;
-
-const HideIcon = styled.button`
-	height: 100%;
-	cursor: pointer;
-
-	display: flex;
-	align-items: center;
-
-	color: rgb(var(--${({ active }) => (active ? `primary` : `black`)}));
-	font-size: 2.8rem;
-
-	transition: color 0.3s ease 0s;
-
-	&:hover {
-		color: rgb(var(--secondary));
 	}
 `;
 
@@ -125,58 +109,60 @@ export const Elements = ({ isReady, elements }) => {
 
 	// sort
 	const sorts = [
-		{ name: 'По цене', property: 'price' },
-		{ name: 'По алфавиту', property: 'title' }
+		{ name: 'Сначала дорогие ', property: 'price-up-to-down' },
+		{ name: 'Сначала дешевые', property: 'price-down-to-up' },
+		{ name: 'от А до Я', property: 'title' },
+		{ name: 'от Я до А', property: 'title-reverse' }
 	];
+
+	// states
 	const [isDropDownMenuOpen, setIsDropDownMenuOpen] = useState(false);
 	const [selectedSort, setSelectedSort] = useState(sorts[0]);
 	const [sortedElements, setSortedElements] = useState([]);
-	const [showHidden, setShowHidden] = useState(true);
 
 	useEffect(() => {
 		if (!!elements && elements.length > 0) {
-			setSortedElements(elements.sort((a, b) => (a.price1 > b.price1 ? -1 : 1)));
-			handleShowHidden();
+			setSortedElements(sortElements(0));
+			setSelectedSort(sorts[0]);
+			setIsDropDownMenuOpen(false);
 		}
 	}, [elements]);
 
-	// events
-	const handleShowHidden = () => {
-		setShowHidden(!showHidden);
+	const sortElements = i => {
+		if (sorts[i].property === 'price-up-to-down') {
+			return elements.sort((a, b) => (a.price1 > b.price1 ? -1 : 1));
+		} else if (sorts[i].property === 'price-down-to-up') {
+			return elements.sort((a, b) => (a.price1 < b.price1 ? -1 : 1));
+		} else if (sorts[i].property === 'title') {
+			return elements.sort((a, b) => {
+				const nameA = a.name.toLowerCase(),
+					nameB = b.name.toLowerCase();
 
-		if (!showHidden) {
-			// hide elements which quantity equal 0
-			setSortedElements(sortedElements.filter(el => el.quantity !== 0));
+				if (nameA < nameB) return -1; // from a to z
+				if (nameA > nameB) return 1;
+				return 0; // not sort
+			});
+		} else if (sorts[i].property === 'title-reverse') {
+			return elements.sort((a, b) => {
+				const nameA = a.name.toLowerCase(),
+					nameB = b.name.toLowerCase();
+
+				if (nameA > nameB) return -1; // from z to a
+				if (nameA < nameB) return 1;
+				return 0; // not sort
+			});
 		} else {
-			// show all elements
-			handleSortElements(sorts.findIndex(s => s.property === selectedSort.property));
-		}
-	};
-
-	const handleSortElements = i => {
-		if (isReady && elements.length) {
-			if (selectedSort.property === sorts[i].property) {
-				setSortedElements(elements.reverse());
-			} else if (sorts[i].property === 'price') {
-				setSortedElements(elements.sort((a, b) => (a.price1 > b.price1 ? -1 : 1)));
-			} else if (sorts[i].property === 'title') {
-				setSortedElements(
-					elements.sort((a, b) => {
-						var nameA = a.name.toLowerCase(),
-							nameB = b.name.toLowerCase();
-						if (nameA < nameB) return -1;
-						if (nameA > nameB) return 1;
-						return 0;
-					})
-				);
-			}
+			return elements;
 		}
 	};
 
 	const handleDropDownMenuClick = i => {
 		setIsDropDownMenuOpen(false);
 		setSelectedSort(sorts[i]);
-		handleSortElements(i);
+
+		if (isReady && elements.length) {
+			setSortedElements(sortElements(i));
+		}
 	};
 
 	return (
@@ -192,45 +178,43 @@ export const Elements = ({ isReady, elements }) => {
 						{isDropDownMenuOpen && (
 							<DropDownMenu>
 								{sorts.map((s, i) => (
-									<DropDownMenuItem key={s.property} onClick={() => handleDropDownMenuClick(i)}>
+									<DropDownMenuItem
+										key={s.property}
+										onClick={() => handleDropDownMenuClick(i)}
+										active={selectedSort.property === s.property}>
 										{s.name}
 									</DropDownMenuItem>
 								))}
 							</DropDownMenu>
 						)}
 					</Menu>
-					<HideIcon title='скрыть элементы которых нет в наличии' active={showHidden} onClick={handleShowHidden}>
-						<BiHide />
-					</HideIcon>
 				</Sort>
 			</Panel>
-			<>
-				{isReady && !!sortedElements.length ? (
-					<Grid>
-						{!!sortedElements.length &&
-							sortedElements.map(a => (
-								<Article
-									key={a.article}
-									articleData={a}
-									href={`/category/${a.category}/${a.article}`}
-									layout={shouldReduceMotion ? false : true}
-									isInCart={cartItems.find(e => e.article === Number(a.article))}
-									dispatch={dispatch}
-								/>
-							))}
-					</Grid>
-				) : (
-					<Grid>
-						<MirageArticle />
-						<MirageArticle />
-						<MirageArticle />
-						<MirageArticle />
-						<MirageArticle />
-						<MirageArticle />
-						<MirageArticle />
-					</Grid>
-				)}
-			</>
+			{isReady && !!sortedElements.length ? (
+				<Grid>
+					{!!sortedElements.length &&
+						sortedElements.map(a => (
+							<Article
+								key={a.article}
+								articleData={a}
+								href={`/category/${a.category}/${a.article}`}
+								layout={shouldReduceMotion ? false : true}
+								isInCart={cartItems.find(e => e.article === Number(a.article))}
+								dispatch={dispatch}
+							/>
+						))}
+				</Grid>
+			) : (
+				<Grid>
+					<MirageArticle />
+					<MirageArticle />
+					<MirageArticle />
+					<MirageArticle />
+					<MirageArticle />
+					<MirageArticle />
+					<MirageArticle />
+				</Grid>
+			)}
 		</>
 	);
 };

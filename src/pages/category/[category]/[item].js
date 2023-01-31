@@ -265,7 +265,7 @@ const PropertiesItem = styled.li`
 	}
 `;
 
-const Item = ({ categoryData, item }) => {
+const ItemPage = ({ categoryData, itemData }) => {
 	const { state, dispatch } = useContext(Store);
 	const {
 		cart: { cartItems }
@@ -274,45 +274,70 @@ const Item = ({ categoryData, item }) => {
 	const breadcrumbData = [
 		{ name: 'Каталог', href: '/' },
 		{ name: categoryData.name, href: `/category/${categoryData.id}` },
-		{ name: item.name, href: `/category/${categoryData.id}/${item.article}` }
+		{ name: itemData.name, href: `/category/${categoryData.id}/${itemData.article}` }
 	];
 
 	const cartHandle = () => {
-		if (!cartItems.find(e => e.article === item.article)) {
-			dispatch({ type: 'CART_ADD_ITEM', payload: item });
+		const payload = {
+			article: itemData.article,
+			name: itemData.name,
+			brand: itemData.brand,
+			article_pn: itemData.article_pn,
+			href: `${process.env.NEXT_PUBLIC_SELF_DOMAIN}/category/${categoryData.id}/${itemData.article}`,
+			price1: itemData.price1,
+			quantity: itemData.quantity,
+			images: itemData.images
+		};
+
+		// interface of payload
+		// article: 0,     // id
+		// name: '',       // name
+		// brand: '',      // brand
+		// href: '',       // link
+		// article_pn: '', // article part number
+		// price1: 0,      // price
+		// quantity: 0,    // count in base
+		// images: [''],   // images
+
+		if (!cartItems.find(e => e.article === itemData.article)) {
+			console.log(itemData);
+			dispatch({ type: 'CART_ADD_ITEM', payload });
 		} else {
-			dispatch({ type: 'CART_REMOVE_ITEM', payload: item });
+			dispatch({ type: 'CART_REMOVE_ITEM', payload });
 		}
 	};
 
 	return (
 		<>
 			<Head>
-				<meta name='description' content={`${item.full_name} все за ${priceRule(item.price1)} / KazInterStroy`} />
+				<meta
+					name='description'
+					content={`${itemData.full_name} все за ${priceRule(itemData.price1)} / KazInterStroy`}
+				/>
 				<meta
 					name='keywords'
-					content={`kazinterstroy, интернет магазин, элемент, продукт, товар, ${item.name}, ${item.price1}, ${item.full_name}`}
+					content={`kazinterstroy, интернет магазин, элемент, продукт, товар, ${itemData.name}, ${itemData.price1}, ${itemData.full_name}`}
 				/>
 
-				<meta property='og:title' content={`${item.name} / KazInterStroy`} />
+				<meta property='og:title' content={`${itemData.name} / KazInterStroy`} />
 				<meta
 					property='og:description'
-					content={`${item.full_name} все за ${priceRule(item.price1)} / KazInterStroy`}
+					content={`${itemData.full_name} все за ${priceRule(itemData.price1)} / KazInterStroy`}
 				/>
-				<meta property='og:image' content={item.images[0]} />
+				<meta property='og:image' content={itemData.images[0]} />
 
-				<meta name='twitter:title' content={`${item.name} / KazInterStroy`} />
+				<meta name='twitter:title' content={`${itemData.name} / KazInterStroy`} />
 				<meta
 					name='twitter:description'
-					content={`${item.full_name} все за ${priceRule(item.price1)} / KazInterStroy`}
+					content={`${itemData.full_name} все за ${priceRule(itemData.price1)} / KazInterStroy`}
 				/>
-				<meta name='twitter:image' content={item.images[0]} />
+				<meta name='twitter:image' content={itemData.images[0]} />
 
-				<title>{item.name} / KazInterStroy</title>
+				<title>{itemData.name} / KazInterStroy</title>
 			</Head>
 			<Wrapper>
 				<Breadcrumb links={breadcrumbData} withMarginBottom />
-				<Heading title={item.full_name}>{item.name}</Heading>
+				<Heading title={itemData.full_name}>{itemData.name}</Heading>
 				<Grid>
 					<Carousel>
 						<StyledSwiper
@@ -324,7 +349,7 @@ const Item = ({ categoryData, item }) => {
 							zoom={true}
 							pagination={{ dynamicBullets: true, clickable: true }}
 							modules={[Autoplay, Zoom, Pagination, EffectCards]}>
-							{item.images.map(i => (
+							{itemData.images.map(i => (
 								<StyledSwiperSlide key={i}>
 									<ImageContainer className='swiper-zoom-container'>
 										<Image priority src={i} alt={i} fill sizes='100%' />
@@ -335,16 +360,16 @@ const Item = ({ categoryData, item }) => {
 					</Carousel>
 					<div>
 						<Info>
-							<h2>{item.full_name}</h2>
+							<h2>{itemData.full_name}</h2>
 							<li>
 								<span>Брэнд</span>
 								<hr />
-								<span>{item.brand}</span>
+								<span>{itemData.brand}</span>
 							</li>
 							<li>
 								<span>Код товара</span>
 								<hr />
-								<span>{item.article}</span>
+								<span>{itemData.article}</span>
 							</li>
 							<li>
 								<span>В наличи</span>
@@ -352,37 +377,38 @@ const Item = ({ categoryData, item }) => {
 								<span
 									style={{
 										color:
-											declOfQuantity(item.quantity) === 'Нет в наличи'
+											declOfQuantity(itemData.quantity) === 'Нет в наличи'
 												? 'rgb(var(--error))'
 												: 'rgb(var(--secondary))'
 									}}>
-									{declOfQuantity(item.quantity)}
+									{declOfQuantity(itemData.quantity)}
 								</span>
 							</li>
-							{item.warranty && (
+							{itemData.warranty && (
 								<li>
 									<span>Гарантия</span>
 									<hr />
-									<span>{item.warranty}</span>
+									<span>{itemData.warranty}</span>
 								</li>
 							)}
 							<li>
 								<span>Артикул-PartNumber</span>
 								<hr />
-								<span>{item.article_pn}</span>
+								<span>{itemData.article_pn}</span>
 							</li>
 						</Info>
 						<Price>
 							Цена
 							<br />
-							<span>{priceRule(item.price1)}</span>
+							<span>{priceRule(itemData.price1)}</span>
 						</Price>
 						<StyledButton
+							disabled={declOfQuantity(itemData.quantity) === 'Нет в наличи'}
 							onClick={cartHandle}
-							background={cartItems.find(i => i.article === item.article) ? 'error' : 'cash'}
+							background={cartItems.find(i => i.article === itemData.article) ? 'error' : 'cash'}
 							color='white'
 							size='l'>
-							{!cartItems.find(i => i.article === item.article) ? (
+							{!cartItems.find(i => i.article === itemData.article) ? (
 								<>
 									Добавить в корзину <BsCartPlusFill />
 								</>
@@ -392,17 +418,22 @@ const Item = ({ categoryData, item }) => {
 								</>
 							)}
 						</StyledButton>
+						{declOfQuantity(itemData.quantity) === 'Нет в наличи' ? (
+							<i style={{ color: 'rgb(var(--error))' }}>* Нет в наличи</i>
+						) : (
+							''
+						)}
 					</div>
 				</Grid>
-				<DetailText dangerouslySetInnerHTML={{ __html: item.detailtext }} />
-				{item.properties && (
+				<DetailText dangerouslySetInnerHTML={{ __html: itemData.detailtext }} />
+				{itemData.properties && (
 					<Properties>
 						<Heading>Характеристики</Heading>
-						{Object.keys(item.properties).map(p => (
+						{Object.keys(itemData.properties).map(p => (
 							<PropertiesItem key={p}>
 								<span>{p}</span>
 								<hr />
-								<span>{item.properties[p]}</span>
+								<span>{itemData.properties[p]}</span>
 							</PropertiesItem>
 						))}
 					</Properties>
@@ -412,7 +443,7 @@ const Item = ({ categoryData, item }) => {
 	);
 };
 
-export default Item;
+export default ItemPage;
 
 export const getServerSideProps = async ctx => {
 	if (!ctx?.query || !ctx.query.category || isNaN(ctx.query.category) || !ctx.query.item || isNaN(ctx.query.item)) {
@@ -425,17 +456,17 @@ export const getServerSideProps = async ctx => {
 	);
 	if (!categoryData || !categoryData.length) return { notFound: true };
 
-	// item
+	// item data
 	const additionalFields = 'images,brand,warranty,detailtext,properties';
-	const { data: item } = await axios.get(
+	const { data: itemData } = await axios.get(
 		`${process.env.NEXT_PUBLIC_API}/element-info?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&article=${ctx.query.item}&additional_fields=${additionalFields}`
 	);
-	if (!item || !item.length) return { notFound: true };
+	if (!itemData || !itemData.length) return { notFound: true };
 
 	return {
 		props: {
 			categoryData: categoryData[0],
-			item: item[0]
+			itemData: itemData[0]
 		}
 	};
 };

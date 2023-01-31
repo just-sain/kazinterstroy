@@ -182,7 +182,7 @@ const BackIcon = styled.div`
 	}
 `;
 
-const ListContainer = styled.div`
+const ListWrapper = styled.div`
 	width: 100%;
 
 	display: grid;
@@ -208,15 +208,33 @@ const ListColumn = styled.div`
 	gap: 3rem;
 `;
 
+const ListContainer = styled.div`
+	width: 100%;
+`;
+
 const List = styled.ul`
-	padding-left: 0.5rem;
+	padding-left: 1rem;
 
 	display: grid;
 	align-content: flex-start;
 	gap: 1rem;
+
+	border-left: 0.1rem solid rgb(var(--real-gray));
+
+	h4 {
+		font-size: 1.6rem;
+	}
+
+	transition: border-left 0.3s ease 0s;
+
+	&:hover {
+		border-left: 0.1rem solid rgb(var(--primary));
+	}
 `;
 
 const ListTitle = styled.h4`
+	margin-bottom: 1rem;
+
 	color: rgb(var(--black));
 	font-size: 1.8rem;
 	font-weight: 700;
@@ -260,6 +278,29 @@ const Category = memo(({ menu, catalog, closeCatalog, ...props }) => {
 		setIsCatalogSelect(true);
 	};
 
+	const AutoFillCategoriesLvl = ({ currentLvl }) => {
+		return (
+			<ListItem key={currentLvl.id}>
+				{currentLvl.left + 1 === currentLvl.right ? (
+					<Link href={`/category/${currentLvl.id}`} onClick={closeCatalog}>
+						{currentLvl.name}
+					</Link>
+				) : (
+					<>
+						<ListTitle>{currentLvl.name}</ListTitle>
+						<List>
+							{menu
+								.filter(nextLvl => currentLvl.left < nextLvl.left && nextLvl.right < currentLvl.right)
+								.map(nextLvl => (
+									<AutoFillCategoriesLvl currentLvl={nextLvl} key={nextLvl.id} />
+								))}
+						</List>
+					</>
+				)}
+			</ListItem>
+		);
+	};
+
 	return (
 		<Box {...props}>
 			<LeftSide isMenuSelect={isCatalogSelect}>
@@ -284,33 +325,63 @@ const Category = memo(({ menu, catalog, closeCatalog, ...props }) => {
 					</BackIcon>
 					{selectCatalog.name}
 				</Heading>
-				<ListContainer>
+				<ListWrapper>
 					{selectCatalogCategoriesColumns.map(columnArray => (
 						<ListColumn key={columnArray.id}>
-							{columnArray.map(firstLevel => (
-								<List key={firstLevel.id}>
-									<ListTitle>{firstLevel.name}</ListTitle>
-									{menu
-										.filter(
-											secondLevel =>
-												firstLevel.left < secondLevel.left && secondLevel.right < firstLevel.right
-										)
-										.map(secondLevel => (
-											<ListItem key={secondLevel.id}>
-												<Link href={`/category/${secondLevel.id}`} onClick={closeCatalog}>
-													{secondLevel.name}
-												</Link>
-											</ListItem>
-										))}
-								</List>
+							{columnArray.map(firstLvl => (
+								<ListContainer>
+									<ListTitle>{firstLvl.name}</ListTitle>
+									<List key={firstLvl.id}>
+										{menu
+											.filter(
+												secondLvl => firstLvl.left < secondLvl.left && secondLvl.right < firstLvl.right
+											)
+											.map(secondLvl => (
+												<AutoFillCategoriesLvl currentLvl={secondLvl} key={secondLvl.id} />
+											))}
+									</List>
+								</ListContainer>
 							))}
 						</ListColumn>
 					))}
-				</ListContainer>
+				</ListWrapper>
 			</RightSide>
 		</Box>
 	);
 });
+
+// {menu
+// 	.filter(
+// 		secondLvl => firstLvl.left < secondLvl.left && secondLvl.right < firstLvl.right
+// 	)
+// 	.map(secondLvl => (
+// 		<ListItem key={secondLvl.id}>
+// 			{secondLvl.left + 1 === secondLvl.right ? (
+// 				<Link href={`/category/${secondLvl.id}`} onClick={closeCatalog}>
+// 					{secondLvl.name}
+// 				</Link>
+// 			) : (
+// 				<>
+// 					<ListTitle>{secondLvl.name}</ListTitle>
+// 					<List>
+// 						{menu
+// 							.filter(
+// 								thirdLvl =>
+// 									secondLvl.left < thirdLvl.left &&
+// 									thirdLvl.right < secondLvl.right
+// 							)
+// 							.map(thirdLvl => (
+// 								<ListItem key={thirdLvl.id}>
+// 									<Link href={`/category/${thirdLvl.id}`} onClick={closeCatalog}>
+// 										{thirdLvl.name}
+// 									</Link>
+// 								</ListItem>
+// 							))}
+// 					</List>
+// 				</>
+// 			)}
+// 		</ListItem>
+// 	))}
 
 /*
 ? code for divide category to 3 columns

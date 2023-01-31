@@ -1,4 +1,4 @@
-import { memo, useContext, useEffect, useRef, useState } from 'react';
+import { memo, useContext, useState } from 'react';
 import { Store } from '../lib/store';
 // components
 import Link from 'next/link';

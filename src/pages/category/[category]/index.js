@@ -6,6 +6,7 @@ import Head from 'next/head';
 import { Breadcrumb } from '../../../components/breadcrumb';
 import { Elements } from '../../../components/elements';
 import styled from '@emotion/styled';
+import { useRouter } from 'next/router';
 
 const Wrapper = styled.div`
 	width: 100%;
@@ -25,11 +26,12 @@ const Heading = styled.h1`
 	}
 `;
 
-const Category = ({ categoryData }) => {
+const Category = ({ categoryData, categoryId }) => {
+	const { query } = useRouter();
 	const [elements, setElements] = useState(null);
 	const [isReady, setIsReady] = useState(false);
 
-	useEffect(() => {
+	const getCategoryElementsData = () => {
 		const additionalFields = 'additional_fields=url,brand,images';
 
 		axios
@@ -43,6 +45,16 @@ const Category = ({ categoryData }) => {
 					setIsReady(true);
 				}
 			});
+	};
+
+	useEffect(() => {
+		if (!!query.category && !isNaN(query.category)) {
+			if (Number(query.category) !== categoryId) {
+				setIsReady(false);
+			}
+		}
+
+		getCategoryElementsData();
 	}, [categoryData]);
 
 	const breadcrumbData = [
@@ -104,7 +116,8 @@ export const getServerSideProps = async ctx => {
 
 	return {
 		props: {
-			categoryData: categoryData[0]
+			categoryData: categoryData[0],
+			categoryId: ctx.query.category
 		}
 	};
 };

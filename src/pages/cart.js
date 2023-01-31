@@ -1,11 +1,11 @@
 import { useContext, useState } from 'react';
 import { Store } from '../lib/store';
+import { sendPostRequest } from '../lib/api';
 import { declOfNum } from '../utils/declaration';
 import { priceRule } from '../utils/price';
 // components
 import Head from 'next/head';
 import { CartItem } from '../components/cartItem';
-import { sendPostRequest } from '../lib/api';
 // icons
 import { BsCartX, BsCashStack } from 'react-icons/bs';
 // styles
@@ -55,23 +55,102 @@ const Section = styled.section`
 	width: 100%;
 `;
 
-const TotalPrice = styled.p`
+// form
+const Title = styled.h2`
 	margin-top: 5rem;
 
+	color: rgba(var(--black));
 	text-align: center;
-	color: rgb(var(--gray));
-	font-size: 2.2rem;
-	font-weight: 400;
+	font-size: 2.4rem;
+	font-weight: 00;
+`;
 
-	span {
-		font-weight: 600;
+const StyledForm = styled.form`
+	width: 100%;
+	margin-top: 3rem;
+`;
+
+const InputContainer = styled.div`
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 2rem 1rem;
+
+	@media screen and (max-width: 720px) {
+		grid-template-columns: 1fr;
+		gap: 1.5rem;
 	}
 `;
 
-const StyledButton = styled.a`
+const Input = styled.input`
+	width: 100%;
+	padding: 1rem 1.5rem;
+
+	background: rgba(var(--real-gray), 0.3);
+	border-radius: 0.75rem;
+
+	font-family: var(--font-family);
+	font-size: 1.6rem;
+	font-weight: 400;
+
+	transition: background 0.3s ease 0s;
+
+	&::placeholder {
+		color: rgba(var(--gray));
+	}
+
+	&:hover,
+	&:focus {
+		background: rgba(var(--real-gray), 0.55);
+	}
+
+	@media screen and (max-width: 570px) {
+		padding: 1rem;
+
+		font-size: 1.4rem;
+	}
+`;
+
+const Textarea = styled.textarea`
+	width: 100%;
+	height: 20rem;
+	padding: 1rem;
+	resize: none;
+
+	grid-area: 3 / 1 / 4 / 3;
+	background: rgba(var(--real-gray), 0.3);
+	border-radius: 0.75rem;
+
+	text-indent: 1rem;
+	font-family: var(--font-family);
+	font-size: 1.6rem;
+	font-weight: 400;
+
+	transition: background 0.3s ease 0s;
+
+	&::placeholder {
+		color: rgba(var(--gray));
+	}
+
+	&:hover,
+	&:focus {
+		background: rgba(var(--real-gray), 0.55);
+	}
+
+	@media screen and (max-width: 720px) {
+		grid-area: auto;
+	}
+	@media screen and (max-width: 570px) {
+		height: 15rem;
+		padding: 1rem;
+
+		font-size: 1.4rem;
+	}
+`;
+
+const StyledButton = styled.button`
 	max-width: 45rem;
 	width: 100%;
-	margin: 1.5rem auto 0;
+	margin: 3rem auto 0;
 	padding: 1.75rem 3rem;
 	${({ disabled }) =>
 		disabled &&
@@ -105,13 +184,33 @@ const StyledButton = styled.a`
 	}
 `;
 
+const TotalPrice = styled.p`
+	margin-top: 2rem;
+
+	text-align: center;
+	color: rgb(var(--gray));
+	font-size: 2.2rem;
+	font-weight: 400;
+
+	span {
+		font-weight: 600;
+	}
+`;
+
 const CartPage = () => {
-	const { state } = useContext(Store);
+	const { state, dispatch } = useContext(Store);
 	const {
 		cart: { cartItems }
 	} = state;
 
 	const [isSending, setIsSending] = useState(false);
+	const [formState, setFormState] = useState({
+		name: '',
+		surname: '',
+		email: '',
+		phone: '',
+		note: ''
+	});
 
 	// for collect total price
 	let totalPrice = 0;
@@ -122,31 +221,31 @@ const CartPage = () => {
 	}
 
 	// events
-	const onSubmit = async () => {
-		setIsSending(true);
+	const onSubmit = async e => {
+		e.preventDefault();
 
+		setIsSending(true);
 		const data = {
-			contacts: {
-				name: 'Батут',
-				surname: 'Андреев',
-				email: 'Батор.some',
-				phone: '8777777777',
-				note: 'Батор.some'
-			},
+			contacts: formState,
 			cart: {
 				cartItems: cartItems,
 				totalPrice: totalPrice
 			}
 		};
 
-		const response = await sendPostRequest(data, '/api/email');
-		setIsSending(false);
+		try {
+			const response = await sendPostRequest(data, '/api/email');
 
-		if (response.data.success) {
-			alert('Ваша заявка успешно отправлена! В скором временем мы свяжемся с вами');
-		} else {
+			if (response.data.success) {
+				alert('Ваша заявка успешно отправлена! В скором временем мы свяжемся с вами');
+			} else {
+				alert('Что-то пошло не так, пожалуйста попробуйте позже');
+			}
+		} catch {
 			alert('Что-то пошло не так, пожалуйста попробуйте позже');
 		}
+
+		setIsSending(false);
 	};
 
 	return (
@@ -172,21 +271,68 @@ const CartPage = () => {
 				) : (
 					<Grid>
 						{cartItems.map(e => (
-							<CartItem key={e.article} elementData={e} />
+							<CartItem key={e.article} elementData={e} dispatch={dispatch} />
 						))}
 					</Grid>
 				)}
+				<Title>Заполните поля чтобы оставить заявку на покупку</Title>
+				<StyledForm>
+					<InputContainer>
+						<Input
+							type='text'
+							placeholder='Имя*'
+							required
+							value={formState.name}
+							onChange={e => setFormState({ ...formState, name: e.target.value })}
+						/>
+						<Input
+							type='text'
+							placeholder='Фамилия*'
+							required
+							value={formState.surname}
+							onChange={e => setFormState({ ...formState, surname: e.target.value })}
+						/>
+						<Input
+							type='email'
+							placeholder='Email*'
+							required
+							value={formState.email}
+							onChange={e => setFormState({ ...formState, email: e.target.value })}
+						/>
+						<Input
+							type='text'
+							placeholder='Телефон*'
+							required
+							value={formState.phone}
+							onChange={e => setFormState({ ...formState, phone: e.target.value })}
+						/>
+						<Textarea
+							placeholder='Примечание'
+							value={formState.note}
+							onChange={e => setFormState({ ...formState, note: e.target.value })}
+						/>
+					</InputContainer>
+					<StyledButton
+						disabled={
+							!cartItems.length ||
+							!!cartItems.find(e => e.quantity === 0) ||
+							isSending ||
+							!formState.email ||
+							!formState.name ||
+							!formState.phone ||
+							!formState.surname
+						}
+						color='white'
+						size='l'
+						type='submit'
+						onClick={onSubmit}>
+						Оставить заявку на покупку
+						<BsCashStack />
+					</StyledButton>
+				</StyledForm>
 				<TotalPrice>
 					Общая сумма: <span>{priceRule(totalPrice)}</span>
 				</TotalPrice>
-				<StyledButton
-					disabled={!cartItems.length || !!cartItems.find(e => e.quantity === 0) || isSending}
-					color='white'
-					size='l'
-					onClick={onSubmit}>
-					Оставить заявку
-					<BsCashStack />
-				</StyledButton>
 			</Section>
 		</>
 	);

@@ -1,19 +1,22 @@
 import { mailOptions, transporter } from '../../config/nodemailer';
-import { getCurrentDate } from '../../utils/date';
+// utils
+import { getCurrentDate, getCurrentTime } from '../../utils/date';
+import { declOfQuantity } from '../../utils/declaration';
+import { priceRule } from '../../utils/price';
 
 const generateEmailContent = data => {
-	const subject = `Заказ от ${data.contacts.surname} ${data.contacts.name}`;
+	const subject = `Заявка о покупке от ${data.contacts.surname} ${data.contacts.name}`;
 	const text = JSON.stringify(data);
 	const html = `
 			<div style="width: 100%">
 				<div style='font-size: 18px; font-weight: 600;'>
-					<p>Дата: <span style='color: rgb(34, 138, 218)'>${getCurrentDate()}</span></p>
+					<p>Дата: <span style='color: rgb(34, 138, 218)'>${`${getCurrentDate()}, ${getCurrentTime()}`}</span></p>
 					<p>Имя: <span style='color: rgb(34, 138, 218)'>${`${data.contacts.name}`}</span></p>
 					<p>Фамилия: <span style='color: rgb(34, 138, 218)'>${data.contacts.surname}</span></p>
 					<p>Почта: <span style='color: rgb(34, 138, 218)'>${data.contacts.email}</span></p>
 					<p>Телефон: <span style='color: rgb(34, 138, 218)'>${data.contacts.phone}</span></p>
 					<p>Примечание: <span style='color: rgb(34, 138, 218)'>${data.contacts.note}</span></p>
-					<p>Общая сумма: <span style='color: rgb(34, 138, 218)'>${data.cart.totalPrice}</span></p>
+					<p>Общая сумма: <span style='color: rgb(34, 138, 218)'>${priceRule(data.cart.totalPrice)}</span></p>
 				</div>
 				<br />
 				<div style='display: flex; flex-direction: column; align-items: center; gap: 3rem;'>
@@ -23,7 +26,44 @@ const generateEmailContent = data => {
 							<hr />
 							<br />
 							<div>
-							<h1>${String(i + 1)}. ${el.name}</h1>
+							<div>
+								<h1>${String(i + 1)}. ${el.name}</h1>
+								<p style='font-size: 18px'>
+									Цена: <span style='color: rgb(34, 138, 218)'>${priceRule(el.price1)}</span>
+								</p>
+								<p style='font-size: 18px'>
+									В наличи:
+									<span
+										style='color: rgb(${declOfQuantity(el.quantity) !== 'Нет в наличи' ? '34, 138, 218' : '235, 75, 75'})'>
+										${declOfQuantity(el.quantity)}
+									</span>
+								</p>
+								<p style='font-size: 18px'>
+									Брэнд:
+									<span
+										style='color: rgb(34, 138, 218)'>
+										${el.brand}
+									</span>
+								</p>
+								<p style='font-size: 18px'>
+									id:
+									<span
+										style='color: rgb(34, 138, 218)'>
+										${el.article}
+									</span>
+								</p>
+								<p style='font-size: 18px'>
+									Артикул-PartNumber:
+									<span
+										style='color: rgb(34, 138, 218)'>
+										${el.article_pn}
+									</span>
+								</p>
+								<a href='${el.href}' style='font-size: 18px; color: rgb(34, 138, 218)'>
+									Просмотреть на сайте
+								</a>
+							</div>
+							<br />
 							<div style='display: flex; flex-direction: column; align-items: center; gap: 1rem'>
 								${el.images.map(
 									image => `
