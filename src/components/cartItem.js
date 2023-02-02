@@ -22,7 +22,7 @@ const Grid = styled.div`
 		notActive &&
 		css`
 			&::after {
-				content: 'Нет в наличии';
+				content: 'нет в наличии';
 				width: 30%;
 				height: 100%;
 
@@ -159,13 +159,15 @@ export const CartItem = memo(({ elementData, dispatch, ...props }) => {
 		dispatch({ type: 'CART_REMOVE_ITEM', payload: elementData });
 	};
 
+	console.log(elementData);
+
 	return (
-		<Grid notActive={declOfQuantity(elementData.quantity) === 'Нет в наличи'} {...props}>
-			<Img href={`/category/${elementData.category}/${elementData.article}`} title={elementData.name}>
+		<Grid notActive={declOfQuantity(elementData.quantity) === 'нет в наличии'} {...props}>
+			<Img href={String(elementData.href)} title={elementData.name}>
 				<Image src={elementData.images[0]} alt={elementData.name} fill sizes='100%' />
 			</Img>
 			<Column>
-				<Name href={`/category/${elementData.category}/${elementData.article}`} title={elementData.name}>
+				<Name href={String(elementData.href)} title={elementData.name}>
 					{elementData.name}
 				</Name>
 				<Info>
@@ -180,7 +182,7 @@ export const CartItem = memo(({ elementData, dispatch, ...props }) => {
 						<span
 							style={{
 								color:
-									declOfQuantity(elementData.quantity) === 'Нет в наличи'
+									declOfQuantity(elementData.quantity) === 'нет в наличии'
 										? 'rgb(var(--error))'
 										: 'rgb(var(--gray))'
 							}}>

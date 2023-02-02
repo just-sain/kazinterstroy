@@ -345,7 +345,7 @@ const ItemPage = ({ categoryData, itemData }) => {
 							effect={'cards'}
 							grabCursor={true}
 							centeredSlides={true}
-							autoplay={{ delay: 2500, disableOnInteraction: false }}
+							autoplay={{ delay: 2500, disableOnInteraction: true }}
 							zoom={true}
 							pagination={{ dynamicBullets: true, clickable: true }}
 							modules={[Autoplay, Zoom, Pagination, EffectCards]}>
@@ -377,7 +377,7 @@ const ItemPage = ({ categoryData, itemData }) => {
 								<span
 									style={{
 										color:
-											declOfQuantity(itemData.quantity) === 'Нет в наличи'
+											declOfQuantity(itemData.quantity) === 'нет в наличии'
 												? 'rgb(var(--error))'
 												: 'rgb(var(--secondary))'
 									}}>
@@ -403,7 +403,7 @@ const ItemPage = ({ categoryData, itemData }) => {
 							<span>{priceRule(itemData.price1)}</span>
 						</Price>
 						<StyledButton
-							disabled={declOfQuantity(itemData.quantity) === 'Нет в наличи'}
+							disabled={declOfQuantity(itemData.quantity) === 'нет в наличии'}
 							onClick={cartHandle}
 							background={cartItems.find(i => i.article === itemData.article) ? 'error' : 'cash'}
 							color='white'
@@ -418,8 +418,8 @@ const ItemPage = ({ categoryData, itemData }) => {
 								</>
 							)}
 						</StyledButton>
-						{declOfQuantity(itemData.quantity) === 'Нет в наличи' ? (
-							<i style={{ color: 'rgb(var(--error))' }}>* Нет в наличи</i>
+						{declOfQuantity(itemData.quantity) === 'нет в наличии' ? (
+							<i style={{ color: 'rgb(var(--error))' }}>* нет в наличии</i>
 						) : (
 							''
 						)}

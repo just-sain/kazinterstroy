@@ -137,8 +137,8 @@ export const Article = ({ href, articleData, dispatch, isInCart, ...props }) => 
 				<Name>{articleData.name}</Name>
 			</Link>
 			<div>
-				<Quantity notavailable={declOfQuantity(articleData.quantity) === 'Нет в наличи'}>
-					{declOfQuantity(articleData.quantity) === 'Нет в наличи'
+				<Quantity notavailable={declOfQuantity(articleData.quantity) === 'нет в наличии'}>
+					{declOfQuantity(articleData.quantity) === 'нет в наличии'
 						? declOfQuantity(articleData.quantity)
 						: `В наличи: ${declOfQuantity(articleData.quantity)}`}
 				</Quantity>
@@ -152,7 +152,7 @@ export const Article = ({ href, articleData, dispatch, isInCart, ...props }) => 
 				</Price>
 			</div>
 			<ToCart
-				disabled={declOfQuantity(articleData.quantity) === 'Нет в наличи'}
+				disabled={declOfQuantity(articleData.quantity) === 'нет в наличии'}
 				title={!isInCart ? 'Добавить в корзину' : 'Удалить из корзины'}
 				onClick={cartHandle}
 				color={!isInCart ? 'cash' : 'error'}>

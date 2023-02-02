@@ -8,7 +8,7 @@ export const declOfNum = (num, titles) => {
 // quantity: number
 export const declOfQuantity = quantity => {
 	if (typeof quantity === 'number') {
-		return quantity === 0 ? 'Нет в наличи' : quantity;
+		return quantity === 0 ? 'нет в наличии' : quantity;
 	}
 	if (!quantity.includes('<') && !quantity.includes('>')) return quantity;
 

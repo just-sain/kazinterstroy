@@ -34,7 +34,7 @@ const generateEmailContent = data => {
 								<p style='font-size: 18px'>
 									В наличи:
 									<span
-										style='color: rgb(${declOfQuantity(el.quantity) !== 'Нет в наличи' ? '34, 138, 218' : '235, 75, 75'})'>
+										style='color: rgb(${declOfQuantity(el.quantity) !== 'нет в наличии' ? '34, 138, 218' : '235, 75, 75'})'>
 										${declOfQuantity(el.quantity)}
 									</span>
 								</p>
