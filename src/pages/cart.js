@@ -315,7 +315,6 @@ const CartPage = () => {
 					<StyledButton
 						disabled={
 							!cartItems.length ||
-							!!cartItems.find(e => e.quantity === 0) ||
 							isSending ||
 							!formState.email ||
 							!formState.name ||

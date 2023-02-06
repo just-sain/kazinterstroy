@@ -109,8 +109,8 @@ export const Elements = ({ isReady, elements }) => {
 
 	// sort
 	const sorts = [
-		{ name: 'Сначала дорогие ', property: 'price-up-to-down' },
 		{ name: 'Сначала дешевые', property: 'price-down-to-up' },
+		{ name: 'Сначала дорогие ', property: 'price-up-to-down' },
 		{ name: 'от А до Я', property: 'title' },
 		{ name: 'от Я до А', property: 'title-reverse' }
 	];

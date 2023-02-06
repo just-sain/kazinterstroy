@@ -192,10 +192,6 @@ const ListWrapper = styled.div`
 	gap: 1.5rem;
 
 	@media screen and (max-width: 850px) {
-		grid-template-columns: 1fr 1fr;
-	}
-
-	@media screen and (max-width: 570px) {
 		grid-template-columns: 1fr;
 	}
 `;
@@ -349,54 +345,3 @@ const Category = memo(({ menu, catalog, closeCatalog, ...props }) => {
 		</Box>
 	);
 });
-
-// {menu
-// 	.filter(
-// 		secondLvl => firstLvl.left < secondLvl.left && secondLvl.right < firstLvl.right
-// 	)
-// 	.map(secondLvl => (
-// 		<ListItem key={secondLvl.id}>
-// 			{secondLvl.left + 1 === secondLvl.right ? (
-// 				<Link href={`/category/${secondLvl.id}`} onClick={closeCatalog}>
-// 					{secondLvl.name}
-// 				</Link>
-// 			) : (
-// 				<>
-// 					<ListTitle>{secondLvl.name}</ListTitle>
-// 					<List>
-// 						{menu
-// 							.filter(
-// 								thirdLvl =>
-// 									secondLvl.left < thirdLvl.left &&
-// 									thirdLvl.right < secondLvl.right
-// 							)
-// 							.map(thirdLvl => (
-// 								<ListItem key={thirdLvl.id}>
-// 									<Link href={`/category/${thirdLvl.id}`} onClick={closeCatalog}>
-// 										{thirdLvl.name}
-// 									</Link>
-// 								</ListItem>
-// 							))}
-// 					</List>
-// 				</>
-// 			)}
-// 		</ListItem>
-// 	))}
-
-/*
-? code for divide category to 3 columns
-const menu = [1, 3, 4, 1, 4, 1, 2, 1, 1, 1];
-let result = [];
-
-console.log('/', Math.ceil(menu.length / 3))
-
-for (let i = 0; i < menu.length + 1; i += Math.ceil(menu.length / 3)) {
-    const nextValue = i + Math.ceil(menu.length / 3);
-    const menuPart = menu.slice(i, nextValue);
-
-    console.log('part', i, nextValue, menuPart);
-    result.push(menuPart);
-}
-
-console.log('result:', result);
-*/

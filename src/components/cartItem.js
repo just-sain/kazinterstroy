@@ -159,10 +159,16 @@ export const CartItem = memo(({ elementData, dispatch, ...props }) => {
 		dispatch({ type: 'CART_REMOVE_ITEM', payload: elementData });
 	};
 
-	console.log(elementData);
+	// checking is item available
+	let isAvailable = true;
+	if (declOfQuantity(elementData.quantity) === 'нет в наличии' && elementData.price1 < 5) {
+		isAvailable = true
+	} else if (declOfQuantity(elementData.quantity) === 'нет в наличии' ) {
+		isAvailable = false;
+	}
 
 	return (
-		<Grid notActive={declOfQuantity(elementData.quantity) === 'нет в наличии'} {...props}>
+		<Grid notActive={!isAvailable} {...props}>
 			<Img href={String(elementData.href)} title={elementData.name}>
 				<Image src={elementData.images[0]} alt={elementData.name} fill sizes='100%' />
 			</Img>
@@ -176,19 +182,21 @@ export const CartItem = memo(({ elementData, dispatch, ...props }) => {
 						<hr />
 						<span>{elementData.brand}</span>
 					</InfoItem>
-					<InfoItem>
-						<span>В наличи</span>
-						<hr />
-						<span
-							style={{
-								color:
-									declOfQuantity(elementData.quantity) === 'нет в наличии'
-										? 'rgb(var(--error))'
-										: 'rgb(var(--gray))'
-							}}>
-							{declOfQuantity(elementData.quantity)}
-						</span>
-					</InfoItem>
+					{!(declOfQuantity(elementData.quantity) === 'нет в наличии' && elementData.price1 < 5) && (
+						<InfoItem>
+							<span>В наличи</span>
+							<hr />
+							<span
+								style={{
+									color:
+										declOfQuantity(elementData.quantity) === 'нет в наличии'
+											? 'rgb(var(--error))'
+											: 'rgb(var(--gray))'
+								}}>
+								{declOfQuantity(elementData.quantity)}
+							</span>
+						</InfoItem>
+					)}
 					<InfoItem>
 						<span>Артикул-PartNumber</span>
 						<hr />
@@ -196,7 +204,10 @@ export const CartItem = memo(({ elementData, dispatch, ...props }) => {
 					</InfoItem>
 				</Info>
 				<Bottom>
-					<Price>{priceRule(elementData.price1)}</Price>
+					<Price>{!(declOfQuantity(elementData.quantity) === 'нет в наличии' && elementData.price1 < 5) 
+						? priceRule(elementData.price1)
+						: 'По запросу'}
+					</Price>
 					<Button onClick={removeHandle} background='error' color='white' size='m'>
 						<BsTrash />
 					</Button>

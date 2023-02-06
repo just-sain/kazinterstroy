@@ -19,7 +19,7 @@ const generateEmailContent = data => {
 					<p>Общая сумма: <span style='color: rgb(34, 138, 218)'>${priceRule(data.cart.totalPrice)}</span></p>
 				</div>
 				<br />
-				<div style='display: flex; flex-direction: column; align-items: center; gap: 3rem;'>
+				<div>
 					${data.cart.cartItems.map(
 						(el, i) =>
 							`<br />
@@ -29,13 +29,19 @@ const generateEmailContent = data => {
 							<div>
 								<h1>${String(i + 1)}. ${el.name}</h1>
 								<p style='font-size: 18px'>
-									Цена: <span style='color: rgb(34, 138, 218)'>${priceRule(el.price1)}</span>
+									Цена: 
+									<span style='color: rgb(34, 138, 218)'>
+										${!(declOfQuantity(el.quantity) === 'нет в наличии' && el.price1 < 5) 
+											? priceRule(el.price1)
+											: 'По запросу'
+										}
+									</span>
 								</p>
 								<p style='font-size: 18px'>
 									В наличи:
 									<span
-										style='color: rgb(${declOfQuantity(el.quantity) !== 'нет в наличии' ? '34, 138, 218' : '235, 75, 75'})'>
-										${declOfQuantity(el.quantity)}
+										style='color: rgb(235, 75, 75)'>
+										${!(declOfQuantity(el.quantity) === 'нет в наличии' && el.price1 < 5) ? declOfQuantity(el.quantity) : 'По запросу'}
 									</span>
 								</p>
 								<p style='font-size: 18px'>
@@ -103,7 +109,6 @@ const handler = async (req, res) => {
 
 			return res.status(200).json({ success: true, message: 'successfully sended' });
 		} catch (err) {
-			console.log(err);
 			return res.status(400).json({ success: false, message: err.message });
 		}
 	}

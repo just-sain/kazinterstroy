@@ -9,6 +9,7 @@ import Link from 'next/link';
 
 const Wrapper = styled.section`
 	width: 100%;
+	padding-left: 1rem;
 `;
 
 const Heading = styled.h1`
@@ -20,6 +21,7 @@ const Heading = styled.h1`
 
 const ListWrapper = styled.div`
 	width: 100%;
+	margin-top: 3rem;
 
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr;
@@ -28,10 +30,6 @@ const ListWrapper = styled.div`
 	gap: 1.5rem;
 
 	@media screen and (max-width: 850px) {
-		grid-template-columns: 1fr 1fr;
-	}
-
-	@media screen and (max-width: 570px) {
 		grid-template-columns: 1fr;
 	}
 `;

@@ -300,12 +300,19 @@ const ItemPage = ({ categoryData, itemData }) => {
 		// images: [''],   // images
 
 		if (!cartItems.find(e => e.article === itemData.article)) {
-			console.log(itemData);
 			dispatch({ type: 'CART_ADD_ITEM', payload });
 		} else {
 			dispatch({ type: 'CART_REMOVE_ITEM', payload });
 		}
 	};
+
+	// checking is item available
+	let isAvailable = true;
+	if (declOfQuantity(itemData.quantity) === 'нет в наличии' && itemData.price1 < 5) {
+		isAvailable = true
+	} else if (declOfQuantity(itemData.quantity) === 'нет в наличии' ) {
+		isAvailable = false;
+	}
 
 	return (
 		<>
@@ -371,19 +378,16 @@ const ItemPage = ({ categoryData, itemData }) => {
 								<hr />
 								<span>{itemData.article}</span>
 							</li>
-							<li>
-								<span>В наличи</span>
-								<hr />
-								<span
-									style={{
-										color:
-											declOfQuantity(itemData.quantity) === 'нет в наличии'
-												? 'rgb(var(--error))'
-												: 'rgb(var(--secondary))'
-									}}>
-									{declOfQuantity(itemData.quantity)}
-								</span>
-							</li>
+							{!(declOfQuantity(itemData.quantity) === 'нет в наличии' && itemData.price1 < 5) && (
+								<li>
+									<span>В наличи</span>
+									<hr />
+									<span
+										style={{ color: !isAvailable ? 'rgb(var(--error))' : 'rgb(var(--secondary))' }}>
+										{declOfQuantity(itemData.quantity)}
+									</span>
+								</li>
+							)}
 							{itemData.warranty && (
 								<li>
 									<span>Гарантия</span>
@@ -400,10 +404,14 @@ const ItemPage = ({ categoryData, itemData }) => {
 						<Price>
 							Цена
 							<br />
-							<span>{priceRule(itemData.price1)}</span>
+							<span>
+								{!(declOfQuantity(itemData.quantity) === 'нет в наличии' && itemData.price1 < 5)
+								? priceRule(itemData.price1)
+								: 'По запросу'}
+							</span>
 						</Price>
 						<StyledButton
-							disabled={declOfQuantity(itemData.quantity) === 'нет в наличии'}
+							disabled={!isAvailable}
 							onClick={cartHandle}
 							background={cartItems.find(i => i.article === itemData.article) ? 'error' : 'cash'}
 							color='white'
@@ -418,11 +426,7 @@ const ItemPage = ({ categoryData, itemData }) => {
 								</>
 							)}
 						</StyledButton>
-						{declOfQuantity(itemData.quantity) === 'нет в наличии' ? (
-							<i style={{ color: 'rgb(var(--error))' }}>* нет в наличии</i>
-						) : (
-							''
-						)}
+						{!isAvailable ? <i style={{ color: 'rgb(var(--error))' }}>* нет в наличии</i> : ''}
 					</div>
 				</Grid>
 				<DetailText dangerouslySetInnerHTML={{ __html: itemData.detailtext }} />

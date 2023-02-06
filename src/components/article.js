@@ -47,6 +47,7 @@ const Name = styled.h4`
 
 const Quantity = styled.p`
 	color: rgb(var(--${({ notavailable }) => (!notavailable ? `gray` : `error`)}));
+	text-transform: capitalize;
 	font-weight: 500;
 	font-size: 1.4rem;
 
@@ -130,6 +131,14 @@ export const Article = ({ href, articleData, dispatch, isInCart, ...props }) => 
 		}
 	};
 
+	// checking is available to buy
+	let isAvailable = true;
+	if (declOfQuantity(articleData.quantity) === 'нет в наличии' && articleData.price1 < 5) {
+		isAvailable = true
+	} else if (declOfQuantity(articleData.quantity) === 'нет в наличии' ) {
+		isAvailable = false;
+	}
+
 	return (
 		<StyledArticle {...props}>
 			<Link href={href} passHref>
@@ -137,22 +146,24 @@ export const Article = ({ href, articleData, dispatch, isInCart, ...props }) => 
 				<Name>{articleData.name}</Name>
 			</Link>
 			<div>
-				<Quantity notavailable={declOfQuantity(articleData.quantity) === 'нет в наличии'}>
-					{declOfQuantity(articleData.quantity) === 'нет в наличии'
-						? declOfQuantity(articleData.quantity)
-						: `В наличи: ${declOfQuantity(articleData.quantity)}`}
-				</Quantity>
+				 {!(declOfQuantity(articleData.quantity) === 'нет в наличии' && articleData.price1 < 5) && (
+				 	<Quantity notavailable={!isAvailable}>
+						{!isAvailable
+							? declOfQuantity(articleData.quantity)
+							: `В наличи: ${declOfQuantity(articleData.quantity)}`}
+					</Quantity>
+				)}
 				{articleData.brand && (
 					<Brand>
 						Брэнд: <span>{articleData.brand}</span>
 					</Brand>
 				)}
 				<Price>
-					<span>{priceRule(articleData.price1)}</span> (шт)
+					<span>{articleData.price1 < 5 ? 'По запросу' : `${priceRule(articleData.price1)} (шт)`}</span> 
 				</Price>
 			</div>
 			<ToCart
-				disabled={declOfQuantity(articleData.quantity) === 'нет в наличии'}
+				disabled={!isAvailable}
 				title={!isInCart ? 'Добавить в корзину' : 'Удалить из корзины'}
 				onClick={cartHandle}
 				color={!isInCart ? 'cash' : 'error'}>
