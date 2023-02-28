@@ -1,8 +1,9 @@
-import axios from 'axios';
 // components
 import styled from '@emotion/styled';
 import Head from 'next/head';
 import { Button } from '../components/button';
+// req
+import { sendDefaultPagePropsRequest } from '../lib/api';
 
 const Wrapper = styled.section`
 	width: 100%;
@@ -700,3 +701,16 @@ export const Error404Page = () => {
 };
 
 export default Error404Page;
+
+export const getStaticProps = async () => {
+	const data = await sendDefaultPagePropsRequest();
+
+	return {
+		props: {
+			contactData: data.contactData,
+			catalogData: data.catalogData,
+			menuData: data.menuData,
+		},
+		revalidate: 15,
+	};
+};

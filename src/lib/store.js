@@ -1,7 +1,5 @@
-import { createContext, useEffect, useReducer } from 'react';
 import { parseCookies, setCookie } from 'nookies';
-import client from '../config/contentful';
-import axios from 'axios';
+import { createContext, useEffect, useReducer } from 'react';
 
 const initialState = {
 	cart: { cartItems: [], shippingAddress: {}, paymentMethod: '' },
@@ -13,8 +11,8 @@ const initialState = {
 		phone: '',
 		city_phone: '',
 		mail: '',
-		timetable: ''
-	}
+		timetable: '',
+	},
 };
 
 const reducer = (state, action) => {
@@ -38,7 +36,7 @@ const reducer = (state, action) => {
 
 			setCookie(null, 'cartItems', JSON.stringify(newCartItems), {
 				maxAge: 30 * 24 * 60 * 60,
-				path: '/'
+				path: '/',
 			});
 
 			return { ...state, cart: { ...state.cart, cartItems: newCartItems } };
@@ -50,7 +48,7 @@ const reducer = (state, action) => {
 			// destroyCookie(null, 'cart'); // to destroy the cookie
 			setCookie(null, 'cartItems', JSON.stringify(filteredCartItems), {
 				maxAge: 30 * 24 * 60 * 60,
-				path: '/'
+				path: '/',
 			});
 
 			return { ...state, cart: { ...state.cart, cartItems: filteredCartItems } };
@@ -65,9 +63,9 @@ const reducer = (state, action) => {
 					...state.cart,
 					shippingAddress: {
 						...state.cart.shippingAddress,
-						...action.payload
-					}
-				}
+						...action.payload,
+					},
+				},
 			};
 		}
 		case 'SAVE_PAYMENT_METHOD': {
@@ -75,8 +73,8 @@ const reducer = (state, action) => {
 				...state,
 				cart: {
 					...state.cart,
-					paymentMethod: action.payload
-				}
+					paymentMethod: action.payload,
+				},
 			};
 		}
 		default: {
@@ -87,63 +85,41 @@ const reducer = (state, action) => {
 
 export const StoreContext = createContext({
 	dispatch: action => '',
-	state: initialState
+	state: initialState,
 });
 
 export const Store = createContext({
 	...initialState,
-	...StoreContext
+	...StoreContext,
 });
 
-export const StoreProvider = ({ children }) => {
+export const StoreProvider = ({ children, contactData, catalogData, menuData }) => {
 	const [state, dispatch] = useReducer(reducer, initialState);
 	const cookies = parseCookies();
 
 	useEffect(() => {
+		// cart
 		dispatch({
 			type: 'ADD_CART',
 			payload: !cookies.cartItems
 				? { cartItems: [], shippingAddress: {}, paymentMethod: '' }
-				: { cartItems: JSON.parse(cookies.cartItems), shippingAddress: {}, paymentMethod: '' }
+				: { cartItems: JSON.parse(cookies.cartItems), shippingAddress: {}, paymentMethod: '' },
 		});
 
-		client.getEntries({ content_type: 'contacts' }).then(res => {
-			const data = {
-				address: res.items[0].fields.address,
-				index: res.items[0].fields.index,
-				phone: res.items[0].fields.phone,
-				city_phone: res.items[0].fields.city_phone,
-				mail: res.items[0].fields.mail,
-				timetable: res.items[0].fields.timetable
-			};
-
-			dispatch({
-				type: 'ADD_CONTACT',
-				payload: data
-			});
+		// contact
+		dispatch({
+			type: 'ADD_CONTACT',
+			payload: contactData,
 		});
 
-		client.getEntries({ content_type: 'catalog' }).then(res => {
-			const data = res.items.map((item, index) => {
-				return {
-					name: item.fields.name,
-					categories: item.fields.categories.split(', ').map(id => Number(id)),
-					icon: item.fields.icon.fields.file.url,
-					id: index
-				};
-			});
-
-			dispatch({
-				type: 'ADD_CATALOG',
-				payload: data
-			});
+		// catalog
+		dispatch({
+			type: 'ADD_CATALOG',
+			payload: catalogData,
 		});
 
-		axios
-			.get(`${process.env.NEXT_PUBLIC_API}/categories?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}`)
-			.then(res => {
-				dispatch({ type: 'ADD_MENU', payload: res.data });
-			});
+		// menu
+		dispatch({ type: 'ADD_MENU', payload: menuData });
 	}, []);
 
 	const value = { state, dispatch };

@@ -1,13 +1,13 @@
-import { memo, useContext } from 'react';
-import { priceRule } from '../utils/price';
+import { memo } from 'react';
 import { declOfQuantity } from '../utils/declaration';
+import { priceRule } from '../utils/price';
 // components
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Button } from './button';
 import { BsTrash } from 'react-icons/bs';
-import styled from '@emotion/styled';
-import { css } from '@emotion/react';
+import { Button } from './button';
 
 const Grid = styled.div`
 	overflow: hidden;
@@ -161,9 +161,9 @@ export const CartItem = memo(({ elementData, dispatch, ...props }) => {
 
 	// checking is item available
 	let isAvailable = true;
-	if (declOfQuantity(elementData.quantity) === 'нет в наличии' && elementData.price1 < 5) {
-		isAvailable = true
-	} else if (declOfQuantity(elementData.quantity) === 'нет в наличии' ) {
+	if (declOfQuantity(elementData.quantity) === 'нет в наличии' && elementData.price2 < 5) {
+		isAvailable = true;
+	} else if (declOfQuantity(elementData.quantity) === 'нет в наличии') {
 		isAvailable = false;
 	}
 
@@ -182,16 +182,13 @@ export const CartItem = memo(({ elementData, dispatch, ...props }) => {
 						<hr />
 						<span>{elementData.brand}</span>
 					</InfoItem>
-					{!(declOfQuantity(elementData.quantity) === 'нет в наличии' && elementData.price1 < 5) && (
+					{!(declOfQuantity(elementData.quantity) === 'нет в наличии' && elementData.price2 < 5) && (
 						<InfoItem>
 							<span>В наличи</span>
 							<hr />
 							<span
 								style={{
-									color:
-										declOfQuantity(elementData.quantity) === 'нет в наличии'
-											? 'rgb(var(--error))'
-											: 'rgb(var(--gray))'
+									color: declOfQuantity(elementData.quantity) === 'нет в наличии' ? 'rgb(var(--error))' : 'rgb(var(--gray))',
 								}}>
 								{declOfQuantity(elementData.quantity)}
 							</span>
@@ -204,9 +201,10 @@ export const CartItem = memo(({ elementData, dispatch, ...props }) => {
 					</InfoItem>
 				</Info>
 				<Bottom>
-					<Price>{!(declOfQuantity(elementData.quantity) === 'нет в наличии' && elementData.price1 < 5) 
-						? priceRule(elementData.price1)
-						: 'По запросу'}
+					<Price>
+						{!(declOfQuantity(elementData.quantity) === 'нет в наличии' && elementData.price2 < 5)
+							? priceRule(elementData.price2)
+							: 'По запросу'}
 					</Price>
 					<Button onClick={removeHandle} background='error' color='white' size='m'>
 						<BsTrash />

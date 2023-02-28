@@ -1,12 +1,12 @@
 // components
-import Image from 'next/image';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Pagination } from 'swiper'; // required modules for swiper js
 import styled from '@emotion/styled';
+import Image from 'next/image';
+import { Autoplay, Pagination } from 'swiper'; // required modules for swiper js
+import { Swiper, SwiperSlide } from 'swiper/react';
 // styles for swiper.js
+import Link from 'next/link';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import Link from 'next/link';
 
 // slider (swiper js)
 const Container = styled.section`
@@ -87,11 +87,12 @@ export const Slider = ({ sliderData, ...props }) => {
 	return (
 		<Container>
 			<StyledSwiper
-				grabCursor={true}
-				centeredSlides={true}
+				grabCursor
+				centeredSlides
+				loop
 				autoplay={{
 					delay: 2500,
-					disableOnInteraction: false
+					disableOnInteraction: false,
 				}}
 				pagination={{ clickable: true, dynamicBullets: true }}
 				modules={[Autoplay, Pagination]}

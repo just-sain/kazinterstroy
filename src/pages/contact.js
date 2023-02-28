@@ -1,9 +1,9 @@
 // components
-import Head from 'next/head';
-import { GrContactInfo, GrMail, GrMapLocation, GrLocationPin, GrFormClock, GrPhone } from 'react-icons/gr';
 import styled from '@emotion/styled';
-import { useContext, useState } from 'react';
-import { Store } from '../lib/store';
+import Head from 'next/head';
+import { useState } from 'react';
+import { GrContactInfo, GrFormClock, GrLocationPin, GrMail, GrMapLocation, GrPhone } from 'react-icons/gr';
+import { sendDefaultPagePropsRequest } from '../lib/api';
 
 // map section
 const MapSection = styled.section`
@@ -156,28 +156,20 @@ const Line = styled.div`
 	}
 `;
 
-const Contact = () => {
+const Contact = ({ contactData: contact }) => {
 	const [isMapLoad, setIsMapLoad] = useState(false);
-	const { state } = useContext(Store);
-	const { contact } = state;
 
 	return (
 		<>
 			<Head>
-				<meta
-					name='description'
-					content='Контакты нашей компании: почта, номер телефона, адрес, режим работы / KazInterStroy '
-				/>
+				<meta name='description' content='Контакты нашей компании: почта, номер телефона, адрес, режим работы / KazInterStroy ' />
 				<meta
 					name='keywords'
 					content='kazinterstroy, интернет магазин, kazstroy, казинтерстрой, казстрой, контакты, номер телефона, номер, мобильный, почта, адрес'
 				/>
 
 				<meta property='og:title' content='Контакты / KazInterStroy' />
-				<meta
-					property='og:description'
-					content='Контакты нашей компании: почта, номер телефона, адрес, режим работы / KazInterStroy'
-				/>
+				<meta property='og:description' content='Контакты нашей компании: почта, номер телефона, адрес, режим работы / KazInterStroy' />
 
 				<meta name='twitter:title' content='Контакты / KazInterStroy' />
 				<meta
@@ -187,6 +179,7 @@ const Contact = () => {
 
 				<title>Контакты / KazInterStroy</title>
 			</Head>
+
 			<MapSection>
 				<MapContainer>
 					<Map
@@ -252,3 +245,16 @@ const Contact = () => {
 };
 
 export default Contact;
+
+export const getStaticProps = async () => {
+	const data = await sendDefaultPagePropsRequest();
+
+	return {
+		props: {
+			contactData: data.contactData,
+			catalogData: data.catalogData,
+			menuData: data.menuData,
+		},
+		revalidate: 15,
+	};
+};

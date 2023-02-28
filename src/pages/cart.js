@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
+import { sendDefaultPagePropsRequest, sendPostRequest } from '../lib/api';
 import { Store } from '../lib/store';
-import { sendPostRequest } from '../lib/api';
 import { declOfNum } from '../utils/declaration';
 import { priceRule } from '../utils/price';
 // components
@@ -9,8 +9,8 @@ import { CartItem } from '../components/cartItem';
 // icons
 import { BsCartX, BsCashStack } from 'react-icons/bs';
 // styles
-import styled from '@emotion/styled';
 import { css } from '@emotion/react';
+import styled from '@emotion/styled';
 
 const Heading = styled.h1`
 	margin-bottom: 3rem;
@@ -200,7 +200,7 @@ const TotalPrice = styled.p`
 const CartPage = () => {
 	const { state, dispatch } = useContext(Store);
 	const {
-		cart: { cartItems }
+		cart: { cartItems },
 	} = state;
 
 	const [isSending, setIsSending] = useState(false);
@@ -209,14 +209,14 @@ const CartPage = () => {
 		surname: '',
 		email: '',
 		phone: '',
-		note: ''
+		note: '',
 	});
 
 	// for collect total price
 	let totalPrice = 0;
 	if (cartItems.length) {
 		for (let i in cartItems) {
-			totalPrice += cartItems[i].price1;
+			totalPrice += cartItems[i].price2;
 		}
 	}
 
@@ -229,8 +229,8 @@ const CartPage = () => {
 			contacts: formState,
 			cart: {
 				cartItems: cartItems,
-				totalPrice: totalPrice
-			}
+				totalPrice: totalPrice,
+			},
 		};
 
 		try {
@@ -253,6 +253,7 @@ const CartPage = () => {
 			<Head>
 				<title>Корзина / KazInterStroy</title>
 			</Head>
+
 			<Heading>
 				Корзина
 				{!!cartItems.length && (
@@ -313,14 +314,7 @@ const CartPage = () => {
 						/>
 					</InputContainer>
 					<StyledButton
-						disabled={
-							!cartItems.length ||
-							isSending ||
-							!formState.email ||
-							!formState.name ||
-							!formState.phone ||
-							!formState.surname
-						}
+						disabled={!cartItems.length || isSending || !formState.email || !formState.name || !formState.phone || !formState.surname}
 						color='white'
 						size='l'
 						type='submit'
@@ -338,3 +332,16 @@ const CartPage = () => {
 };
 
 export default CartPage;
+
+export const getStaticProps = async () => {
+	const data = await sendDefaultPagePropsRequest();
+
+	return {
+		props: {
+			contactData: data.contactData,
+			catalogData: data.catalogData,
+			menuData: data.menuData,
+		},
+		revalidate: 15,
+	};
+};

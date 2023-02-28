@@ -1,10 +1,10 @@
-import globalStyles from '../lib/styles';
 import StoreProvider from '../lib/store';
+import globalStyles from '../lib/styles';
 // components
-import { motion, AnimatePresence } from 'framer-motion';
-import Layout from '../components/layout';
 import { Global } from '@emotion/react';
+import { AnimatePresence, motion } from 'framer-motion';
 import Head from 'next/head';
+import Layout from '../components/layout';
 
 /*
 	! every page must have meta tags! such as:
@@ -24,8 +24,10 @@ import Head from 'next/head';
 const variants = {
 	initialState: { opacity: 0, clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)' },
 	animateState: { opacity: 1, clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)' },
-	exitState: { clipPath: 'polygon(50% 0%, 50% 0%, 50% 100%, 50% 100%)' }
+	exitState: { clipPath: 'polygon(50% 0%, 50% 0%, 50% 100%, 50% 100%)' },
 };
+
+// every page must to have props like => contactData, cartData, catalogData, menuData
 
 const App = ({ Component, pageProps, router }) => {
 	return (
@@ -59,7 +61,7 @@ const App = ({ Component, pageProps, router }) => {
 
 				<title>KazInterStroy - Интернет магазин</title>
 			</Head>
-			<StoreProvider>
+			<StoreProvider contactData={pageProps.contactData} catalogData={pageProps.catalogData} menuData={pageProps.menuData}>
 				<AnimatePresence mode='wait'>
 					<motion.div
 						key={router.route}
@@ -67,7 +69,7 @@ const App = ({ Component, pageProps, router }) => {
 						animate='animateState'
 						exit='exitState'
 						transition={{
-							duration: 0.75
+							duration: 0.75,
 						}}
 						variants={variants}>
 						<Global styles={globalStyles} />

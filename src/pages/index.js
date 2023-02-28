@@ -1,8 +1,9 @@
 import client from '../config/contentful';
 // components
 import Head from 'next/head';
-import { Slider } from '../components/slider';
 import { Category } from '../components/category';
+import { Slider } from '../components/slider';
+import { sendDefaultPagePropsRequest } from '../lib/api';
 
 const HomePage = ({ sliderData }) => {
 	return (
@@ -31,6 +32,10 @@ const HomePage = ({ sliderData }) => {
 export default HomePage;
 
 export const getStaticProps = async () => {
+	// default props
+	const defaultData = await sendDefaultPagePropsRequest();
+
+	// slider
 	const slider = await client.getEntries({ content_type: 'slider' });
 
 	const sliderData = [];
@@ -39,14 +44,18 @@ export const getStaticProps = async () => {
 		for (let i = 0; i < slider.items.length; i++) {
 			sliderData.push({
 				image: slider.items[i].fields.image.fields.file.url,
-				link: slider.items[i].fields.link
+				link: slider.items[i].fields.link,
 			});
 		}
 	}
 
 	return {
 		props: {
-			sliderData
-		}
+			contactData: defaultData.contactData,
+			catalogData: defaultData.catalogData,
+			menuData: defaultData.menuData,
+			sliderData,
+		},
+		revalidate: 15,
 	};
 };

@@ -1,12 +1,11 @@
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { declOfNum } from '../utils/declaration';
 // components
+import styled from '@emotion/styled';
 import Head from 'next/head';
 import { Breadcrumb } from '../components/breadcrumb';
-import styled from '@emotion/styled';
 import { Elements } from '../components/elements';
+import { sendDefaultPagePropsRequest } from '../lib/api';
 
 const Wrapper = styled.div`
 	width: 100%;
@@ -39,100 +38,97 @@ const NotFound = styled.h2`
 	font-weight: 400;
 `;
 
-const Search = () => {
-	const { query } = useRouter();
-	const [elements, setElements] = useState([]);
-	const [isReady, setIsReady] = useState(false);
+// search: string
 
+const Search = ({ search, elementsData }) => {
 	const breadcrumbData = [
 		{ name: 'Поиск', href: '/' },
-		{ name: query.search, href: `/search?search=${query.search}` }
+		{ name: search, href: `/search?search=${search}` },
 	];
-
-	useEffect(() => {
-		setIsReady(false);
-		if (!query.search) {
-			setElements([]);
-		} else {
-			if (!isNaN(query.search)) {
-				const id = Number(query.search);
-
-				axios
-					.get(
-						`${process.env.NEXT_PUBLIC_API}/element-info?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&article=${id}&additional_fields=brand,images`
-					)
-					.then(response => {
-						setElements(typeof response.data === 'string' ? [] : response.data);
-						setIsReady(true);
-					});
-			} else {
-				axios
-					.get(
-						`${process.env.NEXT_PUBLIC_API}/element-info?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&name=${query.search}&additional_fields=brand,images`
-					)
-					.then(response => {
-						setElements(typeof response.data === 'string' ? [] : response.data);
-						setIsReady(true);
-					});
-			}
-		}
-	}, [query.search]);
 
 	return (
 		<>
 			<Head>
-				<meta
-					name='description'
-					content={
-						!query.search ? 'Поисковик / KazInterStroy ' : `Поиск по запросу: ${query.search} / KazInterStroy`
-					}
-				/>
+				<meta name='description' content={search ? 'Поисковик / KazInterStroy ' : `Поиск по запросу: ${search} / KazInterStroy`} />
 				<meta
 					name='keywords'
-					content={`kazinterstroy, интернет магазин, kazstroy, казинтерстрой, казстрой, ${
-						!query.search ? '' : query.search
-					}, поисковик, поиск`}
+					content={`kazinterstroy, интернет магазин, kazstroy, казинтерстрой, казстрой, ${search ? '' : search}, поисковик, поиск`}
 				/>
 
 				<meta property='og:title' content='Поиск / KazInterStroy' />
 				<meta
 					property='og:description'
-					content={
-						!query.search ? 'Поисковик / KazInterStroy ' : `Поиск по запросу: ${query.search} / KazInterStroy`
-					}
+					content={search ? 'Поисковик / KazInterStroy ' : `Поиск по запросу: ${search} / KazInterStroy`}
 				/>
 
 				<meta name='twitter:title' content={`Поиск / KazInterStroy`} />
 				<meta
 					name='twitter:description'
-					content={
-						!query.search ? 'Поисковик / KazInterStroy ' : `Поиск по запросу: ${query.search} / KazInterStroy`
-					}
+					content={search ? 'Поисковик / KazInterStroy ' : `Поиск по запросу: ${search} / KazInterStroy`}
 				/>
 
-				<title>Результаты по запросу {query.search ?? ''} / KazInterStroy</title>
+				<title>Результаты по запросу {search ?? ''} / KazInterStroy</title>
 			</Head>
+
 			<Wrapper>
 				<Breadcrumb links={breadcrumbData} withMarginBottom />
 				<Heading>
-					Результат по запросу <b>{query.search}</b>
-					{!!elements.length && (
+					Результат по запросу <b>{search}</b>
+					{!!elementsData.length && (
 						<>
 							<br />
 							<span>
-								({elements.length} {declOfNum(elements.length, ['товар', 'товара', 'товаров'])})
+								({elementsData.length} {declOfNum(elementsData.length, ['товар', 'товара', 'товаров'])})
 							</span>
 						</>
 					)}
 				</Heading>
-				{!elements.length && isReady ? (
-					<NotFound>Ничего не найдено</NotFound>
-				) : (
-					<Elements isReady={isReady} elements={elements} />
-				)}
+				{!elementsData.length ? <NotFound>Ничего не найдено</NotFound> : <Elements elements={elementsData} />}
 			</Wrapper>
 		</>
 	);
 };
 
 export default Search;
+
+export const getServerSideProps = async ({ query }) => {
+	// default props
+	const defaultData = await sendDefaultPagePropsRequest();
+
+	// working with search
+	if (!query?.search) {
+		return {
+			NotFound: true,
+		};
+	}
+
+	// elements
+	let elementsData = [];
+
+	if (!isNaN(query.search)) {
+		const id = Number(query.search);
+
+		const { data } = await axios.get(
+			`${process.env.NEXT_PUBLIC_API}/element-info?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&article=${id}&additional_fields=brand,images`
+		);
+
+		elementsData = typeof data === 'string' ? [] : data;
+	} else {
+		const { data } = await axios.get(
+			`${process.env.NEXT_PUBLIC_API}/element-info?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&name=${query.search}&additional_fields=brand,images`
+		);
+
+		elementsData = typeof data === 'string' ? [] : data;
+	}
+
+	return {
+		props: {
+			search: query.search,
+			elementsData: elementsData ?? [],
+			// default props
+			contactData: defaultData.contactData,
+			catalogData: defaultData.catalogData,
+			menuData: defaultData.menuData,
+		},
+	};
+};

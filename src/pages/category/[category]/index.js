@@ -1,12 +1,10 @@
-import { useEffect, useState } from 'react';
+import styled from '@emotion/styled';
 import axios from 'axios';
-import { declOfNum } from '../../../utils/declaration';
-// components
 import Head from 'next/head';
 import { Breadcrumb } from '../../../components/breadcrumb';
 import { Elements } from '../../../components/elements';
-import styled from '@emotion/styled';
-import { useRouter } from 'next/router';
+import { sendDefaultPagePropsRequest } from '../../../lib/api';
+import { declOfNum } from '../../../utils/declaration';
 
 const Wrapper = styled.div`
 	width: 100%;
@@ -26,40 +24,10 @@ const Heading = styled.h1`
 	}
 `;
 
-const Category = ({ categoryData, categoryId }) => {
-	const { query } = useRouter();
-	const [elements, setElements] = useState(null);
-	const [isReady, setIsReady] = useState(false);
-
-	const getCategoryElementsData = () => {
-		const additionalFields = 'additional_fields=url,brand,images';
-
-		axios
-			.get(
-				`${process.env.NEXT_PUBLIC_API}/elements?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&limit=250&category=${categoryData.id}&${additionalFields}`
-			)
-			.then(res => {
-				if (!res.data || !res.data?.length) setElements([]);
-				else {
-					setElements(res.data);
-					setIsReady(true);
-				}
-			});
-	};
-
-	useEffect(() => {
-		if (!!query.category && !isNaN(query.category)) {
-			if (Number(query.category) !== categoryId) {
-				setIsReady(false);
-			}
-		}
-
-		getCategoryElementsData();
-	}, [categoryData]);
-
+const Category = ({ categoryData, elementsData }) => {
 	const breadcrumbData = [
 		{ name: 'Каталог', href: '/' },
-		{ name: categoryData.name, href: `/category/${categoryData.id}` }
+		{ name: categoryData.name, href: `/category/${categoryData.id}` },
 	];
 
 	return (
@@ -94,10 +62,10 @@ const Category = ({ categoryData, categoryId }) => {
 					{categoryData.name}
 					<br />
 					<span>
-						({isReady && elements.length} {isReady && declOfNum(elements.length, ['товар', 'товара', 'товаров'])})
+						({elementsData.length} {declOfNum(elementsData.length, ['товар', 'товара', 'товаров'])})
 					</span>
 				</Heading>
-				<Elements isReady={isReady} elements={elements} />
+				<Elements elements={elementsData} />
 			</Wrapper>
 		</>
 	);
@@ -106,18 +74,34 @@ const Category = ({ categoryData, categoryId }) => {
 export default Category;
 
 export const getServerSideProps = async ctx => {
-	if (!ctx?.query || !ctx.query.category || isNaN(ctx.query.category)) return { notFound: true };
+	// default props
+	const defaultData = await sendDefaultPagePropsRequest();
 
 	// category data
+	if (!ctx?.query || !ctx.query.category || isNaN(ctx.query.category)) return { notFound: true };
+
 	const { data: categoryData } = await axios.get(
 		`${process.env.NEXT_PUBLIC_API}/categories?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&id=${ctx.query.category}`
 	);
 	if (!categoryData || !categoryData.length) return { notFound: true };
 
+	// elements data
+	const additionalFields = 'additional_fields=url,brand,images';
+
+	const { data: elementsData } = await axios.get(
+		`${process.env.NEXT_PUBLIC_API}/elements?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&limit=250&category=${ctx.query.category}&${additionalFields}`
+	);
+
 	return {
 		props: {
+			// default props
+			contactData: defaultData.contactData,
+			catalogData: defaultData.catalogData,
+			menuData: defaultData.menuData,
+			// another
 			categoryData: categoryData[0],
-			categoryId: ctx.query.category
-		}
+			categoryId: ctx.query.category,
+			elementsData: elementsData,
+		},
 	};
 };

@@ -1,11 +1,12 @@
 import { useContext } from 'react';
 import { Store } from '../../lib/store';
 // components
-import { Error404Page } from '../404';
 import { Preloader } from '../../components/preloader';
+import { Error404Page } from '../404';
 // styles
 import styled from '@emotion/styled';
 import Link from 'next/link';
+import { sendDefaultPagePropsRequest } from '../../lib/api';
 
 const Wrapper = styled.section`
 	width: 100%;
@@ -95,8 +96,7 @@ const DynamicCatalogPage = ({ catalogId }) => {
 
 	const selectedCatalog = !!catalog && catalog.find(c => c.id === catalogId);
 	if (!!catalog && !catalog.find(c => c.id === catalogId)) return <Error404Page />;
-	const selectedCatalogCategories =
-		!!catalog && !!menu && menu.filter(el => selectedCatalog.categories.indexOf(el.id) > -1);
+	const selectedCatalogCategories = !!catalog && !!menu && menu.filter(el => selectedCatalog.categories.indexOf(el.id) > -1);
 
 	//  for divide category to 3 columns
 	let selectCatalogCategoriesColumns = [];
@@ -145,10 +145,7 @@ const DynamicCatalogPage = ({ catalogId }) => {
 										<List>
 											<ListTitle>{firstLevel.name}</ListTitle>
 											{menu
-												.filter(
-													secondLevel =>
-														firstLevel.left < secondLevel.left && secondLevel.right < firstLevel.right
-												)
+												.filter(secondLevel => firstLevel.left < secondLevel.left && secondLevel.right < firstLevel.right)
 												.map(secondLevel => (
 													<AutoFillCategoriesLvl currentLvl={secondLevel} key={secondLevel.id} />
 												))}
@@ -167,13 +164,20 @@ const DynamicCatalogPage = ({ catalogId }) => {
 export default DynamicCatalogPage;
 
 export const getServerSideProps = async ctx => {
+	// default props
+	const defaultData = await sendDefaultPagePropsRequest();
+
+	// working with catalog data
 	if (!ctx?.query || !ctx.query.catalogId || isNaN(ctx.query.catalogId)) {
 		return { notFound: true };
 	}
 
 	return {
 		props: {
-			catalogId: Number(ctx.query.catalogId)
-		}
+			contactData: defaultData.contactData,
+			catalogData: defaultData.catalogData,
+			menuData: defaultData.menuData,
+			catalogId: Number(ctx.query.catalogId),
+		},
 	};
 };

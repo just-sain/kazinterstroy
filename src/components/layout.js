@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 // components
+import styled from '@emotion/styled';
 import Image from 'next/image';
+import { Footer } from './footer';
 import { Header } from './header';
 import { Menu } from './menu';
-import { Footer } from './footer';
-import styled from '@emotion/styled';
 
 const Wrapper = styled.div`
 	min-height: 100vh;
@@ -60,21 +60,6 @@ const BgImg = styled(Image)`
 	}
 `;
 
-const SnowEffect = styled.div`
-	width: 100%;
-	height: 100%;
-	opacity: 0.2;
-
-	pointer-events: none;
-	background-image: url('/snow1.png'), url('/snow2.png'), url('/snow3.png');
-
-	position: fixed;
-	top: 0;
-	left: 0;
-
-	animation: snow 30s linear infinite;
-`;
-
 const Layout = ({ children }) => {
 	const { events } = useRouter();
 	const [isBurgerMenuOpen, setIsBurgerMenuOpen] = useState(false);
@@ -99,7 +84,6 @@ const Layout = ({ children }) => {
 			<Bg>
 				<BgImg src='/bg-item.png' alt='bg' priority fill sizes='100%' />
 			</Bg>
-			<SnowEffect />
 			<Footer />
 		</Wrapper>
 	);

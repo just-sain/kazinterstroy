@@ -1,9 +1,9 @@
-import { priceRule } from '../utils/price';
 import { declOfQuantity } from '../utils/declaration';
+import { priceRule } from '../utils/price';
 // components
-import Link from 'next/link';
-import { motion } from 'framer-motion';
 import styled from '@emotion/styled';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { BsCartPlusFill, BsCartXFill } from 'react-icons/bs';
 
 const StyledArticle = styled(motion.article)`
@@ -109,9 +109,9 @@ export const Article = ({ href, articleData, dispatch, isInCart, ...props }) => 
 			brand: articleData.brand,
 			article_pn: articleData.article_pn,
 			href: `${process.env.NEXT_PUBLIC_SELF_DOMAIN}${href}`,
-			price1: articleData.price1,
+			price2: articleData.price2,
 			quantity: articleData.quantity,
-			images: articleData.images
+			images: articleData.images,
 		};
 
 		// interface of payload
@@ -120,7 +120,7 @@ export const Article = ({ href, articleData, dispatch, isInCart, ...props }) => 
 		// brand: '',      // brand
 		// article_pn: '', // article part number
 		// href: '',       // link
-		// price1: 0,      // price
+		// price2: 0,      // price
 		// quantity: 0,    // count in base
 		// images: [''],   // images
 
@@ -133,9 +133,9 @@ export const Article = ({ href, articleData, dispatch, isInCart, ...props }) => 
 
 	// checking is available to buy
 	let isAvailable = true;
-	if (declOfQuantity(articleData.quantity) === 'нет в наличии' && articleData.price1 < 5) {
-		isAvailable = true
-	} else if (declOfQuantity(articleData.quantity) === 'нет в наличии' ) {
+	if (declOfQuantity(articleData.quantity) === 'нет в наличии' && articleData.price2 < 5) {
+		isAvailable = true;
+	} else if (declOfQuantity(articleData.quantity) === 'нет в наличии') {
 		isAvailable = false;
 	}
 
@@ -146,11 +146,9 @@ export const Article = ({ href, articleData, dispatch, isInCart, ...props }) => 
 				<Name>{articleData.name}</Name>
 			</Link>
 			<div>
-				 {!(declOfQuantity(articleData.quantity) === 'нет в наличии' && articleData.price1 < 5) && (
-				 	<Quantity notavailable={!isAvailable}>
-						{!isAvailable
-							? declOfQuantity(articleData.quantity)
-							: `В наличи: ${declOfQuantity(articleData.quantity)}`}
+				{!(declOfQuantity(articleData.quantity) === 'нет в наличии' && articleData.price2 < 5) && (
+					<Quantity notavailable={!isAvailable}>
+						{!isAvailable ? declOfQuantity(articleData.quantity) : `В наличи: ${declOfQuantity(articleData.quantity)}`}
 					</Quantity>
 				)}
 				{articleData.brand && (
@@ -159,7 +157,7 @@ export const Article = ({ href, articleData, dispatch, isInCart, ...props }) => 
 					</Brand>
 				)}
 				<Price>
-					<span>{articleData.price1 < 5 ? 'По запросу' : `${priceRule(articleData.price1)} (шт)`}</span> 
+					<span>{articleData.price2 < 5 ? 'По запросу' : `${priceRule(articleData.price2)} (шт)`}</span>
 				</Price>
 			</div>
 			<ToCart

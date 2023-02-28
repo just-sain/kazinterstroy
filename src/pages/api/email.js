@@ -31,17 +31,14 @@ const generateEmailContent = data => {
 								<p style='font-size: 18px'>
 									Цена: 
 									<span style='color: rgb(34, 138, 218)'>
-										${!(declOfQuantity(el.quantity) === 'нет в наличии' && el.price1 < 5) 
-											? priceRule(el.price1)
-											: 'По запросу'
-										}
+										${!(declOfQuantity(el.quantity) === 'нет в наличии' && el.price2 < 5) ? priceRule(el.price2) : 'По запросу'}
 									</span>
 								</p>
 								<p style='font-size: 18px'>
 									В наличи:
 									<span
 										style='color: rgb(235, 75, 75)'>
-										${!(declOfQuantity(el.quantity) === 'нет в наличии' && el.price1 < 5) ? declOfQuantity(el.quantity) : 'По запросу'}
+										${!(declOfQuantity(el.quantity) === 'нет в наличии' && el.price2 < 5) ? declOfQuantity(el.quantity) : 'По запросу'}
 									</span>
 								</p>
 								<p style='font-size: 18px'>
@@ -89,7 +86,7 @@ const generateEmailContent = data => {
 	return {
 		subject,
 		text,
-		html
+		html,
 	};
 };
 
@@ -104,7 +101,7 @@ const handler = async (req, res) => {
 		try {
 			await transporter.sendMail({
 				...mailOptions,
-				...generateEmailContent(data)
+				...generateEmailContent(data),
 			});
 
 			return res.status(200).json({ success: true, message: 'successfully sended' });

@@ -1,21 +1,22 @@
-import { Autoplay, Zoom, Pagination, EffectCards } from 'swiper'; // required modules for swiper
 import axios from 'axios';
+import { Autoplay, EffectCards, Pagination, Zoom } from 'swiper'; // required modules for swiper
 import { declOfQuantity } from '../../../utils/declaration';
 import { priceRule } from '../../../utils/price';
 // components
+import styled from '@emotion/styled';
 import Head from 'next/head';
 import Image from 'next/image';
+import { BsCartPlusFill, BsTrash } from 'react-icons/bs';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Breadcrumb } from '../../../components/breadcrumb';
 import { Button } from '../../../components/button';
-import { BsCartPlusFill, BsTrash } from 'react-icons/bs';
-import styled from '@emotion/styled';
 // styles for swiper
-import 'swiper/css';
-import 'swiper/css/zoom';
-import 'swiper/css/pagination';
-import 'swiper/css/effect-cards';
 import { useContext } from 'react';
+import 'swiper/css';
+import 'swiper/css/effect-cards';
+import 'swiper/css/pagination';
+import 'swiper/css/zoom';
+import { sendDefaultPagePropsRequest } from '../../../lib/api';
 import { Store } from '../../../lib/store';
 
 const StyledButton = styled(Button)`
@@ -268,13 +269,13 @@ const PropertiesItem = styled.li`
 const ItemPage = ({ categoryData, itemData }) => {
 	const { state, dispatch } = useContext(Store);
 	const {
-		cart: { cartItems }
+		cart: { cartItems },
 	} = state;
 
 	const breadcrumbData = [
 		{ name: 'Каталог', href: '/' },
 		{ name: categoryData.name, href: `/category/${categoryData.id}` },
-		{ name: itemData.name, href: `/category/${categoryData.id}/${itemData.article}` }
+		{ name: itemData.name, href: `/category/${categoryData.id}/${itemData.article}` },
 	];
 
 	const cartHandle = () => {
@@ -284,9 +285,9 @@ const ItemPage = ({ categoryData, itemData }) => {
 			brand: itemData.brand,
 			article_pn: itemData.article_pn,
 			href: `${process.env.NEXT_PUBLIC_SELF_DOMAIN}/category/${categoryData.id}/${itemData.article}`,
-			price1: itemData.price1,
+			price2: itemData.price2,
 			quantity: itemData.quantity,
-			images: itemData.images
+			images: itemData.images,
 		};
 
 		// interface of payload
@@ -295,7 +296,7 @@ const ItemPage = ({ categoryData, itemData }) => {
 		// brand: '',      // brand
 		// href: '',       // link
 		// article_pn: '', // article part number
-		// price1: 0,      // price
+		// price2: 0,      // price
 		// quantity: 0,    // count in base
 		// images: [''],   // images
 
@@ -308,36 +309,27 @@ const ItemPage = ({ categoryData, itemData }) => {
 
 	// checking is item available
 	let isAvailable = true;
-	if (declOfQuantity(itemData.quantity) === 'нет в наличии' && itemData.price1 < 5) {
-		isAvailable = true
-	} else if (declOfQuantity(itemData.quantity) === 'нет в наличии' ) {
+	if (declOfQuantity(itemData.quantity) === 'нет в наличии' && itemData.price2 < 5) {
+		isAvailable = true;
+	} else if (declOfQuantity(itemData.quantity) === 'нет в наличии') {
 		isAvailable = false;
 	}
 
 	return (
 		<>
 			<Head>
-				<meta
-					name='description'
-					content={`${itemData.full_name} все за ${priceRule(itemData.price1)} / KazInterStroy`}
-				/>
+				<meta name='description' content={`${itemData.full_name} все за ${priceRule(itemData.price2)} / KazInterStroy`} />
 				<meta
 					name='keywords'
-					content={`kazinterstroy, интернет магазин, элемент, продукт, товар, ${itemData.name}, ${itemData.price1}, ${itemData.full_name}`}
+					content={`kazinterstroy, интернет магазин, элемент, продукт, товар, ${itemData.name}, ${itemData.price2}, ${itemData.full_name}`}
 				/>
 
 				<meta property='og:title' content={`${itemData.name} / KazInterStroy`} />
-				<meta
-					property='og:description'
-					content={`${itemData.full_name} все за ${priceRule(itemData.price1)} / KazInterStroy`}
-				/>
+				<meta property='og:description' content={`${itemData.full_name} все за ${priceRule(itemData.price2)} / KazInterStroy`} />
 				<meta property='og:image' content={itemData.images[0]} />
 
 				<meta name='twitter:title' content={`${itemData.name} / KazInterStroy`} />
-				<meta
-					name='twitter:description'
-					content={`${itemData.full_name} все за ${priceRule(itemData.price1)} / KazInterStroy`}
-				/>
+				<meta name='twitter:description' content={`${itemData.full_name} все за ${priceRule(itemData.price2)} / KazInterStroy`} />
 				<meta name='twitter:image' content={itemData.images[0]} />
 
 				<title>{itemData.name} / KazInterStroy</title>
@@ -378,12 +370,11 @@ const ItemPage = ({ categoryData, itemData }) => {
 								<hr />
 								<span>{itemData.article}</span>
 							</li>
-							{!(declOfQuantity(itemData.quantity) === 'нет в наличии' && itemData.price1 < 5) && (
+							{!(declOfQuantity(itemData.quantity) === 'нет в наличии' && itemData.price2 < 5) && (
 								<li>
 									<span>В наличи</span>
 									<hr />
-									<span
-										style={{ color: !isAvailable ? 'rgb(var(--error))' : 'rgb(var(--secondary))' }}>
+									<span style={{ color: !isAvailable ? 'rgb(var(--error))' : 'rgb(var(--secondary))' }}>
 										{declOfQuantity(itemData.quantity)}
 									</span>
 								</li>
@@ -405,9 +396,9 @@ const ItemPage = ({ categoryData, itemData }) => {
 							Цена
 							<br />
 							<span>
-								{!(declOfQuantity(itemData.quantity) === 'нет в наличии' && itemData.price1 < 5)
-								? priceRule(itemData.price1)
-								: 'По запросу'}
+								{!(declOfQuantity(itemData.quantity) === 'нет в наличии' && itemData.price2 < 5)
+									? priceRule(itemData.price2)
+									: 'По запросу'}
 							</span>
 						</Price>
 						<StyledButton
@@ -450,11 +441,14 @@ const ItemPage = ({ categoryData, itemData }) => {
 export default ItemPage;
 
 export const getServerSideProps = async ctx => {
+	// default props
+	const defaultData = await sendDefaultPagePropsRequest();
+
+	// category data
 	if (!ctx?.query || !ctx.query.category || isNaN(ctx.query.category) || !ctx.query.item || isNaN(ctx.query.item)) {
 		return { notFound: true };
 	}
 
-	// category data
 	const { data: categoryData } = await axios.get(
 		`${process.env.NEXT_PUBLIC_API}/categories?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&id=${ctx.query.category}`
 	);
@@ -470,7 +464,11 @@ export const getServerSideProps = async ctx => {
 	return {
 		props: {
 			categoryData: categoryData[0],
-			itemData: itemData[0]
-		}
+			itemData: itemData[0],
+			// default props
+			contactData: defaultData.contactData,
+			catalogData: defaultData.catalogData,
+			menuData: defaultData.menuData,
+		},
 	};
 };

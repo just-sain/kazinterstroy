@@ -1,5 +1,5 @@
-import { useContext, useEffect, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
+import { useContext, useEffect, useState } from 'react';
 import { Store } from '../lib/store';
 // components
 import { Article } from './article';
@@ -100,11 +100,11 @@ const DropDownMenuItem = styled.div`
 `;
 
 // elements: []
-export const Elements = ({ isReady, elements }) => {
+export const Elements = ({ elements }) => {
 	const shouldReduceMotion = useReducedMotion(); // for animation on sort
 	const { state, dispatch } = useContext(Store);
 	const {
-		cart: { cartItems }
+		cart: { cartItems },
 	} = state;
 
 	// sort
@@ -112,7 +112,7 @@ export const Elements = ({ isReady, elements }) => {
 		{ name: 'Сначала дешевые', property: 'price-down-to-up' },
 		{ name: 'Сначала дорогие ', property: 'price-up-to-down' },
 		{ name: 'от А до Я', property: 'title' },
-		{ name: 'от Я до А', property: 'title-reverse' }
+		{ name: 'от Я до А', property: 'title-reverse' },
 	];
 
 	// states
@@ -130,9 +130,9 @@ export const Elements = ({ isReady, elements }) => {
 
 	const sortElements = i => {
 		if (sorts[i].property === 'price-up-to-down') {
-			return elements.sort((a, b) => (a.price1 > b.price1 ? -1 : 1));
+			return elements.sort((a, b) => (a.price2 > b.price2 ? -1 : 1));
 		} else if (sorts[i].property === 'price-down-to-up') {
-			return elements.sort((a, b) => (a.price1 < b.price1 ? -1 : 1));
+			return elements.sort((a, b) => (a.price2 < b.price2 ? -1 : 1));
 		} else if (sorts[i].property === 'title') {
 			return elements.sort((a, b) => {
 				const nameA = a.name.toLowerCase(),
@@ -160,7 +160,7 @@ export const Elements = ({ isReady, elements }) => {
 		setIsDropDownMenuOpen(false);
 		setSelectedSort(sorts[i]);
 
-		if (isReady && elements.length) {
+		if (!!elements.length) {
 			setSortedElements(sortElements(i));
 		}
 	};
@@ -190,7 +190,7 @@ export const Elements = ({ isReady, elements }) => {
 					</Menu>
 				</Sort>
 			</Panel>
-			{isReady && !!sortedElements.length ? (
+			{!!sortedElements.length ? (
 				<Grid>
 					{!!sortedElements.length &&
 						sortedElements.map(a => (
