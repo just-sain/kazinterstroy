@@ -1,10 +1,10 @@
 import { memo, useContext, useState } from 'react';
 import { Store } from '../lib/store';
 // components
-import { List } from './list';
-import { Container } from './container';
 import styled from '@emotion/styled';
 import { getCurrentYear } from '../utils/date';
+import { Container } from './container';
+import { List } from './list';
 
 const StyledFooter = styled.footer`
 	width: 100%;
@@ -126,7 +126,18 @@ const Loader = styled.div`
 `;
 
 const Bottom = styled.div`
+	width: 100%;
+	padding-top: 2rem;
 	color: rgb(var(--light-gray));
+
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+
+	a {
+		text-decoration: underline;
+	}
 `;
 
 export const Footer = memo(() => {
@@ -177,7 +188,12 @@ export const Footer = memo(() => {
 						</LoaderWrapper>
 					</MapContainer>
 				</StyledContainer>
-				<Bottom>Авторское право © {getCurrentYear()} KazInterStroy All rights reserved.</Bottom>
+				<Bottom>
+					<span>Авторское право © {getCurrentYear()} KazInterStroy All rights reserved.</span>
+					<span>
+						by <a href='https://github.com/just-sain'>just-sain</a>
+					</span>
+				</Bottom>
 			</FooterWrapper>
 		</StyledFooter>
 	);

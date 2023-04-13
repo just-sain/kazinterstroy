@@ -1,15 +1,15 @@
 import { memo, useContext, useState } from 'react';
 import { Store } from '../lib/store';
 // components
-import Link from 'next/link';
-import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Container } from './container';
+import Image from 'next/image';
+import Link from 'next/link';
 import { Catalog } from './catalog';
+import { Container } from './container';
 import { Search } from './search';
 // icons
 import { BsCart } from 'react-icons/bs';
-import { FaPhoneAlt, FaListUl, FaRegWindowClose } from 'react-icons/fa';
+import { FaListUl, FaPhoneAlt, FaRegWindowClose } from 'react-icons/fa';
 // styles
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -305,7 +305,7 @@ const Cart = styled(Link)`
 export const Header = memo(({ isBurgerMenuOpen, setIsBurgerMenuOpen }) => {
 	const { state } = useContext(Store);
 	const {
-		cart: { cartItems }
+		cart: { cartItems },
 	} = state;
 
 	const [isCatalogOpen, setIsCatalogOpen] = useState(false);
@@ -340,6 +340,9 @@ export const Header = memo(({ isBurgerMenuOpen, setIsBurgerMenuOpen }) => {
 						<HeaderMenu>
 							<li>
 								<Link href='/'>Главная</Link>
+							</li>
+							<li>
+								<Link href='/about'>О нас</Link>
 							</li>
 							<li>
 								<Link href='/contact'>Контакты</Link>
