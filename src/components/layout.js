@@ -2,10 +2,14 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 // components
 import styled from '@emotion/styled';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
-import { Footer } from './footer';
 import { Header } from './header';
 import { Menu } from './menu';
+
+const DynamicFooter = dynamic(() => import('./footer'), {
+	ssr: false,
+});
 
 const Wrapper = styled.div`
 	min-height: 100vh;
@@ -84,7 +88,7 @@ const Layout = ({ children }) => {
 			<Bg>
 				<BgImg src='/bg-item.png' alt='bg' priority fill sizes='100%' />
 			</Bg>
-			<Footer />
+			<DynamicFooter />
 		</Wrapper>
 	);
 };

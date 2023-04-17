@@ -140,7 +140,7 @@ const Bottom = styled.div`
 	}
 `;
 
-export const Footer = memo(() => {
+const Footer = memo(() => {
 	const { state } = useContext(Store);
 	const { contact } = state;
 	const [isMapLoad, setIsMapLoad] = useState(false);
@@ -198,3 +198,5 @@ export const Footer = memo(() => {
 		</StyledFooter>
 	);
 });
+
+export default Footer;

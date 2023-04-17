@@ -1,16 +1,66 @@
 import styled from '@emotion/styled';
 import Head from 'next/head';
+import Image from 'next/image';
 import { Container } from '../components/container';
+import { sendDefaultPagePropsRequest } from '../lib/api';
 
 const Section = styled.section`
 	width: 100%;
 	margin-top: 5rem;
 `;
 
+// logo
+const Logo = styled.div`
+	margin-bottom: 2.5rem;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 1rem;
+
+	color: rgb(var(--primary));
+	line-height: 1rem;
+	font-size: 4.6rem;
+	font-weight: 700;
+
+	@media screen and (max-width: 650px) {
+		font-size: 2.6rem;
+	}
+
+	@media screen and (max-width: 300px) {
+		flex-direction: column;
+		font-size: 2rem;
+	}
+`;
+
+const LogoImage = styled.div`
+	width: 10rem;
+	height: 10rem;
+
+	position: relative;
+
+	img {
+		width: auto;
+		height: 5rem;
+
+		object-fit: contain;
+		object-position: center;
+	}
+
+	@media screen and (max-width: 650px) {
+		width: 5rem;
+		height: 5rem;
+	}
+`;
+
 const Grid = styled.div`
 	display: grid;
 	grid-template-columns: 1fr auto;
 	gap: 2rem;
+
+	@media screen and (max-width: 900px) {
+		grid-template-columns: 1fr;
+	}
 `;
 
 const Company = styled.span`
@@ -37,10 +87,17 @@ const Text = styled.div`
 		margin-top: 0.5rem;
 
 		li {
-			margin-top: 0.5rem;
+			margin-top: 0.75rem;
+			padding-left: 1rem;
 
-			border-left: 0.2rem solid red;
+			border-left: 0.3rem solid rgb(var(--primary));
+
+			font-size: 1.7rem;
 		}
+	}
+
+	@media screen and (max-width: 350px) {
+		font-size: 1.4rem;
 	}
 `;
 
@@ -49,6 +106,16 @@ const Img = styled.img`
 	height: auto;
 
 	border-radius: 1.5rem;
+
+	@media screen and (max-width: 900px) {
+		width: 75%;
+		margin: 0 auto;
+	}
+
+	@media screen and (max-width: 450px) {
+		width: 100%;
+		margin: 0 auto;
+	}
 `;
 
 const AboutPage = () => {
@@ -80,6 +147,12 @@ const AboutPage = () => {
 			</Head>
 			<Container maxW='s'>
 				<Section>
+					<Logo>
+						<LogoImage>
+							<Image src='/logo.png' alt='KazInterStroy' priority fill sizes='100%' />
+						</LogoImage>
+						KazInterStroy
+					</Logo>
 					<Grid>
 						<Text>
 							<h2>
@@ -94,12 +167,15 @@ const AboutPage = () => {
 								каждый человек хотел бы быть уверенным в защите своего дома или иного имущества и верить в спокойствие завтрашнего
 								дня.
 							</p>
-							<p>
-								А современные системы <strong>видеонаблюдения</strong> помогают держать руку на пульсе и знать, что в данный момент
-								происходит в доме или в вашей организации. Если Вы переживаете за своего ребёнка, который остался с няней –
-								установите камеры <strong>видеонаблюдения</strong> и не волнуйтесь без повода. Мы готовы помочь с выбором систем
-								<strong> видеонаблюдения</strong>, исходя из предназначения и места использования. Наша компания занимается
-								установкой во всех отраслях деятельности:
+							<div>
+								<p>
+									А современные системы <strong>видеонаблюдения</strong> помогают держать руку на пульсе и знать, что в данный
+									момент происходит в доме или в вашей организации. Если Вы переживаете за своего ребёнка, который остался с няней
+									– установите камеры <strong>видеонаблюдения</strong> и не волнуйтесь без повода. Мы готовы помочь с выбором
+									систем
+									<strong> видеонаблюдения</strong>, исходя из предназначения и места использования. Наша компания занимается
+									установкой во всех отраслях деятельности:
+								</p>
 								<ul>
 									<li>Кафе, ресторанах</li>
 									<li>Магазинах, торговых центрах</li>
@@ -107,7 +183,7 @@ const AboutPage = () => {
 									<li>Квартирах, загородных</li>
 									<li>домах и т.д.</li>
 								</ul>
-							</p>
+							</div>
 						</Text>
 
 						<Img src='/pic/cctv.png' alt='cctv' />
@@ -130,7 +206,7 @@ const AboutPage = () => {
 							</p>
 						</Text>
 
-						<Img src='/pic/camera-2.jpg' alt='' />
+						<Img src='/pic/camera-2.jpg' alt='' style={{ width: '100%' }} />
 					</div>
 				</Section>
 			</Container>
@@ -139,3 +215,16 @@ const AboutPage = () => {
 };
 
 export default AboutPage;
+
+export const getStaticProps = async () => {
+	const data = await sendDefaultPagePropsRequest();
+
+	return {
+		props: {
+			contactData: data.contactData,
+			catalogData: data.catalogData,
+			menuData: data.menuData,
+		},
+		revalidate: 60,
+	};
+};

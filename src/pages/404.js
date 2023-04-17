@@ -711,6 +711,6 @@ export const getStaticProps = async () => {
 			catalogData: data.catalogData,
 			menuData: data.menuData,
 		},
-		revalidate: 15,
+		revalidate: 60,
 	};
 };

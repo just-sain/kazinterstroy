@@ -56,6 +56,6 @@ export const getStaticProps = async () => {
 			menuData: defaultData.menuData,
 			sliderData,
 		},
-		revalidate: 15,
+		revalidate: 60,
 	};
 };
