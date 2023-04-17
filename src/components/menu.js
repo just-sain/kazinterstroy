@@ -1,10 +1,9 @@
 // components
-import Link from 'next/link';
-import { Container } from './container';
-import { Search } from './search';
-import { FaPhoneAlt } from 'react-icons/fa';
-import { BsCart } from 'react-icons/bs';
 import styled from '@emotion/styled';
+import Link from 'next/link';
+import { BsCart } from 'react-icons/bs';
+import { FaPhoneAlt } from 'react-icons/fa';
+import { Container } from './container';
 
 const Wrapper = styled.div`
 	width: 100vw;
