@@ -41,14 +41,14 @@ const Name = styled.h4`
 	margin-top: 0.5rem;
 
 	color: rgb(var(--primary));
-	font-weight: 500;
+	font-weight: 600;
 	font-size: 1.6rem;
 `;
 
 const Quantity = styled.p`
 	color: rgb(var(--${({ notavailable }) => (!notavailable ? `gray` : `error`)}));
 	text-transform: capitalize;
-	font-weight: 500;
+	font-weight: 600;
 	font-size: 1.4rem;
 
 	span {
@@ -58,7 +58,7 @@ const Quantity = styled.p`
 
 const Brand = styled.p`
 	color: rgb(var(--gray));
-	font-weight: 500;
+	font-weight: 600;
 	font-size: 1.4rem;
 
 	span {

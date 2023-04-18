@@ -5,10 +5,10 @@ import Image from 'next/image';
 import { Container } from './container';
 import { Preloader } from './preloader';
 // icons
-import { BsChevronRight, BsChevronLeft } from 'react-icons/bs';
+import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
 // styles
-import styled from '@emotion/styled';
 import { css } from '@emotion/react';
+import styled from '@emotion/styled';
 import Link from 'next/link';
 
 const Wrapper = styled.div`
@@ -90,7 +90,7 @@ const LeftSideItem = styled.li`
 	border-radius: 1rem;
 
 	font-size: 1.6rem;
-	font-weight: 500;
+	font-weight: 600;
 
 	transition: background 0.4s ease 0s, left 0.3s ease 0s, top 0.3s ease 0s, color 0.3s ease 0s;
 
@@ -171,7 +171,7 @@ const BackIcon = styled.div`
 
 	color: rgba(var(--black));
 	font-size: 1.6rem;
-	font-weight: 500;
+	font-weight: 600;
 
 	svg {
 		font-size: 2rem;
@@ -243,7 +243,7 @@ const ListTitle = styled.h4`
 const ListItem = styled.li`
 	color: rgb(var(--gray));
 	font-size: 1.4rem;
-	font-weight: 500;
+	font-weight: 600;
 
 	a:hover {
 		text-decoration: underline;
@@ -254,9 +254,7 @@ const ListItem = styled.li`
 const Category = memo(({ menu, catalog, closeCatalog, ...props }) => {
 	const [selectCatalog, setSelectCatalog] = useState(catalog[0]);
 	const [isCatalogSelect, setIsCatalogSelect] = useState(false);
-	const [selectCatalogCategories, setSelectCatalogCategories] = useState(
-		menu.filter(el => selectCatalog.categories.indexOf(el.id) > -1)
-	);
+	const [selectCatalogCategories, setSelectCatalogCategories] = useState(menu.filter(el => selectCatalog.categories.indexOf(el.id) > -1));
 
 	//  for divide category to 3 columns
 	let selectCatalogCategoriesColumns = [];
@@ -301,10 +299,7 @@ const Category = memo(({ menu, catalog, closeCatalog, ...props }) => {
 		<Box {...props}>
 			<LeftSide isMenuSelect={isCatalogSelect}>
 				{catalog.map(item => (
-					<LeftSideItem
-						key={item.id}
-						isSelected={selectCatalog.id === item.id}
-						onClick={() => onCatalogClick(item)}>
+					<LeftSideItem key={item.id} isSelected={selectCatalog.id === item.id} onClick={() => onCatalogClick(item)}>
 						<LeftSideIcon>
 							<Image src={item.icon} alt={item.name} fill priority />
 						</LeftSideIcon>
@@ -329,9 +324,7 @@ const Category = memo(({ menu, catalog, closeCatalog, ...props }) => {
 									<ListTitle>{firstLvl.name}</ListTitle>
 									<List key={firstLvl.id}>
 										{menu
-											.filter(
-												secondLvl => firstLvl.left < secondLvl.left && secondLvl.right < firstLvl.right
-											)
+											.filter(secondLvl => firstLvl.left < secondLvl.left && secondLvl.right < firstLvl.right)
 											.map(secondLvl => (
 												<AutoFillCategoriesLvl currentLvl={secondLvl} key={secondLvl.id} />
 											))}

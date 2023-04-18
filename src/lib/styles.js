@@ -31,7 +31,7 @@ const globalStyles = css`
 		--black-gray: 35, 35, 35;
 		--light-gray: 160, 160, 160;
 
-		--font-family-primary: 'Inter', sans-serif;
+		--font-family-primary: 'Source Sans 3', sans-serif;
 	}
 
 	* {

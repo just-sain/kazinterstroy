@@ -149,6 +149,9 @@ export const Menu = ({ isOpen, setIsBurgerMenuOpen, ...props }) => {
 						<Link href='/cart'>Корзина</Link>
 					</li>
 					<li>
+						<Link href='/about'>О компании</Link>
+					</li>
+					<li>
 						<Link href='/contact'>Контакты</Link>
 					</li>
 				</StyledMenu>

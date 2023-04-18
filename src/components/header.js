@@ -125,7 +125,7 @@ const Phone = styled(Link)`
 
 	color: rgb(var(--black));
 	font-size: 1.6rem;
-	font-weight: 500;
+	font-weight: 600;
 
 	transition: color 0.4s ease 0s;
 
@@ -342,7 +342,7 @@ export const Header = memo(({ isBurgerMenuOpen, setIsBurgerMenuOpen }) => {
 								<Link href='/'>Главная</Link>
 							</li>
 							<li>
-								<Link href='/about'>О нас</Link>
+								<Link href='/about'>О компании</Link>
 							</li>
 							<li>
 								<Link href='/contact'>Контакты</Link>

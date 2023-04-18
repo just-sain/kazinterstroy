@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 // components
-import { AiOutlineSearch } from 'react-icons/ai';
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
+import { AiOutlineSearch } from 'react-icons/ai';
 
 const Form = styled.form`
 	width: 100%;
@@ -30,7 +30,7 @@ const Input = styled.input`
 
 	color: rgb(var(--black));
 	font-size: 1.4rem;
-	font-weight: 500;
+	font-weight: 600;
 
 	&:hover,
 	&:focus {
@@ -81,13 +81,7 @@ export const Search = ({ ...props }) => {
 
 	return (
 		<Form onSubmit={onSubmit} {...props}>
-			<Input
-				className='xz'
-				type='text'
-				placeholder='Что ищем?'
-				value={text}
-				onChange={e => setText(e.currentTarget.value)}
-			/>
+			<Input className='xz' type='text' placeholder='Что ищем?' value={text} onChange={e => setText(e.currentTarget.value)} />
 			<Button type='submit' tabIndex={!text ? -1 : 0}>
 				<Icon text={text} />
 			</Button>

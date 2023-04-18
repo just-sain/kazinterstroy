@@ -17,7 +17,7 @@ const Heading = styled.h1`
 	color: rgb(var(--primary));
 	text-align: center;
 	font-size: 3.2rem;
-	font-weight: 500;
+	font-weight: 600;
 `;
 
 const ListWrapper = styled.div`
@@ -82,7 +82,7 @@ const ListTitle = styled.h4`
 const ListItem = styled.li`
 	color: rgb(var(--gray));
 	font-size: 1.4rem;
-	font-weight: 500;
+	font-weight: 600;
 
 	a:hover {
 		text-decoration: underline;

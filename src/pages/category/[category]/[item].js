@@ -152,7 +152,7 @@ const Info = styled.ul`
 
 		color: rgb(var(--gray));
 		font-size: 1.6rem;
-		font-weight: 500;
+		font-weight: 600;
 
 		hr {
 			border: none;
@@ -182,7 +182,7 @@ const Price = styled.p`
 
 	color: rgb(var(--light-gray));
 	font-size: 1.6rem;
-	font-weight: 500;
+	font-weight: 600;
 
 	span {
 		color: rgb(var(--black));
@@ -204,7 +204,7 @@ const DetailText = styled.div`
 	h3,
 	h4 {
 		margin: 0.5rem 0;
-		font-weight: 500;
+		font-weight: 600;
 	}
 
 	p {

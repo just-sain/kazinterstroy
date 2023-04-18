@@ -59,3 +59,22 @@ export const sendDefaultPagePropsRequest = async () => {
 		catalogData,
 	};
 };
+
+// about page request
+export const sendAboutTextRequest = async () => {
+	const res = await client.getEntries({ content_type: 'about' });
+
+	const data = res.items[0].fields;
+
+	return {
+		title1: data.title1,
+		content1: data.content1,
+		image1: data.image1.fields.file.url,
+		title2: data.title2,
+		content2: data.content2,
+		image2: data.image2.fields.file.url,
+		title3: data.title3,
+		content3: data.content3,
+		image3: data.image3.fields.file.url,
+	};
+};

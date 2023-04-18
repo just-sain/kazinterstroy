@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Container } from '../components/container';
-import { sendDefaultPagePropsRequest } from '../lib/api';
+import { sendAboutTextRequest, sendDefaultPagePropsRequest } from '../lib/api';
 
 const Section = styled.section`
 	width: 100%;
@@ -75,7 +75,7 @@ const Grid = styled.div`
 	}
 `;
 
-const Company = styled.span`
+const Company = styled.h2`
 	color: var(--primary);
 	text-decoration: underline;
 	font-style: italic;
@@ -139,7 +139,7 @@ const End = styled.div`
 	}
 `;
 
-const AboutPage = () => {
+const AboutPage = ({ aboutData }) => {
 	return (
 		<>
 			<Head>
@@ -182,21 +182,8 @@ const AboutPage = () => {
 
 					<Grid>
 						<Text>
-							<h2>
-								О <Company>KazInterStroy</Company>
-							</h2>
-							<p>
-								<strong>
-									<i>TOO “KazInterStroy”</i>
-								</strong>{' '}
-								— процветающая компания, положительно зарекомендовавшаяся себя на рынке систем безопасности. Мы отвечаем за качество
-								предлагаемой продукции и предоставленных услугах, а потому даем фирменную гарантию.
-							</p>
-							<p>
-								Многолетний опыт нашего коллектива позволяет осуществлять работы по внедрению систем{' '}
-								<strong>видеонаблюдения</strong> на высоком профессиональном уровне. Проверенные эффективные решения позволят
-								сократить Ваше время, и, в результате, деньги.
-							</p>
+							<Company>{aboutData.title1}</Company>
+							<p dangerouslySetInnerHTML={{ __html: aboutData.content1 }} />
 						</Text>
 
 						<Img src='/pic/cctv.png' alt='cctv' />
@@ -204,16 +191,8 @@ const AboutPage = () => {
 				</Section>
 				<Section>
 					<Text>
-						<h2>IP видеонаблюдение</h2>
-						<p>
-							<strong>IP камеры</strong> одновременно совместили в себе два устройства, аналоговую видеокамеру и DVR
-							видеорегистратор.
-						</p>
-						<p>
-							В отличие от аналоговых камер, IP камеры одновременно снимают видеоинформацию, сжимают ее а затем передают его по
-							локальным сетям или по сети Интернет. Так же при помощи технологии Wifi IP камера может использоваться как беспроводная
-							камера.
-						</p>
+						<h2>{aboutData.title2}</h2>
+						<p dangerouslySetInnerHTML={{ __html: aboutData.content2 }} />
 					</Text>
 
 					<Img src='/pic/camera-2.jpg' alt='' style={{ width: '100%' }} />
@@ -221,15 +200,8 @@ const AboutPage = () => {
 				<Section>
 					<Grid>
 						<Text>
-							<h2>HD видеонаблюдение</h2>
-							<p>
-								<strong>HD видеокамеры</strong> имеют большое количество преимуществ, и это позволяет им занимать все большую долю
-								рынка видеонаблюдения.
-							</p>
-							<p>
-								Так пользователи систем безопасности с каждым днем все лучше ориентируются в важных плюсах таких камер и отдают им
-								предпочтение при постройке системы видеонаблюдения на своем объекте.
-							</p>
+							<h2>{aboutData.title3}</h2>
+							<p dangerouslySetInnerHTML={{ __html: aboutData.content3 }} />
 						</Text>
 
 						<Img src='/pic/camera-1.png' alt='' style={{ width: '100%' }} />
@@ -251,12 +223,14 @@ export default AboutPage;
 
 export const getStaticProps = async () => {
 	const data = await sendDefaultPagePropsRequest();
+	const aboutData = await sendAboutTextRequest();
 
 	return {
 		props: {
 			contactData: data.contactData,
 			catalogData: data.catalogData,
 			menuData: data.menuData,
+			aboutData,
 		},
 		revalidate: 60,
 	};

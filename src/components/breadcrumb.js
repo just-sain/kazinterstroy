@@ -1,8 +1,8 @@
 import { Fragment, memo } from 'react';
 // components
+import styled from '@emotion/styled';
 import Link from 'next/link';
 import { BsArrowBarLeft } from 'react-icons/bs';
-import styled from '@emotion/styled';
 
 const Wrapper = styled.div`
 	width: 100%;
@@ -71,7 +71,7 @@ const BackArrow = styled(Link)`
 
 	color: rgb(var(--primary));
 	font-size: 1.8rem;
-	font-weight: 500;
+	font-weight: 600;
 
 	svg {
 		font-size: 3.3rem;

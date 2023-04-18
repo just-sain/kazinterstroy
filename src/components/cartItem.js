@@ -90,7 +90,7 @@ const Column = styled.div`
 const Name = styled(Link)`
 	color: rgb(var(--primary));
 	font-size: 1.8rem;
-	font-weight: 500;
+	font-weight: 600;
 `;
 
 const Info = styled.ul`

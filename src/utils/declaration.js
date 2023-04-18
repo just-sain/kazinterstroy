@@ -18,3 +18,19 @@ export const declOfQuantity = quantity => {
 
 	return `Больше ${quantity.substr(1, quantity.length - 1)}`;
 };
+
+// __bold__
+export const declOfBoldText = text => {
+	const surroundingUnderscores = new RegExp(/__(.*?)__/g);
+	return text.replace(surroundingUnderscores, word => {
+		return `<strong>${word.replace(/__/g, '')}</strong>`;
+	});
+};
+
+// *italic*
+export const declOfItalicText = text => {
+	const surroundingUnderscores = new RegExp(/.*(.*?)*/g);
+	return text.replace(surroundingUnderscores, word => {
+		return `<i>${word.replace(/.*/g, '')}</i>`;
+	});
+};

@@ -636,7 +636,7 @@ const Content = styled.div`
 
 	text-align: center;
 	font-size: 1.7rem;
-	font-weight: 500;
+	font-weight: 600;
 
 	animation: apparition 0.7s 1.2s cubic-bezier(0.37, 0.575, 0.27, 0.775) forwards;
 
