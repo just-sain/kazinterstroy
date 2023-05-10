@@ -162,6 +162,9 @@ const Contact = ({ contactData: contact }) => {
 	return (
 		<>
 			<Head>
+				<meta name='robots' content='index, follow' />
+				<meta name='googlebot' content='index, follow' />
+
 				<meta name='description' content='Контакты нашей компании: почта, номер телефона, адрес, режим работы / KazInterStroy ' />
 				<meta
 					name='keywords'
@@ -247,14 +250,22 @@ const Contact = ({ contactData: contact }) => {
 export default Contact;
 
 export const getStaticProps = async () => {
-	const data = await sendDefaultPagePropsRequest();
+	try {
+		const data = await sendDefaultPagePropsRequest();
 
-	return {
-		props: {
-			contactData: data.contactData,
-			catalogData: data.catalogData,
-			menuData: data.menuData,
-		},
-		revalidate: 60,
-	};
+		return {
+			props: {
+				contactData: data.contactData,
+				catalogData: data.catalogData,
+				menuData: data.menuData,
+			},
+			revalidate: 60,
+		};
+	} catch (err) {
+		console.error(err);
+
+		return {
+			notFound: true,
+		};
+	}
 };

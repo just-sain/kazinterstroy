@@ -143,6 +143,9 @@ const AboutPage = ({ aboutData }) => {
 	return (
 		<>
 			<Head>
+				<meta name='robots' content='index, follow' />
+				<meta name='googlebot' content='index, follow' />
+
 				<meta
 					name='description'
 					content='KazInterStroy - многопрофильное строительно-монтажная компания, в наши услуги входят продажа установкам систем видеонаблюдения в городе Алматы / KazInterStroy '
@@ -222,16 +225,24 @@ const AboutPage = ({ aboutData }) => {
 export default AboutPage;
 
 export const getStaticProps = async () => {
-	const data = await sendDefaultPagePropsRequest();
-	const aboutData = await sendAboutTextRequest();
+	try {
+		const data = await sendDefaultPagePropsRequest();
+		const aboutData = await sendAboutTextRequest();
 
-	return {
-		props: {
-			contactData: data.contactData,
-			catalogData: data.catalogData,
-			menuData: data.menuData,
-			aboutData,
-		},
-		revalidate: 60,
-	};
+		return {
+			props: {
+				contactData: data.contactData,
+				catalogData: data.catalogData,
+				menuData: data.menuData,
+				aboutData,
+			},
+			revalidate: 60,
+		};
+	} catch (err) {
+		console.error(err);
+
+		return {
+			notFound: true,
+		};
+	}
 };

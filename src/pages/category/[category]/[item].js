@@ -291,14 +291,14 @@ const ItemPage = ({ categoryData, itemData }) => {
 		};
 
 		// interface of payload
-		// article: 0,     // id
-		// name: '',       // name
-		// brand: '',      // brand
-		// href: '',       // link
-		// article_pn: '', // article part number
-		// price2: 0,      // price
-		// quantity: 0,    // count in base
-		// images: [''],   // images
+		// article: 0,       // id
+		// name: '',         // name
+		// brand: '',        // brand
+		// href: '',         // link
+		// article_pn: '',   // article part number
+		// price2: 0,        // price
+		// quantity: 0,      // count in base
+		// images: string[]  // images
 
 		if (!cartItems.find(e => e.article === itemData.article)) {
 			dispatch({ type: 'CART_ADD_ITEM', payload });
@@ -318,6 +318,9 @@ const ItemPage = ({ categoryData, itemData }) => {
 	return (
 		<>
 			<Head>
+				<meta name='robots' content='index, follow' />
+				<meta name='googlebot' content='index, follow' />
+
 				<meta name='description' content={`${itemData.full_name} все за ${priceRule(itemData.price2)} / KazInterStroy`} />
 				<meta
 					name='keywords'
@@ -440,24 +443,45 @@ const ItemPage = ({ categoryData, itemData }) => {
 
 export default ItemPage;
 
-export const getServerSideProps = async ctx => {
+export const getStaticPaths = async () => {
+	const paths = [];
+
+	const { data: categoryData } = await axios.get(
+		`${process.env.NEXT_PUBLIC_API}/categories?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&`
+	);
+
+	for (const c of categoryData) {
+		const { data: itemData } = await axios.get(
+			`${process.env.NEXT_PUBLIC_API}/elements?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&limit=250&category=${c.id}`
+		);
+
+		for (const i of itemData) {
+			paths.push({ params: { category: String(c.id), item: String(i.article) } });
+		}
+	}
+
+	return {
+		paths,
+		fallback: false,
+	};
+};
+
+export const getStaticProps = async ({ params }) => {
 	// default props
 	const defaultData = await sendDefaultPagePropsRequest();
 
 	// category data
-	if (!ctx?.query || !ctx.query.category || isNaN(ctx.query.category) || !ctx.query.item || isNaN(ctx.query.item)) {
-		return { notFound: true };
-	}
+	if (!params || !params.category || isNaN(params.category) || !params.item || isNaN(params.item)) return { notFound: true };
 
 	const { data: categoryData } = await axios.get(
-		`${process.env.NEXT_PUBLIC_API}/categories?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&id=${ctx.query.category}`
+		`${process.env.NEXT_PUBLIC_API}/categories?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&id=${params.category}`
 	);
 	if (!categoryData || !categoryData.length) return { notFound: true };
 
 	// item data
 	const additionalFields = 'images,brand,warranty,detailtext,properties';
 	const { data: itemData } = await axios.get(
-		`${process.env.NEXT_PUBLIC_API}/element-info?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&article=${ctx.query.item}&additional_fields=${additionalFields}`
+		`${process.env.NEXT_PUBLIC_API}/element-info?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&article=${params.item}&additional_fields=${additionalFields}`
 	);
 	if (!itemData || !itemData.length) return { notFound: true };
 
@@ -470,5 +494,6 @@ export const getServerSideProps = async ctx => {
 			catalogData: defaultData.catalogData,
 			menuData: defaultData.menuData,
 		},
+		revalidate: 300,
 	};
 };

@@ -33,6 +33,9 @@ const Category = ({ categoryData, elementsData }) => {
 	return (
 		<>
 			<Head>
+				<meta name='robots' content='index, follow' />
+				<meta name='googlebot' content='index, follow' />
+
 				<meta
 					name='description'
 					content={`${categoryData.name}. Рассмотрите наши продукты и выберите себе нужный товар / KazInterStroy`}
@@ -73,15 +76,32 @@ const Category = ({ categoryData, elementsData }) => {
 
 export default Category;
 
-export const getServerSideProps = async ctx => {
+export const getStaticPaths = async () => {
+	const paths = [];
+
+	const { data: categoryData } = await axios.get(
+		`${process.env.NEXT_PUBLIC_API}/categories?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&`
+	);
+
+	for (const c of categoryData) {
+		paths.push({ params: { category: String(c.id) } });
+	}
+
+	return {
+		paths,
+		fallback: false,
+	};
+};
+
+export const getStaticProps = async ({ params }) => {
 	// default props
 	const defaultData = await sendDefaultPagePropsRequest();
 
 	// category data
-	if (!ctx?.query || !ctx.query.category || isNaN(ctx.query.category)) return { notFound: true };
+	if (!params || !params.category || isNaN(params.category)) return { notFound: true };
 
 	const { data: categoryData } = await axios.get(
-		`${process.env.NEXT_PUBLIC_API}/categories?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&id=${ctx.query.category}`
+		`${process.env.NEXT_PUBLIC_API}/categories?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&id=${params.category}`
 	);
 	if (!categoryData || !categoryData.length) return { notFound: true };
 
@@ -89,7 +109,7 @@ export const getServerSideProps = async ctx => {
 	const additionalFields = 'additional_fields=url,brand,images';
 
 	const { data: elementsData } = await axios.get(
-		`${process.env.NEXT_PUBLIC_API}/elements?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&limit=250&category=${ctx.query.category}&${additionalFields}`
+		`${process.env.NEXT_PUBLIC_API}/elements?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&limit=250&category=${params.category}&${additionalFields}`
 	);
 
 	return {
@@ -100,8 +120,9 @@ export const getServerSideProps = async ctx => {
 			menuData: defaultData.menuData,
 			// another
 			categoryData: categoryData[0],
-			categoryId: ctx.query.category,
+			categoryId: params.category,
 			elementsData: elementsData,
 		},
+		revalidate: 300,
 	};
 };

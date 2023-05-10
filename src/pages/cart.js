@@ -251,6 +251,9 @@ const CartPage = () => {
 	return (
 		<>
 			<Head>
+				<meta name='robots' content='noindex, nofollow' />
+				<meta name='googlebot' content='noindex, nofollow' />
+
 				<title>Корзина / KazInterStroy</title>
 			</Head>
 
@@ -334,14 +337,22 @@ const CartPage = () => {
 export default CartPage;
 
 export const getStaticProps = async () => {
-	const data = await sendDefaultPagePropsRequest();
+	try {
+		const data = await sendDefaultPagePropsRequest();
 
-	return {
-		props: {
-			contactData: data.contactData,
-			catalogData: data.catalogData,
-			menuData: data.menuData,
-		},
-		revalidate: 60,
-	};
+		return {
+			props: {
+				contactData: data.contactData,
+				catalogData: data.catalogData,
+				menuData: data.menuData,
+			},
+			revalidate: 60,
+		};
+	} catch (err) {
+		console.error(err);
+
+		return {
+			notFound: true,
+		};
+	}
 };

@@ -49,6 +49,9 @@ const Search = ({ search, elementsData }) => {
 	return (
 		<>
 			<Head>
+				<meta name='robots' content='noindex, nofollow' />
+				<meta name='googlebot' content='noindex, nofollow' />
+
 				<meta name='description' content={search ? 'Поисковик / KazInterStroy ' : `Поиск по запросу: ${search} / KazInterStroy`} />
 				<meta
 					name='keywords'
@@ -92,43 +95,51 @@ const Search = ({ search, elementsData }) => {
 export default Search;
 
 export const getServerSideProps = async ({ query }) => {
-	// default props
-	const defaultData = await sendDefaultPagePropsRequest();
+	try {
+		// default props
+		const defaultData = await sendDefaultPagePropsRequest();
 
-	// working with search
-	if (!query?.search) {
+		// working with search
+		if (!query?.search) {
+			return {
+				NotFound: true,
+			};
+		}
+
+		// elements
+		let elementsData = [];
+
+		if (!isNaN(query.search)) {
+			const id = Number(query.search);
+
+			const { data } = await axios.get(
+				`${process.env.NEXT_PUBLIC_API}/element-info?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&article=${id}&additional_fields=brand,images`
+			);
+
+			elementsData = typeof data === 'string' ? [] : data;
+		} else {
+			const { data } = await axios.get(
+				`${process.env.NEXT_PUBLIC_API}/element-info?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&name=${query.search}&additional_fields=brand,images`
+			);
+
+			elementsData = typeof data === 'string' ? [] : data;
+		}
+
 		return {
-			NotFound: true,
+			props: {
+				search: query.search,
+				elementsData: elementsData ?? [],
+				// default props
+				contactData: defaultData.contactData,
+				catalogData: defaultData.catalogData,
+				menuData: defaultData.menuData,
+			},
+		};
+	} catch (err) {
+		console.error(err);
+
+		return {
+			notFound: true,
 		};
 	}
-
-	// elements
-	let elementsData = [];
-
-	if (!isNaN(query.search)) {
-		const id = Number(query.search);
-
-		const { data } = await axios.get(
-			`${process.env.NEXT_PUBLIC_API}/element-info?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&article=${id}&additional_fields=brand,images`
-		);
-
-		elementsData = typeof data === 'string' ? [] : data;
-	} else {
-		const { data } = await axios.get(
-			`${process.env.NEXT_PUBLIC_API}/element-info?access-token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&name=${query.search}&additional_fields=brand,images`
-		);
-
-		elementsData = typeof data === 'string' ? [] : data;
-	}
-
-	return {
-		props: {
-			search: query.search,
-			elementsData: elementsData ?? [],
-			// default props
-			contactData: defaultData.contactData,
-			catalogData: defaultData.catalogData,
-			menuData: defaultData.menuData,
-		},
-	};
 };

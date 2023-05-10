@@ -669,6 +669,9 @@ export const Error404Page = () => {
 	return (
 		<>
 			<Head>
+				<meta name='robots' content='noindex, nofollow' />
+				<meta name='googlebot' content='noindex, nofollow' />
+
 				<meta name='description' content='Ошибка 404, страница не найдена / KazInterStroy ' />
 
 				<meta property='og:title' content='Страница не найдена / KazInterStroy' />
@@ -703,14 +706,22 @@ export const Error404Page = () => {
 export default Error404Page;
 
 export const getStaticProps = async () => {
-	const data = await sendDefaultPagePropsRequest();
+	try {
+		const data = await sendDefaultPagePropsRequest();
 
-	return {
-		props: {
-			contactData: data.contactData,
-			catalogData: data.catalogData,
-			menuData: data.menuData,
-		},
-		revalidate: 60,
-	};
+		return {
+			props: {
+				contactData: data.contactData,
+				catalogData: data.catalogData,
+				menuData: data.menuData,
+			},
+			revalidate: 60,
+		};
+	} catch (err) {
+		console.error(err);
+
+		return {
+			notFound: true,
+		};
+	}
 };

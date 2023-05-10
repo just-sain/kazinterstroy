@@ -9,6 +9,9 @@ const HomePage = ({ sliderData }) => {
 	return (
 		<>
 			<Head>
+				<meta name='robots' content='index, follow' />
+				<meta name='googlebot' content='index, follow' />
+
 				<meta name='description' content='kazinterstroy - Интернет магазин / KazInterStroy ' />
 				<meta
 					name='keywords'
@@ -32,30 +35,38 @@ const HomePage = ({ sliderData }) => {
 export default HomePage;
 
 export const getStaticProps = async () => {
-	// default props
-	const defaultData = await sendDefaultPagePropsRequest();
+	try {
+		// default props
+		const defaultData = await sendDefaultPagePropsRequest();
 
-	// slider
-	const slider = await client.getEntries({ content_type: 'slider' });
+		// slider
+		const slider = await client.getEntries({ content_type: 'slider' });
 
-	const sliderData = [];
-	if (!slider.items.length) sliderData.push('/slider-plug.webp'); // if sliderData is empty
-	else {
-		for (let i = 0; i < slider.items.length; i++) {
-			sliderData.push({
-				image: slider.items[i].fields.image.fields.file.url,
-				link: slider.items[i].fields.link,
-			});
+		const sliderData = [];
+		if (!slider.items.length) sliderData.push('/slider-plug.webp'); // if sliderData is empty
+		else {
+			for (let i = 0; i < slider.items.length; i++) {
+				sliderData.push({
+					image: slider.items[i].fields.image.fields.file.url,
+					link: slider.items[i].fields.link,
+				});
+			}
 		}
-	}
 
-	return {
-		props: {
-			contactData: defaultData.contactData,
-			catalogData: defaultData.catalogData,
-			menuData: defaultData.menuData,
-			sliderData,
-		},
-		revalidate: 60,
-	};
+		return {
+			props: {
+				contactData: defaultData.contactData,
+				catalogData: defaultData.catalogData,
+				menuData: defaultData.menuData,
+				sliderData,
+			},
+			revalidate: 60,
+		};
+	} catch (err) {
+		console.error(err);
+
+		return {
+			notFound: true,
+		};
+	}
 };

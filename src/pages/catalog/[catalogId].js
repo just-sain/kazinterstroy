@@ -5,8 +5,9 @@ import { Preloader } from '../../components/preloader';
 import { Error404Page } from '../404';
 // styles
 import styled from '@emotion/styled';
+import Head from 'next/head';
 import Link from 'next/link';
-import { sendDefaultPagePropsRequest } from '../../lib/api';
+import { sendCatalogRequest, sendDefaultPagePropsRequest } from '../../lib/api';
 
 const Wrapper = styled.section`
 	width: 100%;
@@ -132,6 +133,12 @@ const DynamicCatalogPage = ({ catalogId }) => {
 
 	return (
 		<Wrapper>
+			<Head>
+				<meta name='robots' content='noindex, nofollow' />
+				<meta name='googlebot' content='noindex, nofollow' />
+
+				<title>{!selectedCatalog?.name ? 'Каталог' : selectedCatalog.name}</title>
+			</Head>
 			{!selectedCatalog || !menu ? (
 				<Preloader />
 			) : (
@@ -163,21 +170,45 @@ const DynamicCatalogPage = ({ catalogId }) => {
 
 export default DynamicCatalogPage;
 
-export const getServerSideProps = async ctx => {
-	// default props
-	const defaultData = await sendDefaultPagePropsRequest();
+export const getStaticPaths = async () => {
+	const paths = [];
 
-	// working with catalog data
-	if (!ctx?.query || !ctx.query.catalogId || isNaN(ctx.query.catalogId)) {
-		return { notFound: true };
+	const catalogData = await sendCatalogRequest();
+
+	for (const c of catalogData) {
+		paths.push({ params: { catalogId: String(c.id) } });
 	}
 
 	return {
-		props: {
-			contactData: defaultData.contactData,
-			catalogData: defaultData.catalogData,
-			menuData: defaultData.menuData,
-			catalogId: Number(ctx.query.catalogId),
-		},
+		paths,
+		fallback: false,
 	};
+};
+
+export const getStaticProps = async ({ params }) => {
+	try {
+		// default props
+		const defaultData = await sendDefaultPagePropsRequest();
+
+		// working with catalog data
+		if (!params || !params.catalogId || isNaN(params.catalogId)) {
+			return { notFound: true };
+		}
+
+		return {
+			props: {
+				contactData: defaultData.contactData,
+				catalogData: defaultData.catalogData,
+				menuData: defaultData.menuData,
+				catalogId: Number(params.catalogId),
+			},
+			revalidate: 120,
+		};
+	} catch (err) {
+		console.error(err);
+
+		return {
+			notFound: true,
+		};
+	}
 };
