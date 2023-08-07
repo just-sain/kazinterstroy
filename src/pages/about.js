@@ -211,7 +211,7 @@ const AboutPage = ({ aboutData }) => {
 					</Grid>
 
 					<End>
-						Здесь вы можете подробнее узнать о нашем компании:{' '}
+						Здесь вы можете подробнее узнать о нашей компаний:{' '}
 						<Link target='_blank' href='/doc/presentation-KazInterstroy.pdf'>
 							презентация
 						</Link>
